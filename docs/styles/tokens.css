@@ -1,0 +1,362 @@
+/* ==========================================================================
+   Intragram Landing Page — Three-Layer Design Token Architecture (v2)
+   Synthesized with Leonxlnx/taste-skill (design-taste-frontend 2.5)
+   + nextlevelbuilder/ui-ux-pro-max-skill + Intragram AppPalette/Theme
+   100% Zero-Violet, 92% Neutral Architectural Surface, WCAG AAA (>= 7:1)
+   ========================================================================== */
+
+:root {
+  /* --- Layer 1: Primitive Palette (Zero #000, Zero Violet/Lavender) --- */
+  --p-white: #ffffff;
+  --p-paper-50: #f5f6f8;
+  --p-paper-100: #eceff3;
+  --p-paper-150: #e2e7ee;
+  --p-paper-200: #d3dbe6;
+  --p-slate-300: #bcc7d8;
+  --p-slate-500: #526075;
+  --p-slate-650: #3b4658;
+  --p-slate-750: #252c39;
+  --p-slate-800: #1b212c;
+  --p-slate-850: #151a23;
+  --p-slate-900: #0f131a;
+  --p-slate-950: #090b0f;
+
+  --p-ink-light: #161b24;
+  --p-ink-mine: #11223d;
+  --p-ink-dark: #f1f5fa;
+
+  /* Single Brand Accent Family (Cobalt-Slate Blue, OKLCH ~255deg) */
+  --p-blue-50: #eff5ff;
+  --p-blue-100: #dbe8fd;
+  --p-blue-200: #bfd5fb;
+  --p-blue-250: #b8d4ff;
+  --p-blue-350: #7ab2ff;
+  --p-blue-400: #5c9eff;
+  --p-blue-800: #193b9e;
+  --p-blue-850: #132f80;
+  --p-blue-950: #08142c;
+
+  /* Semantic Status Primitives (AAA Contrast Pairs) */
+  --p-emerald-50: #ecfdf5;
+  --p-emerald-200: #a7f3d0;
+  --p-emerald-300: #6ee7b7;
+  --p-emerald-800: #065f46;
+  --p-emerald-950: #082018;
+
+  --p-amber-50: #fdf7e2;
+  --p-amber-100: #fde79c;
+  --p-amber-200: #fde68a;
+  --p-amber-300: #e2c262;
+  --p-amber-850: #633304;
+  --p-amber-950: #211a0b;
+
+  --p-burn-50: #fff2ed;
+  --p-burn-200: #ffccb4;
+  --p-burn-300: #f0ae90;
+  --p-burn-850: #82270a;
+  --p-burn-950: #23110d;
+
+  /* Lit Card Panel Grounds (taste-skill cards.md: soft fields, never dark-on-dark) */
+  --p-lit-sky-a: #c8d6e4;
+  --p-lit-sky-b: #dbe5ef;
+  --p-lit-sand-a: #dfd2be;
+  --p-lit-sand-b: #ece3d4;
+  --p-lit-sage-a: #cdd7c7;
+  --p-lit-sage-b: #dde5d8;
+  --p-lit-stone-a: #d2d6df;
+  --p-lit-stone-b: #e3e6ed;
+
+  /* --- Typography Scale (Zero External Network Requests; >= 13px Floor) --- */
+  --font-display: 'Pretendard Variable', 'Pretendard', -apple-system,
+    BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI',
+    system-ui, sans-serif;
+  --font-sans: 'Pretendard Variable', 'Pretendard', -apple-system,
+    BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI',
+    system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', Menlo, Monaco,
+    Consolas, 'Liberation Mono', ui-monospace, monospace;
+
+  --w-body: 400;
+  --w-medium: 500;
+  --w-display: 600;
+
+  --t-label: 0.8125rem;   /* 13px — minimum permitted label/meta size */
+  --t-small: 0.875rem;    /* 14px — secondary metadata & code */
+  --t-body: 1rem;         /* 16px — all card prose, list items, FAQ answers */
+  --t-lead: 1.125rem;     /* 18px — hero & section lead */
+  --t-card: 1.25rem;      /* 20px — card headings */
+  --t-h3: 1.375rem;       /* 22px — sub-panel headings */
+  --t-h2: clamp(1.75rem, 2.5vw, 2.5rem);     /* 28px -> 40px */
+  --t-h1: clamp(2.125rem, 3.5vw, 3.25rem);   /* 34px -> 52px */
+
+  --leading-tight: 1.16;
+  --leading-snug: 1.32;
+  --leading-body: 1.6;
+
+  /* --- Spacing Scale (taste-skill system.md: 4, 8, 12, 16, 24, 32, 48, 64, 96, 128) --- */
+  --s-1: 0.25rem;   /* 4px */
+  --s-2: 0.5rem;    /* 8px */
+  --s-3: 0.75rem;   /* 12px */
+  --s-4: 1rem;      /* 16px */
+  --s-5: 1.5rem;    /* 24px */
+  --s-6: 2rem;      /* 32px */
+  --s-7: 3rem;      /* 48px */
+  --s-8: 4rem;      /* 64px */
+  --s-9: 6rem;      /* 96px */
+  --s-10: 8rem;     /* 128px */
+
+  /* --- Rhythm & Equal-Edge Grid Tokens (taste-skill layout-v4.md) --- */
+  --nav: 4.5rem;        /* 72px fixed opaque header */
+  --padt: 6.5rem;       /* 104px section top padding (clears 72px fixed header) */
+  --padb: 3.5rem;       /* 56px section bottom padding */
+  --gut: 5rem;          /* 80px side margin at >= 1280px -> 1280px wrap at 1440 */
+  --gutter: 24px;       /* 12-column grid gutter read by layout-check.js */
+  --wrap-max: 80rem;    /* 1280px */
+  --btn-h: 2.75rem;     /* 44px unified button height */
+
+  /* --- Soft Radius Family (data-radius="soft": 8 / 12 / 20) --- */
+  --r-sm: 0.5rem;       /* 8px controls & buttons */
+  --r-md: 0.75rem;      /* 12px inner panels & UI fragments */
+  --r-lg: 1.25rem;      /* 20px cards & frames */
+  --r-btn: 0.5rem;      /* 8px solid/outline buttons */
+  --r-pill: 999px;
+
+  /* --- Z-Index Scale --- */
+  --z-base: 1;
+  --z-nav: 20;
+  --z-sheet: 40;
+  --z-skip: 100;
+
+  /* --- Motion Layer Tokens (taste-skill motion.md) --- */
+  --m-in: 140ms;
+  --m-out: 200ms;
+  --m-press: 90ms;
+  --m-panel: 200ms;
+  --m-slide: 240ms;
+  --m-image: 600ms;
+  --m-cycle: 3.2s;
+  --m-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --m-ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (max-width: 79.99rem) {
+  :root {
+    --gut: 3rem;        /* 48px tablet gutter */
+  }
+}
+
+@media (max-width: 39.99rem) {
+  :root {
+    --nav: 3.5rem;      /* 56px mobile header */
+    --padt: 5rem;       /* 80px mobile section top padding */
+    --padb: 2rem;       /* 32px mobile section bottom padding */
+    --gut: 1.5rem;      /* 24px mobile gutter -> 342px wrap at 390 */
+    --gutter: 12px;     /* 12px mobile grid gap */
+    --t-h1: 1.875rem;   /* 30px (>= 28px layout-v4 phone floor) */
+    --t-h2: 1.5625rem;  /* 25px */
+    --t-card: 1.125rem; /* 18px */
+  }
+}
+
+/* --- Layer 2 & 3: Light Grade Semantic + Component Tokens --- */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-canvas: var(--p-paper-50);
+  --bg-surface: var(--p-paper-100);
+  --card-bg: var(--p-white);
+  --card-alt: var(--p-paper-50);
+  --code-bg: var(--p-slate-900);
+  --code-fg: var(--p-ink-dark);
+
+  --text-primary: var(--p-ink-light);
+  --text-secondary: var(--p-slate-650);
+  --text-accent: var(--p-blue-800);
+
+  --hairline: rgba(22, 27, 36, 0.12);
+  --hairline-strong: rgba(22, 27, 36, 0.24);
+  --border-subtle: var(--p-paper-200);
+  --focus-ring: var(--p-blue-800);
+
+  --pigeon-pedestal: var(--p-amber-100);
+  --pigeon-pedestal-edge: var(--p-amber-300);
+
+  /* Unified Button Pair (taste-skill system.md: 1 primary fill, 1 secondary outline) */
+  --btn-primary-bg: var(--p-blue-800);
+  --btn-primary-hover: var(--p-blue-850);
+  --btn-primary-fg: var(--p-white);
+  --btn-secondary-bg: var(--p-white);
+  --btn-secondary-hover: var(--p-paper-100);
+  --btn-secondary-fg: var(--p-ink-light);
+  --btn-secondary-border: var(--p-paper-200);
+
+  /* Hover-Only Soft Card Elevation (No Blurred Shadow at Rest) */
+  --shadow-hover: 0 10px 24px rgba(22, 27, 36, 0.08);
+  --frag-shadow: 0 8px 20px rgba(22, 27, 36, 0.1);
+
+  /* Semantic Status Pairs (All >= 7:1 AAA) */
+  --status-ok-bg: var(--p-emerald-50);
+  --status-ok-fg: var(--p-emerald-800);
+  --status-ok-border: var(--p-emerald-200);
+
+  --status-warn-bg: var(--p-amber-50);
+  --status-warn-fg: var(--p-amber-850);
+  --status-warn-border: var(--p-amber-300);
+
+  --status-burn-bg: var(--p-burn-50);
+  --status-burn-fg: var(--p-burn-850);
+  --status-burn-border: var(--p-burn-300);
+
+  /* Lit Panel & UI Fragment Tokens */
+  --panel-sky: linear-gradient(155deg, var(--p-lit-sky-a) 0%, var(--p-lit-sky-b) 100%);
+  --panel-sand: linear-gradient(155deg, var(--p-lit-sand-a) 0%, var(--p-lit-sand-b) 100%);
+  --panel-sage: linear-gradient(155deg, var(--p-lit-sage-a) 0%, var(--p-lit-sage-b) 100%);
+  --panel-stone: linear-gradient(155deg, var(--p-lit-stone-a) 0%, var(--p-lit-stone-b) 100%);
+
+  --frag-bg: var(--p-white);
+  --frag-subtle: var(--p-paper-50);
+  --frag-ink: var(--p-ink-light);
+  --frag-muted: var(--p-slate-650);
+  --frag-border: rgba(22, 27, 36, 0.12);
+
+  /* Chat Simulator Bubbles */
+  --bubble-mine-bg: var(--p-blue-50);
+  --bubble-mine-edge: var(--p-blue-200);
+  --bubble-mine-fg: var(--p-ink-mine);
+  --bubble-theirs-bg: var(--p-white);
+  --bubble-theirs-edge: var(--p-paper-200);
+  --bubble-theirs-fg: var(--p-ink-light);
+}
+
+/* --- Layer 2 & 3: Dark Evening Grade Semantic + Component Tokens --- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg-canvas: var(--p-slate-950);
+    --bg-surface: var(--p-slate-900);
+    --card-bg: var(--p-slate-850);
+    --card-alt: var(--p-slate-800);
+    --code-bg: var(--p-slate-850);
+    --code-fg: var(--p-ink-dark);
+
+    --text-primary: var(--p-ink-dark);
+    --text-secondary: var(--p-slate-300);
+    --text-accent: var(--p-blue-250);
+
+    --hairline: rgba(241, 245, 250, 0.12);
+    --hairline-strong: rgba(241, 245, 250, 0.24);
+    --border-subtle: var(--p-slate-750);
+    --focus-ring: var(--p-blue-250);
+
+    --pigeon-pedestal: var(--p-slate-800);
+    --pigeon-pedestal-edge: var(--p-slate-750);
+
+    --btn-primary-bg: var(--p-blue-350);
+    --btn-primary-hover: var(--p-blue-250);
+    --btn-primary-fg: var(--p-blue-950);
+    --btn-secondary-bg: var(--p-slate-850);
+    --btn-secondary-hover: var(--p-slate-800);
+    --btn-secondary-fg: var(--p-ink-dark);
+    --btn-secondary-border: var(--p-slate-750);
+
+    --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.42);
+    --frag-shadow: 0 10px 24px rgba(9, 11, 15, 0.22);
+
+    --status-ok-bg: var(--p-emerald-950);
+    --status-ok-fg: var(--p-emerald-300);
+    --status-ok-border: var(--p-emerald-800);
+
+    --status-warn-bg: var(--p-amber-950);
+    --status-warn-fg: var(--p-amber-200);
+    --status-warn-border: var(--p-amber-850);
+
+    --status-burn-bg: var(--p-burn-950);
+    --status-burn-fg: var(--p-burn-200);
+    --status-burn-border: var(--p-burn-850);
+
+    /* Lit Panels Stay Daylight-Lit in Dark Mode (taste-skill cards.md: x.ai pattern) */
+    --panel-sky: linear-gradient(155deg, var(--p-lit-sky-a) 0%, var(--p-lit-sky-b) 100%);
+    --panel-sand: linear-gradient(155deg, var(--p-lit-sand-a) 0%, var(--p-lit-sand-b) 100%);
+    --panel-sage: linear-gradient(155deg, var(--p-lit-sage-a) 0%, var(--p-lit-sage-b) 100%);
+    --panel-stone: linear-gradient(155deg, var(--p-lit-stone-a) 0%, var(--p-lit-stone-b) 100%);
+
+    --frag-bg: var(--p-slate-850);
+    --frag-subtle: var(--p-slate-800);
+    --frag-ink: var(--p-ink-dark);
+    --frag-muted: var(--p-slate-300);
+    --frag-border: rgba(241, 245, 250, 0.14);
+
+    --bubble-mine-bg: var(--p-blue-950);
+    --bubble-mine-edge: var(--p-blue-800);
+    --bubble-mine-fg: var(--p-ink-dark);
+    --bubble-theirs-bg: var(--p-slate-800);
+    --bubble-theirs-edge: var(--p-slate-750);
+    --bubble-theirs-fg: var(--p-ink-dark);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-canvas: var(--p-slate-950);
+  --bg-surface: var(--p-slate-900);
+  --card-bg: var(--p-slate-850);
+  --card-alt: var(--p-slate-800);
+  --code-bg: var(--p-slate-850);
+  --code-fg: var(--p-ink-dark);
+
+  --text-primary: var(--p-ink-dark);
+  --text-secondary: var(--p-slate-300);
+  --text-accent: var(--p-blue-250);
+
+  --hairline: rgba(241, 245, 250, 0.12);
+  --hairline-strong: rgba(241, 245, 250, 0.24);
+  --border-subtle: var(--p-slate-750);
+  --focus-ring: var(--p-blue-250);
+
+  --pigeon-pedestal: var(--p-slate-800);
+  --pigeon-pedestal-edge: var(--p-slate-750);
+
+  --btn-primary-bg: var(--p-blue-350);
+  --btn-primary-hover: var(--p-blue-250);
+  --btn-primary-fg: var(--p-blue-950);
+  --btn-secondary-bg: var(--p-slate-850);
+  --btn-secondary-hover: var(--p-slate-800);
+  --btn-secondary-fg: var(--p-ink-dark);
+  --btn-secondary-border: var(--p-slate-750);
+
+  --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.42);
+  --frag-shadow: 0 10px 24px rgba(9, 11, 15, 0.22);
+
+  --status-ok-bg: var(--p-emerald-950);
+  --status-ok-fg: var(--p-emerald-300);
+  --status-ok-border: var(--p-emerald-800);
+
+  --status-warn-bg: var(--p-amber-950);
+  --status-warn-fg: var(--p-amber-200);
+  --status-warn-border: var(--p-amber-850);
+
+  --status-burn-bg: var(--p-burn-950);
+  --status-burn-fg: var(--p-burn-200);
+  --status-burn-border: var(--p-burn-850);
+
+  --panel-sky: linear-gradient(155deg, var(--p-lit-sky-a) 0%, var(--p-lit-sky-b) 100%);
+  --panel-sand: linear-gradient(155deg, var(--p-lit-sand-a) 0%, var(--p-lit-sand-b) 100%);
+  --panel-sage: linear-gradient(155deg, var(--p-lit-sage-a) 0%, var(--p-lit-sage-b) 100%);
+  --panel-stone: linear-gradient(155deg, var(--p-lit-stone-a) 0%, var(--p-lit-stone-b) 100%);
+
+  --frag-bg: var(--p-slate-850);
+  --frag-subtle: var(--p-slate-800);
+  --frag-ink: var(--p-ink-dark);
+  --frag-muted: var(--p-slate-300);
+  --frag-border: rgba(241, 245, 250, 0.14);
+
+  --bubble-mine-bg: var(--p-blue-950);
+  --bubble-mine-edge: var(--p-blue-800);
+  --bubble-mine-fg: var(--p-ink-dark);
+  --bubble-theirs-bg: var(--p-slate-800);
+  --bubble-theirs-edge: var(--p-slate-750);
+  --bubble-theirs-fg: var(--p-ink-dark);
+}

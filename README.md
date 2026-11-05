@@ -17,7 +17,7 @@ No server, no account. Chats stay in memory unless you choose to keep them.
 [![ci](https://github.com/gnoyx2/Intragram/actions/workflows/ci.yml/badge.svg)](https://github.com/gnoyx2/Intragram/actions/workflows/ci.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**[Downloads / 다운로드](https://github.com/gnoyx2/Intragram/releases)** · [Install](#install) · [설치 안내](#설치)
+**[Website / 공식 페이지](https://gnoyx2.github.io/Intragram/)** · **[Downloads / 다운로드](https://github.com/gnoyx2/Intragram/releases)** · [Install](#install) · [설치 안내](#설치)
 
 [English](#english) · [한국어](#한국어)
 
