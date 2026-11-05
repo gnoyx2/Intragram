@@ -1,5 +1,11 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/readme/icon-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/readme/icon-light.png">
+  <img src="docs/readme/icon-light.png" alt="Intragram app icon" width="96" height="96">
+</picture>
+
 # Intragram
 
 Peer-to-peer messenger for devices on the same network.<br>
@@ -23,7 +29,7 @@ No server, no account. Chats stay in memory unless you choose to keep them.
 
 Intragram is a messenger for phones, tablets and computers on the same Wi-Fi or LAN. The apps find each other with mDNS and connect directly, so there is no server, no sign-up and no phone number. Every socket the app opens has to go to a private address, and anything else is refused. Chats are kept in memory and reach the disk only if you turn on the local vault. People who don't have the app can join from a browser by scanning a QR code.
 
-The name is *intranet* plus *-gram*. Intragram is not affiliated with Instagram, Telegram or Meta.
+The name is *intranet* plus *-gram*, and the mascot is a carrier pigeon: messages go straight from one device to another on the local network without passing through an outside server. Intragram is not affiliated with Instagram, Telegram or Meta.
 
 [Status](#status) · [Features](#features) · [Why Intragram](#why-intragram) · [Install](#install) · [Troubleshooting](#troubleshooting) · [Build from source](#build-from-source) · [How it works](#how-it-works) · [Project structure](#project-structure) · [Development and CI](#development-and-ci) · [Security model](#security-model) · [Contributing](#contributing) · [Credits](#credits) · [License](#license)
 
@@ -72,6 +78,10 @@ Bug reports and questions go to Issues. Include your OS and device, the app vers
 - The iOS photo picker sends photos only, up to 10 at a time and 50 MiB in total. Send videos from the Files app.
 
 ### Why Intragram
+
+<p align="center">
+  <img src="docs/readme/p2p-pigeons.png" alt="Two carrier pigeons passing a sealed letter directly between each other" width="360">
+</p>
 
 A message to a colleague two meters away usually goes through a data center somewhere else and stays there. [LocalSend](https://github.com/localsend/localsend) solved this for files: same Wi-Fi, no cloud, no account. It sends files and one-off texts, though, not conversations. Intragram takes the same idea to chat. It does not talk to LocalSend apps, since discovery and protocol are different.
 
@@ -211,8 +221,10 @@ graph TD
 │   ├── features/            screens: home, chat, connect, portal, search, settings
 │   ├── l10n/                English and Korean strings
 │   ├── theme/               design tokens, color schemes, adaptive layout
-│   └── widgets/             shared widgets
-├── assets/web/              browser guest client (HTML, CSS, JavaScript, no external files)
+│   └── widgets/             shared widgets and carrier pigeon state illustrations
+├── assets/
+│   ├── illustrations/       carrier pigeon mascot and state cutouts (480x480 RGBA PNG)
+│   └── web/                 browser guest client (HTML, CSS, JavaScript, no external files)
 ├── test/                    unit and integration tests; test/ui for widgets, test/support for rigs
 ├── tool/                    line-count check, Node checks for the web client,
 │                            icon generation, Linux desktop helper test
@@ -270,7 +282,7 @@ A debug-signed Android APK is never attached to a release; it stays a workflow a
 | Link admission | `link_registry_pre_proof_test`, `link_registry_pending_cap_test`, `link_registry_admission_test` |
 | Evidence and credentials | `audit_*_test`, `delivery_receipt_test`, `org_credential*_test`, `room_integrity*_test` |
 | Vault and wipe | `vault_*_test`, `panic_*_test` |
-| Native configuration | `android_manifest_test`, `macos_release_entitlements_test` |
+| Native configuration and branding | `android_manifest_test`, `macos_release_entitlements_test`, `native_branding_test`, `illustrations_test` |
 | UI | `test/ui/`, one file per screen or behavior |
 
 ### Security model
@@ -321,7 +333,7 @@ MIT, see [LICENSE](LICENSE). The two files modified from LocalSend also carry th
 
 Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰는 메신저입니다. 앱끼리 mDNS로 서로를 찾아 직접 연결하므로 서버도, 가입도, 전화번호도 필요 없습니다. 앱이 여는 소켓은 모두 사설 주소로만 가야 하고, 그 밖의 주소는 거부합니다. 대화는 메모리에 두며, 로컬 보관소를 켰을 때만 디스크에 저장합니다. 앱이 없는 사람도 QR 코드를 찍어 브라우저로 들어올 수 있습니다.
 
-이름은 *intranet*과 *-gram*을 합친 것입니다. Intragram은 Instagram, Telegram, Meta와 관계가 없습니다.
+이름은 *intranet*과 *-gram*을 합친 것이고, 마스코트는 전서구입니다. 외부 서버를 거치지 않고 같은 네트워크 안의 기기끼리 직접 소식을 전한다는 뜻을 담았습니다. Intragram은 Instagram, Telegram, Meta와 관계가 없습니다.
 
 [현재 상태](#현재-상태) · [기능](#기능) · [왜 만들었나](#왜-만들었나) · [설치](#설치) · [문제 해결](#문제-해결) · [소스에서 빌드](#소스에서-빌드) · [동작 방식](#동작-방식) · [프로젝트 구조](#프로젝트-구조) · [개발과 CI](#개발과-ci) · [보안 모델](#보안-모델) · [기여](#기여) · [감사의 말](#감사의-말) · [라이선스](#라이선스)
 
@@ -370,6 +382,10 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
 - iOS 사진 선택기는 사진만 보냅니다. 한 번에 10장, 합계 50 MiB까지이고, 동영상은 파일 앱에서 보내면 됩니다.
 
 ### 왜 만들었나
+
+<p align="center">
+  <img src="docs/readme/p2p-pigeons.png" alt="봉인된 편지를 날개로 직접 건네는 두 마리 전서구" width="360">
+</p>
 
 2미터 옆에 앉은 동료에게 보낸 메시지도 보통은 먼 데이터센터를 거쳐 가고, 거기 남습니다. [LocalSend](https://github.com/localsend/localsend)는 같은 Wi-Fi 안에서 클라우드와 계정 없이 파일을 주고받게 해서 파일 전송에서는 이 문제를 풀었습니다. 다만 LocalSend가 다루는 건 파일과 한 번짜리 텍스트이고 대화는 아닙니다. Intragram은 같은 생각을 대화로 옮긴 것입니다. 기기 탐색과 프로토콜이 달라서 LocalSend 앱과는 통신하지 않습니다.
 
@@ -509,8 +525,10 @@ graph TD
 │   ├── features/            화면: home, chat, connect, portal, search, settings
 │   ├── l10n/                영어·한국어 문자열
 │   ├── theme/               디자인 토큰, 색 체계, 적응형 레이아웃
-│   └── widgets/             공용 위젯
-├── assets/web/              브라우저 게스트 클라이언트(HTML, CSS, JavaScript, 외부 파일 없음)
+│   └── widgets/             공용 위젯과 전서구 상태 일러스트
+├── assets/
+│   ├── illustrations/       전서구 마스코트와 상태별 컷아웃(480x480 RGBA PNG)
+│   └── web/                 브라우저 게스트 클라이언트(HTML, CSS, JavaScript, 외부 파일 없음)
 ├── test/                    단위·통합 테스트, test/ui는 위젯 테스트, test/support는 테스트 도구
 ├── tool/                    줄 수 검사, 웹 클라이언트 Node 검사, 아이콘 생성,
 │                            Linux 데스크톱 보조 코드 테스트
@@ -568,7 +586,7 @@ git diff --check
 | 연결 수락 | `link_registry_pre_proof_test`, `link_registry_pending_cap_test`, `link_registry_admission_test` |
 | 증적·자격 | `audit_*_test`, `delivery_receipt_test`, `org_credential*_test`, `room_integrity*_test` |
 | 보관소·소거 | `vault_*_test`, `panic_*_test` |
-| 네이티브 설정 | `android_manifest_test`, `macos_release_entitlements_test` |
+| 네이티브 설정·브랜딩 | `android_manifest_test`, `macos_release_entitlements_test`, `native_branding_test`, `illustrations_test` |
 | UI | `test/ui/`, 화면이나 동작마다 파일 하나 |
 
 ### 보안 모델
