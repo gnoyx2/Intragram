@@ -9,16 +9,28 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
     return AppBar(
       titleSpacing: AppSpacing.lg,
       toolbarHeight: AppType.toolbarHeight(context),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+      title: Row(
         children: [
-          const Text(kAppName, maxLines: 1, overflow: TextOverflow.ellipsis),
-          Text(
-            S.of(context).t('home.slogan'),
-            style: Theme.of(context).textTheme.bodySmall,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          const BrandPigeonIcon(size: 30),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  kAppName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  S.of(context).t('home.slogan'),
+                  style: Theme.of(context).textTheme.bodySmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ],
       ),

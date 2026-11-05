@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intragram/theme/app_theme.dart';
 import 'package:intragram/theme/tokens.dart';
 import 'empty_state_art.dart';
+import 'illustration.dart';
 
 class EmptyState extends StatelessWidget {
   const EmptyState({
@@ -21,12 +22,22 @@ class EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final chat = context.chat;
-    final painter = EmptyStateArtPainter(
-      art: art,
-      colorScheme: scheme,
-      chat: chat,
-    );
+    final illustration = art.illustration;
+    final Widget artwork;
+    if (illustration != null) {
+      artwork = Illustration(illustration, size: 136);
+    } else {
+      final painter = EmptyStateArtPainter(
+        art: art,
+        colorScheme: scheme,
+        chat: context.chat,
+      );
+      artwork = ExcludeSemantics(
+        child: RepaintBoundary(
+          child: CustomPaint(size: painter.preferredSize, painter: painter),
+        ),
+      );
+    }
     return Center(
       child: SingleChildScrollView(
         child: ConstrainedBox(
@@ -39,14 +50,7 @@ class EmptyState extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ExcludeSemantics(
-                    child: RepaintBoundary(
-                      child: CustomPaint(
-                        size: painter.preferredSize,
-                        painter: painter,
-                      ),
-                    ),
-                  ),
+                  artwork,
                   const SizedBox(height: AppSpacing.xxl),
                   ExcludeSemantics(
                     child: Text(

@@ -16,6 +16,7 @@ import 'package:intragram/store/vault.dart' show VaultSettings, kTextScales;
 import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/widgets/adaptive_dialog_action.dart';
 import 'package:intragram/widgets/boxed_list.dart';
+import 'package:intragram/widgets/illustration.dart';
 import 'package:intragram/widgets/readable_list.dart';
 
 part 'settings_app.dart';

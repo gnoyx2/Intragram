@@ -24,6 +24,8 @@ import 'network/server_controller.dart';
 import 'store/in_memory_store.dart';
 import 'store/vault.dart';
 import 'theme/app_theme.dart';
+import 'theme/tokens.dart';
+import 'widgets/illustration.dart';
 import 'widgets/keyboard_access.dart';
 import 'widgets/privacy_shield.dart';
 

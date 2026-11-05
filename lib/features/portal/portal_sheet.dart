@@ -9,6 +9,7 @@ import 'package:intragram/features/home/widgets/home_sections.dart'
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/network/server_controller.dart';
 import 'package:intragram/theme/tokens.dart';
+import 'package:intragram/widgets/illustration.dart';
 
 import 'portal_qr.dart';
 import 'portal_sheet_route.dart';
@@ -44,6 +45,8 @@ class PortalSheet extends ConsumerWidget {
 
     final fold = tabletopFold(context);
     final heading = <Widget>[
+      const Center(child: BrandPigeonIcon(size: 44)),
+      const SizedBox(height: AppSpacing.xs),
       Text(
         s.t('home.guestPortal'),
         style: Theme.of(context).textTheme.titleLarge,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intragram/core/app_settings.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/tokens.dart';
+import 'illustration.dart';
 
 // 카메라를 못 쓸 때(데스크톱, 권한 거부, 카메라 없음) 스캔 자리에 대안 경로 문구를 보여 줌. 권한 거부면 설정 열기를 붙임
 class CameraUnavailable extends StatelessWidget {
@@ -17,11 +18,13 @@ class CameraUnavailable extends StatelessWidget {
     return ColoredBox(
       color: Theme.of(context).colorScheme.surface,
       child: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppSpacing.xxl),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const Illustration(IllustrationName.cameraScan, size: 108),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 denied ? '${s.t('scan.cameraDenied')} $text' : text,
                 textAlign: TextAlign.center,

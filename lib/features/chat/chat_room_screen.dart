@@ -130,7 +130,7 @@ class _ChatRoomScreenState extends _ChatRoomScreenStateBase
       return Scaffold(
         appBar: AppBar(title: Text(s.t('common.backToHome'))),
         body: EmptyState(
-          art: EmptyStateArt.bubbles,
+          art: EmptyStateArt.ended,
           title: s.t('empty.endedTitle'),
           body: s.t('empty.endedBody'),
           action: FilledButton(

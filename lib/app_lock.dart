@@ -115,6 +115,18 @@ class _VaultCheckingScreen extends StatelessWidget {
   const _VaultCheckingScreen();
 
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: CircularProgressIndicator()));
+  Widget build(BuildContext context) => const Scaffold(
+    body: Center(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Illustration(IllustrationName.loadingHourglass, size: 108),
+            SizedBox(height: AppSpacing.lg),
+            CircularProgressIndicator(),
+          ],
+        ),
+      ),
+    ),
+  );
 }

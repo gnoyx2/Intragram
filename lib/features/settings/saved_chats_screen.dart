@@ -6,10 +6,12 @@ import 'package:intragram/features/chat/open_chat.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/store/models.dart';
 import 'package:intragram/store/vault.dart';
+import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/widgets/adaptive_dialog_action.dart';
 import 'package:intragram/widgets/boxed_list.dart';
 import 'package:intragram/widgets/empty_state.dart';
 import 'package:intragram/widgets/empty_state_art.dart';
+import 'package:intragram/widgets/illustration.dart';
 import 'package:intragram/widgets/readable_list.dart';
 
 // 라이브 스토어를 안 거치고 디스크 스냅샷을 직접 읽어서 지금 파일에 뭐가 남았는지 보여 줌
@@ -93,13 +95,24 @@ class _SavedChatsScreenState extends ConsumerState<SavedChatsScreen> {
         future: _future,
         builder: (context, snap) {
           if (!snap.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Illustration(IllustrationName.loadingHourglass, size: 108),
+                    SizedBox(height: AppSpacing.lg),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              ),
+            );
           }
           final conversations =
               snap.data?.conversations ?? const <Conversation>[];
           if (conversations.isEmpty) {
             return EmptyState(
-              art: EmptyStateArt.bubbles,
+              art: EmptyStateArt.vault,
               title: s.t('savedChats.emptyTitle'),
               body: s.t('savedChats.emptyBody'),
             );

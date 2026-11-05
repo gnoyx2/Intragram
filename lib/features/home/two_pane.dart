@@ -200,7 +200,7 @@ class _NoChatOpen extends StatelessWidget {
     final s = S.of(context);
     return Scaffold(
       body: EmptyState(
-        art: EmptyStateArt.bubbles,
+        art: EmptyStateArt.welcome,
         title: s.t('home.noChatOpenTitle'),
         body: s.t('home.noChatOpenBody'),
       ),

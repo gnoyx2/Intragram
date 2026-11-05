@@ -9,6 +9,7 @@ import 'package:intragram/features/settings/pin_dialog.dart'
     show kPinInputFormatters;
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/tokens.dart';
+import 'package:intragram/widgets/illustration.dart';
 
 // 맞는 PIN이면 아카이브를 열어 RAM에 올린 뒤 통과시킴. 틀리면 다시 입력하거나 새로 시작함 (파일은 그대로 두고 빈 세션)
 class PinGateScreen extends ConsumerStatefulWidget {
@@ -95,7 +96,12 @@ class _PinGateScreenState extends ConsumerState<PinGateScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const Icon(Icons.lock_outline, size: 40),
+                          const Center(
+                            child: Illustration(
+                              IllustrationName.pinLock,
+                              size: 96,
+                            ),
+                          ),
                           const SizedBox(height: AppSpacing.lg),
                           Text(
                             s.t('pinGate.title'),

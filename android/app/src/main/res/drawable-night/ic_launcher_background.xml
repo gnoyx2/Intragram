@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 다크 모드 아이콘 배경: iOS·macOS 다크 아이콘(AppIcon.icon)과 같은 색. 런처에 따라 무시될 수 있음 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#1E222B" />
+</shape>

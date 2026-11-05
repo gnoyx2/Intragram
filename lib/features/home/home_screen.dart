@@ -17,6 +17,7 @@ import 'package:intragram/features/search/search_screen.dart';
 import 'package:intragram/features/settings/settings_screen.dart';
 import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/theme/type_scale.dart';
+import 'package:intragram/widgets/illustration.dart';
 import 'package:intragram/widgets/readable_list.dart';
 import 'home_actions.dart';
 import 'widgets/conversation_tile.dart';

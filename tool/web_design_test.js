@@ -12,7 +12,8 @@ const icon = html.match(/<link\b[^>]*rel="icon"[^>]*href="([^"]+)"/)[1];
 assert.ok(icon.startsWith('data:image/svg+xml,'));
 const svg = decodeURIComponent(icon.slice('data:image/svg+xml,'.length));
 assert.match(svg, /viewBox="0 0 16 16"/);
-assert.deepEqual([...svg.matchAll(/<circle cx="(\d+)" cy="8" r="2"/g)].map(m => +m[1]), [4, 12]);
+assert.match(svg, /#fde79c/i);
+assert.match(svg, /prefers-color-scheme:\s*dark[^}]*#1e222b/i);
 assert.ok(!/<(?:image|script|foreignObject)\b|\bhref=/.test(svg), 'favicon must be self-contained');
 for (const [mode, color] of [['light', '#EEF2F6'], ['dark', '#10141B']]) {
   assert.ok(html.includes(`name="theme-color" content="${color}" media="(prefers-color-scheme: ${mode})"`));

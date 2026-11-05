@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 # macOS sips·Swift·Dart로 아이콘과 실행 화면 표시를 만듦.
-# 먼저 flutter test test/tool/icon_master.dart를 실행해야 함.
-# test/tool/icon_master.dart를 바꾸면 다시 실행해야 함.
+# 원본은 tool/icon_source.png 하나이고, 바꾸면 이 스크립트를 다시 실행함.
+# Android 배경색(ic_launcher_background, launch_mark_plate)은 마스터 스크립트가 출력한 배경색과 맞출 것
 set -euo pipefail
 cd "$(dirname "$0")/.."
+
+swift tool/make_icon_masters.swift tool/icon_source.png build/icon_master
+for size in 16 24 32; do
+  sips -z "$size" "$size" build/icon_master/master_windows.png \
+    --out "build/icon_master/small_$size.png" >/dev/null
+done
 
 MASTER=build/icon_master/master_full.png
 MASTER_MACOS=build/icon_master/master_macos.png
 MASTER_WINDOWS=build/icon_master/master_windows.png
+CUTOUT=build/icon_master/cutout.png
 FOREGROUND=build/icon_master/foreground.png
 MONOCHROME=build/icon_master/monochrome.png
 LAUNCH_MARK=build/icon_master/launch_mark.png
@@ -15,9 +22,9 @@ NOTIFICATION=build/icon_master/notification.png
 
 SMALL=(build/icon_master/small_16.png build/icon_master/small_24.png build/icon_master/small_32.png)
 
-for f in "$MASTER" "$MASTER_MACOS" "$MASTER_WINDOWS" "$FOREGROUND" "$MONOCHROME" "$LAUNCH_MARK" "$NOTIFICATION" "${SMALL[@]}"; do
+for f in "$MASTER" "$MASTER_MACOS" "$MASTER_WINDOWS" "$CUTOUT" "$FOREGROUND" "$MONOCHROME" "$LAUNCH_MARK" "$NOTIFICATION" "${SMALL[@]}"; do
   if [ ! -f "$f" ]; then
-    echo "Missing $f — run: flutter test test/tool/icon_master.dart" >&2
+    echo "Missing $f — check tool/make_icon_masters.swift" >&2
     exit 1
   fi
 done
@@ -25,7 +32,7 @@ done
 SRGB_PROFILE="/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 
 echo "== sRGB color-match masters =="
-for master in "$MASTER" "$MASTER_MACOS" "$MASTER_WINDOWS" "$FOREGROUND" "$MONOCHROME" "$LAUNCH_MARK" "${SMALL[@]}"; do
+for master in "$MASTER" "$MASTER_MACOS" "$MASTER_WINDOWS" "$CUTOUT" "$FOREGROUND" "$MONOCHROME" "$LAUNCH_MARK" "$NOTIFICATION" "${SMALL[@]}"; do
   sips --matchTo "$SRGB_PROFILE" "$master" >/dev/null
 done
 
@@ -61,7 +68,10 @@ for pair in mdpi:24 hdpi:36 xhdpi:48 xxhdpi:72 xxxhdpi:96; do
     --out "android/app/src/main/res/drawable-$density/ic_stat_intragram.png" >/dev/null
 done
 
-echo "== Linux hicolor icons (16~32 small mark, 48+ from the 512 master) =="
+echo "== Linux hicolor icons (512 master from macOS plate, 48~256 scaled, 16~32 small mark) =="
+# GNOME 앱 아이콘 격자의 판 비율(약 81%)이 macOS 템플릿과 같아서 macOS 마스터를 씀
+mkdir -p linux/icons/hicolor/512x512/apps
+sips -z 512 512 "$MASTER_MACOS" --out "linux/icons/hicolor/512x512/apps/intragram.png" >/dev/null
 for size in 16 24 32; do
   mkdir -p "linux/icons/hicolor/${size}x${size}/apps"
   cp "build/icon_master/small_$size.png" "linux/icons/hicolor/${size}x${size}/apps/intragram.png"
@@ -72,28 +82,12 @@ for size in 48 64 128 256; do
     --out "linux/icons/hicolor/${size}x${size}/apps/intragram.png" >/dev/null
 done
 
-echo "== iOS AppIcon (15 fixed slots, filenames unchanged) =="
-IOS_DIR="ios/Runner/Assets.xcassets/AppIcon.appiconset"
-for pair in \
-  "Icon-App-20x20@1x.png:20" "Icon-App-20x20@2x.png:40" "Icon-App-20x20@3x.png:60" \
-  "Icon-App-29x29@1x.png:29" "Icon-App-29x29@2x.png:58" "Icon-App-29x29@3x.png:87" \
-  "Icon-App-40x40@1x.png:40" "Icon-App-40x40@2x.png:80" "Icon-App-40x40@3x.png:120" \
-  "Icon-App-60x60@2x.png:120" "Icon-App-60x60@3x.png:180" \
-  "Icon-App-76x76@1x.png:76" "Icon-App-76x76@2x.png:152" \
-  "Icon-App-83.5x83.5@2x.png:167" "Icon-App-1024x1024@1x.png:1024"; do
-  name=${pair%%:*}; size=${pair##*:}
-  sips -z "$size" "$size" "$MASTER" --out "$IOS_DIR/$name" >/dev/null
-done
-swift tool/flatten_ios_icons.swift "$IOS_DIR"/*.png
-
-echo "== macOS AppIcon (7 fixed slots, filenames unchanged) =="
-# 16·32px는 Windows·Linux와 같은 작은 마크: 방패는 이 크기에서 흰 덩어리로 뭉개짐
-MACOS_DIR="macos/Runner/Assets.xcassets/AppIcon.appiconset"
-for size in 16 32; do
-  cp "build/icon_master/small_$size.png" "$MACOS_DIR/app_icon_$size.png"
-done
-for size in 64 128 256 512 1024; do
-  sips -z "$size" "$size" "$MASTER_MACOS" --out "$MACOS_DIR/app_icon_$size.png" >/dev/null
+echo "== iOS·macOS Icon Composer layer =="
+# Xcode가 AppIcon.icon 하나로 모든 버전의 아이콘을 만듦: 26 이상은 기본·다크·모노(투명·틴트),
+# 그 전 버전과 App Store용은 같은 파일에서 만든 대체 이미지. 배경색과 다크 배경색은 각 icon.json에 있음
+for dir in ios/Runner/AppIcon.icon macos/Runner/AppIcon.icon; do
+  mkdir -p "$dir/Assets"
+  cp "$CUTOUT" "$dir/Assets/pigeon.png"
 done
 
 echo "== Windows .ico source PNGs + pack =="
@@ -108,13 +102,8 @@ for size in 48 64 128 256; do
 done
 dart run tool/pack_ico.dart
 
-echo "== Linux icon =="
-# GNOME 앱 아이콘 격자의 판 비율(약 81%)이 macOS 템플릿과 같아서 macOS 마스터를 씀
-mkdir -p linux/icons/hicolor/512x512/apps
-sips -z 512 512 "$MASTER_MACOS" --out "linux/icons/hicolor/512x512/apps/intragram.png" >/dev/null
-
 echo "== iOS launch mark =="
-# 라이트 외형은 흰 바탕에서 밝은 마크가 보이지 않아 남색 판이 포함된 macOS 마스터를 쓰고, 다크 외형은 투명 마크를 씀
+# 라이트 외형은 둥근 판이 있는 macOS 마스터를, 다크 외형은 원형 실행 화면 마크를 씀
 LAUNCH_DIR="ios/Runner/Assets.xcassets/LaunchImage.imageset"
 for pair in ":168" "@2x:336" "@3x:504"; do
   suffix=${pair%%:*}; size=${pair##*:}

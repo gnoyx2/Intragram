@@ -43,23 +43,35 @@ void main() {
     }
   });
 
+  // iOS·macOS 앱 아이콘은 Icon Composer 파일 하나: 26 이상은 기본·다크·모노 모양,
+  // 그 전 버전은 Xcode가 같은 파일에서 만든 대체 이미지를 씀 (에셋 카탈로그 아이콘은 무시됨)
   for (final platform in ['ios', 'macos']) {
-    test('$platform icon catalog slots all have matching PNGs', () {
-      final base = '$platform/Runner/Assets.xcassets/AppIcon.appiconset';
-      final catalog = jsonDecode(
-        File('$base/Contents.json').readAsStringSync(),
-      );
-      for (final image in catalog['images'] as List) {
-        final size = double.parse((image['size'] as String).split('x').first);
-        final scale = int.parse((image['scale'] as String).replaceAll('x', ''));
-        _png(
-          '$base/${image['filename']}',
-          (size * scale).round(),
-          opaque: platform == 'ios',
-        );
+    test('$platform Icon Composer file has its layer and a dark fill', () {
+      final base = '$platform/Runner/AppIcon.icon';
+      final icon = jsonDecode(File('$base/icon.json').readAsStringSync());
+      final fills = icon['fill-specializations'] as List;
+      expect(fills.where((f) => f['appearance'] == 'dark'), hasLength(1));
+      for (final group in icon['groups'] as List) {
+        for (final layer in group['layers'] as List) {
+          _png('$base/Assets/${layer['image-name']}', 1024);
+        }
       }
+      expect(
+        File('$platform/Runner.xcodeproj/project.pbxproj').readAsStringSync(),
+        contains('AppIcon.icon in Resources'),
+      );
     });
   }
+
+  test('Android icon background switches in dark mode', () {
+    const res = 'android/app/src/main/res';
+    String color(String dir) => RegExp(r'#[0-9A-F]{6}')
+        .firstMatch(
+          File('$res/$dir/ic_launcher_background.xml').readAsStringSync(),
+        )!
+        .group(0)!;
+    expect(color('drawable'), isNot(color('drawable-night')));
+  });
 
   test('Windows ICO contains seven correctly sized PNG entries', () {
     final bytes = File(
@@ -122,8 +134,8 @@ void main() {
       }
     },
   );
-  // 밝은 마크는 흰 바탕에서 안 보임(대비 1.25:1): 라이트 실행 화면만 남색 판 위에 올리고 다크는 투명 마크 그대로
-  test('the light launch screen puts the mark on a navy plate', () {
+  // 라이트 실행 화면만 아이콘 배경색 판 위에 올리고 다크는 원형 마크 그대로
+  test('the light launch screen puts the mark on the icon-colored plate', () {
     const res = 'android/app/src/main/res';
     String read(String path) => File(path).readAsStringSync();
     for (final dir in ['drawable', 'drawable-v21']) {

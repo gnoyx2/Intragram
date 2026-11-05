@@ -3,15 +3,23 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'package:intragram/theme/app_theme.dart';
-import 'package:intragram/theme/tokens.dart';
+import 'illustration.dart';
 
-part 'empty_state_art/bubbles_art.dart';
-part 'empty_state_art/magnifier_art.dart';
+enum EmptyStateArt { radar, bubbles, welcome, vault, ended, invite, magnifier }
 
-enum EmptyStateArt { radar, bubbles, magnifier }
+extension EmptyStateArtIllustration on EmptyStateArt {
+  IllustrationName? get illustration => switch (this) {
+    EmptyStateArt.radar => null,
+    EmptyStateArt.bubbles => IllustrationName.chatBubbles,
+    EmptyStateArt.welcome => IllustrationName.welcomeWave,
+    EmptyStateArt.vault => IllustrationName.savedVault,
+    EmptyStateArt.ended => IllustrationName.chatEnded,
+    EmptyStateArt.invite => IllustrationName.addPeople,
+    EmptyStateArt.magnifier => IllustrationName.searchLooking,
+  };
+}
 
-// 외부 SVG/이미지 패키지 없이 CustomPainter로 직접 그리는 벡터 일러스트
-// 설계 좌표(preferredSize)로 그린 뒤 실제 크기에 맞춰 늘림
+// 기기 탐색 중(radar) 애니메이션 스위프를 그리는 CustomPainter (나머지 빈 상태는 전서구 컷아웃 에셋을 씀)
 // motion을 주면 레이더가 그 값(0~1 반복)으로 스위프·펄스를 돌림. 위젯 리빌드 없이 다시 칠함
 class EmptyStateArtPainter extends CustomPainter {
   const EmptyStateArtPainter({
@@ -27,28 +35,15 @@ class EmptyStateArtPainter extends CustomPainter {
   final Animation<double>? motion;
 
   static const Size radarSize = Size(160, 160);
-  static const Size bubblesSize = Size(168, 128);
-  static const Size magnifierSize = Size(148, 148);
 
-  Size get preferredSize => switch (art) {
-    EmptyStateArt.radar => radarSize,
-    EmptyStateArt.bubbles => bubblesSize,
-    EmptyStateArt.magnifier => magnifierSize,
-  };
+  Size get preferredSize => radarSize;
 
   @override
   void paint(Canvas canvas, Size size) {
     final design = preferredSize;
     canvas.save();
     canvas.scale(size.width / design.width, size.height / design.height);
-    switch (art) {
-      case EmptyStateArt.radar:
-        _paintRadar(canvas, motion?.value ?? 0.18);
-      case EmptyStateArt.bubbles:
-        _paintBubbles(canvas, colorScheme, chat);
-      case EmptyStateArt.magnifier:
-        _paintMagnifier(canvas, colorScheme);
-    }
+    _paintRadar(canvas, motion?.value ?? 0.18);
     canvas.restore();
   }
 

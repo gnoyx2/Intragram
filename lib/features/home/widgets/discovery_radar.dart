@@ -7,8 +7,9 @@ import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/app_theme.dart';
 import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/widgets/empty_state_art.dart';
+import 'package:intragram/widgets/illustration.dart';
 
-// '이 네트워크에서' 섹션이 빈 이유. 이유마다 문구·아이콘·보조 액션이 다름
+// '이 네트워크에서' 섹션이 빈 이유. 이유마다 문구·일러스트·보조 액션이 다름
 enum DiscoveryEmptyReason {
   searching,
   noDevices,
@@ -93,38 +94,32 @@ class _DiscoveryRadarState extends State<DiscoveryRadar>
       TargetPlatform.iOS,
       TargetPlatform.macOS,
     }.contains(Theme.of(context).platform);
-    final (icon, color, text) = switch (widget.reason) {
+    final (illustration, text) = switch (widget.reason) {
       DiscoveryEmptyReason.searching => (
-        Icons.wifi_tethering,
-        scheme.primary,
+        null,
         apple
             ? '${s.t('home.lookingForDevices')}\n'
                   '${s.t('home.localNetworkWhy')}'
             : s.t('home.lookingForDevices'),
       ),
       DiscoveryEmptyReason.noDevices => (
-        Icons.wifi_tethering_off,
-        scheme.onSurfaceVariant,
+        IllustrationName.radarEmpty,
         s.t('home.noDevicesFound'),
       ),
       DiscoveryEmptyReason.noWifi => (
-        Icons.wifi_off,
-        scheme.onSurfaceVariant,
+        IllustrationName.wifiOff,
         s.t('home.noWifi'),
       ),
       DiscoveryEmptyReason.notPrivate => (
-        Icons.public,
-        scheme.onSurfaceVariant,
+        IllustrationName.wifiOff,
         s.t('home.notPrivate'),
       ),
       DiscoveryEmptyReason.localNetworkDenied => (
-        Icons.lan_outlined,
-        scheme.onSurfaceVariant,
+        IllustrationName.wifiOff,
         s.t('server.localNetworkDeniedTitle'),
       ),
       DiscoveryEmptyReason.error => (
-        Icons.error_outline,
-        scheme.error,
+        IllustrationName.errorAlert,
         // Linux 탐색은 avahi-daemon(D-Bus)에 기대서, 멈췄다면 대개 데몬이 없음
         s.t(
           defaultTargetPlatform == TargetPlatform.linux
@@ -139,9 +134,9 @@ class _DiscoveryRadarState extends State<DiscoveryRadar>
         children: [
           SizedBox.square(
             dimension: 120,
-            child: ExcludeSemantics(
-              child: widget.reason == DiscoveryEmptyReason.searching
-                  ? RepaintBoundary(
+            child: illustration == null
+                ? ExcludeSemantics(
+                    child: RepaintBoundary(
                       child: CustomPaint(
                         painter: EmptyStateArtPainter(
                           art: EmptyStateArt.radar,
@@ -150,23 +145,9 @@ class _DiscoveryRadarState extends State<DiscoveryRadar>
                           motion: _controller,
                         ),
                       ),
-                    )
-                  : Center(
-                      child: Container(
-                        width: 64,
-                        height: 64,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: color.withValues(alpha: 0.10),
-                          border: Border.all(
-                            color: color.withValues(alpha: 0.28),
-                            width: AppBorder.hairline,
-                          ),
-                        ),
-                        child: Icon(icon, size: 28, color: color),
-                      ),
                     ),
-            ),
+                  )
+                : Center(child: Illustration(illustration, size: 112)),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(

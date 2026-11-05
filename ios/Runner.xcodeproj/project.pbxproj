@@ -20,6 +20,7 @@
 		EDEC38CA8EA6E89CFCDF4D2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6F6D4807F72710AEE58943A /* InfoPlist.strings */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
+		1F0E1C0A2A1B3C4D5E6F7A02 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 1F0E1C0A2A1B3C4D5E6F7A01 /* AppIcon.icon */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		B1A7CA121867399F5190089E /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A973AE6754120143394EEE5 /* Pods_RunnerTests.framework */; };
 		D0ACE93821F30D38F2CBEA64 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D998C31F3BEBFB2AC109B9 /* Pods_Runner.framework */; };
@@ -73,6 +74,7 @@
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97C146FB1CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1F0E1C0A2A1B3C4D5E6F7A01 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9FD352FAE97119ABED163ECC /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				A6F6D4807F72710AEE58943A /* InfoPlist.strings */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
+				1F0E1C0A2A1B3C4D5E6F7A01 /* AppIcon.icon */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
 				97C147021CF9000F007C117D /* Info.plist */,
 				A6E16B8D4F414E85994D3E22 /* PrivacyInfo.xcprivacy */,
@@ -293,6 +296,7 @@
 				A6E16B8D4F414E85994D3E21 /* PrivacyInfo.xcprivacy in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
+				1F0E1C0A2A1B3C4D5E6F7A02 /* AppIcon.icon in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				EDEC38CA8EA6E89CFCDF4D2E /* InfoPlist.strings in Resources */,
 			);

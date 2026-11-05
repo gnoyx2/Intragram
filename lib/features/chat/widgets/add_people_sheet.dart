@@ -66,7 +66,7 @@ class _AddPeopleSheetState extends ConsumerState<_AddPeopleSheet> {
           const SizedBox(height: AppSpacing.md),
           if (peers.isEmpty)
             EmptyState(
-              art: EmptyStateArt.bubbles,
+              art: EmptyStateArt.invite,
               title: S.of(context).t('empty.addPeopleTitle'),
               body: S.of(context).t('empty.addPeopleBody'),
             ),

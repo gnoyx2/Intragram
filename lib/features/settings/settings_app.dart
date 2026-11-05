@@ -30,8 +30,14 @@ class _AppSection extends StatelessWidget {
               leading: const Icon(Icons.description_outlined),
               title: Text(s.t('settings.licenses')),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () =>
-                  showLicensePage(context: context, applicationName: kAppName),
+              onTap: () => showLicensePage(
+                context: context,
+                applicationName: kAppName,
+                applicationIcon: const Padding(
+                  padding: EdgeInsets.only(top: AppSpacing.sm),
+                  child: BrandPigeonIcon(size: 48),
+                ),
+              ),
             ),
           ],
         ),
