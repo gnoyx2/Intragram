@@ -35,6 +35,10 @@ The name is *intranet* plus *-gram*, and the mascot is a carrier pigeon: message
 
 ### Status
 
+<p align="center">
+  <img src="docs/readme/01-status.png" alt="Carrier pigeon holding a release checklist clipboard" width="139" height="144">
+</p>
+
 Intragram is a release candidate (app 1.0.0, wire protocol 7). It builds for six platforms and includes a browser client, but no platform has passed the real-device checks in [DEVICE_QA.md](DEVICE_QA.md) yet, and the code has not had an independent security audit. Don't rely on it where a failure could put someone at risk.
 
 | Platform | Minimum version | Release build | Signing | Device QA |
@@ -51,6 +55,10 @@ CI runs the test suite and an Android debug build on every push, and builds the 
 Bug reports and questions go to Issues. Include your OS and device, the app version and the steps to reproduce, and remove message text, IP addresses, keys, tokens and PINs from logs and screenshots. Security problems go through the private route in [SECURITY.md](SECURITY.md), not an issue.
 
 ### Features
+
+<p align="center">
+  <img src="docs/readme/02-features.png" alt="Carrier pigeon hugging a rounded chat bubble" width="160" height="168">
+</p>
 
 - 1:1 chats are end-to-end encrypted with X25519 and ChaCha20-Poly1305. Both screens show the same 6-digit code. Read it out loud once to make sure nobody is sitting in the middle; until then the chat is marked unverified.
 - Group rooms use one app as the hub. Each member's link to the host is encrypted, but the host decrypts every message to relay it, so a room is encrypted hop by hop, not end to end. Room files go directly between devices without encryption, and the receiver checks them against a SHA-256 that arrives over the encrypted link. Every room shows a banner that says this.
@@ -80,8 +88,9 @@ Bug reports and questions go to Issues. Include your OS and device, the app vers
 ### Why Intragram
 
 <p align="center">
-  <img src="docs/readme/p2p-pigeons.png" alt="Two carrier pigeons passing a sealed letter directly between each other" width="360">
+  <img src="docs/readme/03-why-intragram.png" alt="Two carrier pigeons passing a locked letter directly between each other" width="322" height="168">
 </p>
+
 
 A message to a colleague two meters away usually goes through a data center somewhere else and stays there. [LocalSend](https://github.com/localsend/localsend) solved this for files: same Wi-Fi, no cloud, no account. It sends files and one-off texts, though, not conversations. Intragram takes the same idea to chat. It does not talk to LocalSend apps, since discovery and protocol are different.
 
@@ -99,6 +108,10 @@ A message to a colleague two meters away usually goes through a data center some
 It fits places where the internet is blocked, slow or unwanted: an internal network with no outside access, a factory floor, a ship or test site, a classroom or lab full of mixed laptops and phones, or a meeting where a few people need a room for an hour without trading phone numbers.
 
 ### Install
+
+<p align="center">
+  <img src="docs/readme/04-install.png" alt="Carrier pigeon hugging an app download parcel box" width="151" height="160">
+</p>
 
 **[Open Downloads (GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**, select a version and expand **Assets**. [v1.0.0-rc.1](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.0-rc.1) is available as a **testing pre-release**. Automated tests and artifact verification passed, but **real-device QA has not been completed on any platform**. Store and TestFlight links will be added when available.
 
@@ -126,6 +139,10 @@ The vault (`vault.json`) and a remembered display name (`identity.json`) live in
 
 ### Troubleshooting
 
+<p align="center">
+  <img src="docs/readme/05-troubleshooting.png" alt="Carrier pigeon holding a question-mark card" width="123" height="128">
+</p>
+
 - **The other device doesn't show up.** Both devices have to be on the same Wi-Fi. Guest networks and most office, school and café Wi-Fi keep devices apart (AP isolation), so turn on a phone hotspot and join it with both. You can also use *Connect by IP* with the address on the other device's home screen, or scan its device code.
 - **"This Wi-Fi can't be used for Intragram".** The network gave the device a public or carrier (`100.64.x.x`) address, and Intragram only talks over private addresses. Use a phone hotspot.
 - **An iPhone, iPad or Mac finds nothing.** Turn on Local Network access for Intragram: *Settings › Intragram* on iOS and iPadOS, *System Settings › Privacy & Security › Local Network* on macOS.
@@ -135,6 +152,10 @@ The vault (`vault.json`) and a remembered display name (`identity.json`) live in
 - **Microphone or camera access was denied.** Tap *Open Settings* in the app's notice, or allow it in the system settings.
 
 ### Build from source
+
+<p align="center">
+  <img src="docs/readme/06-build.png" alt="Carrier pigeon holding a wrench" width="147" height="144">
+</p>
 
 You need:
 
@@ -161,6 +182,10 @@ flutter run     # pick a device, then start Intragram on a second device on the 
 Signing, store uploads and the release workflow are in [RELEASING.md](RELEASING.md).
 
 ### How it works
+
+<p align="center">
+  <img src="docs/readme/07-how-it-works.png" alt="Carrier pigeon looking through binoculars to discover nearby peers" width="126" height="124">
+</p>
 
 ```mermaid
 graph TD
@@ -202,6 +227,10 @@ graph TD
 3. **One codebase.** One Flutter codebase for iOS, iPadOS, Android, macOS, Windows and Linux, plus a browser client in plain HTML, CSS and JavaScript that the app serves itself.
 
 ### Project structure
+
+<p align="center">
+  <img src="docs/readme/08-project-structure.png" alt="Carrier pigeon holding an organized project folder" width="123" height="124">
+</p>
 
 ```text
 .
@@ -245,6 +274,10 @@ The native side is small. Dart talks to it over a few channels (`intragram/priva
 
 ### Development and CI
 
+<p align="center">
+  <img src="docs/readme/09-development-ci.png" alt="Carrier pigeon inspecting code through a magnifying glass" width="138" height="144">
+</p>
+
 Run the same checks as CI from the repository root:
 
 ```bash
@@ -287,6 +320,10 @@ A debug-signed Android APK is never attached to a release; it stays a workflow a
 
 ### Security model
 
+<p align="center">
+  <img src="docs/readme/10-security-model.png" alt="Carrier pigeon holding a padlock" width="150" height="160">
+</p>
+
 What it is built to defend against:
 
 - **Other devices on the LAN.** A 1:1 link is end-to-end encrypted and the peer's ID is proven by a signature, so another device can't read the chat, rejoin a room as someone else or answer an invite meant for another device. Comparing the 6-digit code catches a relayed handshake. If the same device reconnects while both apps are still running, it has to prove the same identity key, so a code you already confirmed stays confirmed. After either app restarts, compare again.
@@ -306,6 +343,10 @@ The full threat model and the reporting policy are in [SECURITY.md](SECURITY.md)
 
 ### Contributing
 
+<p align="center">
+  <img src="docs/readme/11-contributing.png" alt="Carrier pigeon waving a friendly wing" width="140" height="140">
+</p>
+
 Pull requests are welcome. The codebase stays small on purpose: no code generation, and each file should read top to bottom in one sitting. Good first issues: more file-kind icons, better transfer stats, a Windows Explorer polish pass, tests for link-teardown races.
 
 Rules for every pull request:
@@ -321,9 +362,17 @@ Signing material never goes in the repository. [CONTRIBUTING.md](CONTRIBUTING.md
 
 ### Credits
 
+<p align="center">
+  <img src="docs/readme/12-credits.png" alt="Carrier pigeon hugging a thank-you letter sealed with a heart" width="99" height="104">
+</p>
+
 Thanks to [LocalSend](https://github.com/localsend/localsend). The "same Wi-Fi, no cloud, no account" idea behind Intragram came from using it. Two small parts are modified from its Apache-2.0 source: the file-type and icon mapping (`lib/core/file_kind.dart`) and the time-left calculation (`_formatEta` in `lib/features/chat/transfer_tile/received_actions.dart`). The open-file and show-in-folder flow (`lib/core/native_open.dart`) only borrows the idea and is written independently. If all you need is a good cross-platform file sender, use LocalSend.
 
 ### License
+
+<p align="center">
+  <img src="docs/readme/13-license.png" alt="Carrier pigeon holding a sealed license scroll" width="99" height="104">
+</p>
 
 MIT, see [LICENSE](LICENSE). The two files modified from LocalSend also carry the Apache License 2.0, as their SPDX headers say. Third-party licenses are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), and the app shows all of them under *Settings › App › Open-source licenses*.
 
@@ -338,6 +387,10 @@ Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰�
 [현재 상태](#현재-상태) · [기능](#기능) · [왜 만들었나](#왜-만들었나) · [설치](#설치) · [문제 해결](#문제-해결) · [소스에서 빌드](#소스에서-빌드) · [동작 방식](#동작-방식) · [프로젝트 구조](#프로젝트-구조) · [개발과 CI](#개발과-ci) · [보안 모델](#보안-모델) · [기여](#기여) · [감사의 말](#감사의-말) · [라이선스](#라이선스)
 
 ### 현재 상태
+
+<p align="center">
+  <img src="docs/readme/01-status.png" alt="릴리스 점검표 클립보드를 안고 있는 전서구" width="139" height="144">
+</p>
 
 릴리스 후보 단계입니다(앱 1.0.0, 와이어 프로토콜 7). 여섯 개 플랫폼용으로 빌드되고 브라우저 클라이언트도 들어 있지만, [DEVICE_QA.md](DEVICE_QA.md)의 실기기 점검을 통과한 플랫폼은 아직 없고 외부 보안 감사도 받지 않았습니다. 문제가 생겼을 때 누군가 위험해질 수 있는 곳에서는 쓰지 마세요.
 
@@ -355,6 +408,10 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
 버그와 질문은 Issues에 남겨 주세요. OS와 기기, 앱 버전, 재현 순서를 적고, 로그와 스크린샷에서 대화 내용, IP 주소, 키, 토큰, PIN은 지워 주세요. 보안 문제는 이슈가 아니라 [SECURITY.md](SECURITY.md)의 비공개 경로로 알려 주세요.
 
 ### 기능
+
+<p align="center">
+  <img src="docs/readme/02-features.png" alt="말풍선을 안고 웃는 전서구" width="160" height="168">
+</p>
 
 - 1:1 대화는 X25519와 ChaCha20-Poly1305로 종단 간 암호화됩니다. 양쪽 화면에 같은 6자리 코드가 뜹니다. 한 번 소리 내어 맞춰 보면 중간에 누가 끼어들지 않았는지 확인할 수 있고, 맞춰 보기 전까지는 대화에 미확인 표시가 붙습니다.
 - 그룹 방은 앱 하나가 허브가 됩니다. 멤버와 호스트 사이의 연결은 각각 암호화되지만 호스트가 메시지를 복호화해서 중계하므로, 종단 간이 아니라 구간별(hop-by-hop) 암호화입니다. 방에서 보낸 파일은 암호화 없이 기기끼리 바로 오가고, 받는 쪽은 암호화된 연결로 먼저 받은 SHA-256으로 내용을 확인합니다. 방마다 위쪽 배너에 이 사실이 표시됩니다.
@@ -384,8 +441,9 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
 ### 왜 만들었나
 
 <p align="center">
-  <img src="docs/readme/p2p-pigeons.png" alt="봉인된 편지를 날개로 직접 건네는 두 마리 전서구" width="360">
+  <img src="docs/readme/03-why-intragram.png" alt="잠긴 편지를 날개로 직접 건네는 두 마리 전서구" width="322" height="168">
 </p>
+
 
 2미터 옆에 앉은 동료에게 보낸 메시지도 보통은 먼 데이터센터를 거쳐 가고, 거기 남습니다. [LocalSend](https://github.com/localsend/localsend)는 같은 Wi-Fi 안에서 클라우드와 계정 없이 파일을 주고받게 해서 파일 전송에서는 이 문제를 풀었습니다. 다만 LocalSend가 다루는 건 파일과 한 번짜리 텍스트이고 대화는 아닙니다. Intragram은 같은 생각을 대화로 옮긴 것입니다. 기기 탐색과 프로토콜이 달라서 LocalSend 앱과는 통신하지 않습니다.
 
@@ -403,6 +461,10 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
 인터넷이 막혔거나 느리거나 쓰고 싶지 않은 곳에 맞습니다. 외부 접속이 없는 사내망, 공장, 선박이나 시험장, 노트북과 폰이 섞인 강의실과 실습실, 전화번호를 주고받지 않고 한 시간쯤 대화방이 필요한 모임 같은 곳입니다.
 
 ### 설치
+
+<p align="center">
+  <img src="docs/readme/04-install.png" alt="설치 패키지 상자를 안고 있는 전서구" width="151" height="160">
+</p>
 
 **[다운로드 페이지(GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**에서 버전을 고른 뒤 **Assets**를 펼치세요. [v1.0.0-rc.1](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.0-rc.1)을 **테스트용 프리릴리스**로 제공합니다. 자동 테스트와 빌드 파일 검증은 통과했지만, **모든 플랫폼의 실기기 QA는 아직 미완료**입니다. 스토어와 TestFlight 링크는 배포가 준비되면 추가합니다.
 
@@ -430,6 +492,10 @@ Intragram은 사설 주소에서만 연결을 받고 겁니다. 방화벽 팝업
 
 ### 문제 해결
 
+<p align="center">
+  <img src="docs/readme/05-troubleshooting.png" alt="물음표 카드를 들고 있는 전서구" width="123" height="128">
+</p>
+
 - **상대 기기가 안 보입니다.** 두 기기가 같은 Wi-Fi에 있어야 합니다. 게스트 네트워크와 대부분의 회사·학교·카페 Wi-Fi는 기기끼리 연결을 막으므로(AP isolation), 폰 핫스팟을 켜고 두 기기를 거기에 연결하세요. 상대 기기 홈 화면에 보이는 주소로 *IP로 연결*을 쓰거나 기기 코드를 스캔해도 됩니다.
 - **"이 Wi-Fi에서는 Intragram을 쓸 수 없어요"가 뜹니다.** 네트워크가 기기에 공인 주소나 통신사 주소(`100.64.x.x`)를 줬고, Intragram은 사설 주소로만 통신합니다. 폰 핫스팟을 쓰세요.
 - **iPhone, iPad, Mac에서 아무도 안 보입니다.** Intragram의 로컬 네트워크 접근을 켜세요. iOS와 iPadOS는 *설정 › Intragram*, macOS는 *시스템 설정 › 개인정보 보호 및 보안 › 로컬 네트워크*에 있습니다.
@@ -439,6 +505,10 @@ Intragram은 사설 주소에서만 연결을 받고 겁니다. 방화벽 팝업
 - **마이크나 카메라 권한을 거부했습니다.** 앱 안내의 *설정 열기*를 누르거나 시스템 설정에서 켜세요.
 
 ### 소스에서 빌드
+
+<p align="center">
+  <img src="docs/readme/06-build.png" alt="렌치를 들고 있는 전서구" width="147" height="144">
+</p>
 
 필요한 것:
 
@@ -465,6 +535,10 @@ flutter run     # 기기를 고른 뒤, 같은 Wi-Fi의 다른 기기에서도 I
 서명, 스토어 업로드, 릴리스 워크플로는 [RELEASING.md](RELEASING.md)에 있습니다.
 
 ### 동작 방식
+
+<p align="center">
+  <img src="docs/readme/07-how-it-works.png" alt="쌍안경으로 주변 기기를 찾는 전서구" width="126" height="124">
+</p>
 
 ```mermaid
 graph TD
@@ -506,6 +580,10 @@ graph TD
 3. **하나의 코드베이스.** Flutter 코드베이스 하나로 iOS, iPadOS, Android, macOS, Windows, Linux를 대상으로 하고, 앱이 직접 내려주는 브라우저 클라이언트는 평범한 HTML, CSS, JavaScript로 되어 있습니다.
 
 ### 프로젝트 구조
+
+<p align="center">
+  <img src="docs/readme/08-project-structure.png" alt="정리된 프로젝트 폴더를 안고 있는 전서구" width="123" height="124">
+</p>
 
 ```text
 .
@@ -549,6 +627,10 @@ graph TD
 
 ### 개발과 CI
 
+<p align="center">
+  <img src="docs/readme/09-development-ci.png" alt="돋보기로 코드와 테스트를 살피는 전서구" width="138" height="144">
+</p>
+
 저장소 루트에서 CI와 같은 검사를 돌립니다.
 
 ```bash
@@ -591,6 +673,10 @@ git diff --check
 
 ### 보안 모델
 
+<p align="center">
+  <img src="docs/readme/10-security-model.png" alt="자물쇠를 안고 있는 전서구" width="150" height="160">
+</p>
+
 막으려는 것:
 
 - **같은 LAN의 다른 기기.** 1:1 연결은 종단 간 암호화되고 상대의 ID는 서명으로 증명되므로, 다른 기기가 대화를 읽거나, 다른 멤버인 척 방에 다시 들어오거나, 남에게 온 초대에 대신 답할 수 없습니다. 6자리 코드를 맞춰 보면 중계된 핸드셰이크를 잡아낼 수 있습니다. 두 앱이 켜진 채로 같은 기기가 다시 연결되면 같은 신원 키를 증명해야 하므로 이미 확인한 코드는 확인된 채로 남습니다. 어느 쪽이든 앱을 다시 켰다면 코드를 다시 맞춰 보세요.
@@ -610,6 +696,10 @@ git diff --check
 
 ### 기여
 
+<p align="center">
+  <img src="docs/readme/11-contributing.png" alt="날개를 흔들어 인사하는 전서구" width="140" height="140">
+</p>
+
 PR은 언제든 환영합니다. 코드는 일부러 작게 유지합니다. 코드 생성을 쓰지 않고, 파일 하나를 한자리에서 위에서 아래로 읽을 수 있게 둡니다. 처음 손대기 좋은 주제는 파일 종류 아이콘 추가, 전송 통계 개선, Windows 탐색기 연동 다듬기, 연결 종료 경쟁 상태 테스트입니다.
 
 모든 PR에 적용되는 규칙:
@@ -625,8 +715,16 @@ PR은 언제든 환영합니다. 코드는 일부러 작게 유지합니다. 코
 
 ### 감사의 말
 
+<p align="center">
+  <img src="docs/readme/12-credits.png" alt="하트 봉인 감사 편지를 안고 있는 전서구" width="99" height="104">
+</p>
+
 [LocalSend](https://github.com/localsend/localsend)에 감사드립니다. "같은 Wi-Fi, 클라우드 없음, 계정 없음"이라는 Intragram의 출발점은 LocalSend를 쓰면서 나왔습니다. 작은 조각 두 개는 LocalSend의 Apache-2.0 소스를 가져와 고친 것입니다. 파일 종류·아이콘 매핑(`lib/core/file_kind.dart`)과 남은 시간 계산(`lib/features/chat/transfer_tile/received_actions.dart`의 `_formatEta`)입니다. 받은 파일 열기와 폴더에서 보기(`lib/core/native_open.dart`)는 아이디어만 빌려 와 따로 작성했습니다. 크로스플랫폼 파일 전송 도구만 필요하다면 LocalSend를 쓰세요.
 
 ### 라이선스
+
+<p align="center">
+  <img src="docs/readme/13-license.png" alt="봉인된 라이선스 두루마리를 안고 있는 전서구" width="99" height="104">
+</p>
 
 MIT 라이선스입니다. 전문은 [LICENSE](LICENSE)에 있습니다. LocalSend에서 가져와 고친 두 파일은 SPDX 머리말에 적힌 대로 Apache License 2.0도 함께 따릅니다. 서드파티 라이선스는 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)에 있고, 앱의 *설정 › 앱 › 오픈소스 라이선스*에서도 모두 볼 수 있습니다.
