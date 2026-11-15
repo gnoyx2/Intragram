@@ -355,15 +355,17 @@ For `v1.0.0-rc.1` only, the maintainer approved an untested preview on 2026-10-2
   declaration/code with that result; the current `false` value is not proof of
   exemption. See [Apple's process](https://developer.apple.com/help/app-store-connect/manage-app-information/overview-of-export-compliance/)
   and [France-specific documentation](https://developer.apple.com/help/app-store-connect/reference/export-compliance-documentation-for-encryption/).
-- [ ] **WebRTC third-party notices.** Native builds link a prebuilt WebRTC
+- [x] **WebRTC third-party notices.** Native builds link a prebuilt WebRTC
   library that also contains BoringSSL, libvpx, libaom, dav1d, Opus, libyuv,
-  libsrtp, Abseil and other components under their own licenses. The upstream
-  binaries ship only WebRTC's BSD text, which `THIRD_PARTY_NOTICES.md` and the
-  app's license page reproduce. Before publishing any native binary or
-  uploading to a store, generate the full notice list for the linked milestone
-  (WebRTC's `tools_webrtc/libs/generate_licenses.py` on branch-heads/7871 for
-  M150) and bundle it with the app and the release. The web app bundles no
-  WebRTC code and is not affected.
+  libsrtp, Abseil and other components under their own licenses. The full
+  notice list for the linked milestone (`tools_webrtc/libs/generate_licenses.py`
+  and `DEPS` on `branch-heads/7871`, commit
+  `05e02da9d17f5844e84800fa524dd1eb57d7014c`, for M150) is bundled in
+  `assets/licenses/WEBRTC_NOTICES.md`, registered in `lib/core/app_licenses.dart`
+  for Settings › Open-source licenses, and attached to GitHub Releases as
+  `WEBRTC_NOTICES.md`. Refresh `assets/licenses/WEBRTC_NOTICES.md` whenever
+  `flutter_webrtc` or its native WebRTC milestone is upgraded. The web app
+  bundles no WebRTC code and is not affected.
 - [ ] **Store listing support contact.** Decided on 2026-11-14: the support
   URL is `https://github.com/gnoyx2/Intragram/issues`. Enter it in the App
   Store and Play listings before submission. Play Console also asks for a

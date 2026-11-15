@@ -75,3 +75,4 @@ flutter:
     # 설정 › 오픈소스 라이선스 화면에 그대로 띄움 (lib/core/app_licenses.dart)
     - LICENSE
     - THIRD_PARTY_NOTICES.md
+    - assets/licenses/WEBRTC_NOTICES.md

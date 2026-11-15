@@ -26,6 +26,7 @@ def step(name):
 
 RESTORE = step("Restore release keystore (only if the secrets exist)")
 COLLECT = step("Collect artifacts and measure signing")
+FLATTEN = step("Flatten")
 NAMES = ("KEYSTORE_B64", "STORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD")
 VALUES = ("a2V5c3RvcmU=", "store-secret", "upload", "key-secret")
 
@@ -106,5 +107,22 @@ for case in cases:
                 expected.add("intragram.aab")
             assert {p.name for p in (root / "dist").iterdir()} == expected
             assert "old report" not in (root / "dist/SIGNING-android.txt").read_text()
+
+with tempfile.TemporaryDirectory() as directory:
+    root = Path(directory)
+    (root / "artifacts/android").mkdir(parents=True)
+    (root / "assets/licenses").mkdir(parents=True)
+    (root / "artifacts/android/intragram-android-debugsigned.apk").write_text("debug")
+    (root / "artifacts/android/SIGNING-android.txt").write_text("signing")
+    (root / "LICENSE").write_text("mit")
+    (root / "THIRD_PARTY_NOTICES.md").write_text("notices")
+    (root / "assets/licenses/WEBRTC_NOTICES.md").write_text("webrtc notices")
+    assert run(FLATTEN, root).returncode == 0
+    assert {p.name for p in (root / "release").iterdir()} == {
+        "SIGNING-android.txt",
+        "LICENSE",
+        "THIRD_PARTY_NOTICES.md",
+        "WEBRTC_NOTICES.md",
+    }
 
 print("Android release workflow: 24 signing and packaging cases passed.")

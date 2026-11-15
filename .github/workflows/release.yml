@@ -293,7 +293,7 @@ jobs:
           find artifacts -type f -exec cp {} release/ \;
           # debug 서명 APK는 다른 debug 서명 빌드와 키가 같아 업데이트로 위장해 덮어쓸 수 있으므로 절대 올리지 않음
           rm -f release/*-debugsigned.apk
-          cp LICENSE THIRD_PARTY_NOTICES.md release/
+          cp LICENSE THIRD_PARTY_NOTICES.md assets/licenses/WEBRTC_NOTICES.md release/
           ls -lh release
       - name: Checksums
         working-directory: release
@@ -333,7 +333,7 @@ jobs:
             - Windows zip: not Authenticode-signed. SmartScreen will warn.
             - Linux tarball: experimental, Linux runtime/dependencies not yet reviewed; no OS-level signing.
 
-            Licenses: `LICENSE` (MIT) and `THIRD_PARTY_NOTICES.md` are attached.
+            Licenses: `LICENSE` (MIT), `THIRD_PARTY_NOTICES.md` and `WEBRTC_NOTICES.md` are attached.
 
             Real-device test status and open items are in `README.md` (Status) and
             `DEVICE_QA.md`. Review the signing reports and device QA before publishing

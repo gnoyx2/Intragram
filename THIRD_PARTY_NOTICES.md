@@ -60,11 +60,12 @@ voice messages use the app's separately consented recording flow.
 WebRTC is distributed under the BSD 3-Clause license below, the `LICENSE` file
 of the WebRTC-SDK framework, unmodified. The prebuilt library also contains
 third-party components under their own licenses, among them BoringSSL, libvpx,
-libaom, dav1d, Opus, libyuv, libsrtp and Abseil. The upstream binary
-distribution does not ship their collected notices; their license files are in
-the WebRTC source tree for this milestone
-(https://webrtc.googlesource.com/src/+/branch-heads/7871) and the `third_party`
-repositories it pins.
+libaom, dav1d, Opus, libyuv, libsrtp and Abseil. Their collected license texts
+for this milestone (`refs/branch-heads/7871`, commit
+`05e02da9d17f5844e84800fa524dd1eb57d7014c`, and the `third_party` repositories
+pinned in its `DEPS`) ship in `assets/licenses/WEBRTC_NOTICES.md`, are shown in
+Settings › Open-source licenses, and are attached to GitHub Releases as
+`WEBRTC_NOTICES.md`.
 
 ```text
 Copyright (c) 2011, The WebRTC project authors. All rights reserved.

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:intragram/core/app_licenses.dart';
@@ -39,6 +40,50 @@ void main() {
     expect(text, contains('The WebRTC project authors'));
     expect(text, contains('Redistributions in binary form must reproduce'));
   });
+
+  // 프리빌트 WebRTC가 품은 하위 구성요소(BoringSSL·libvpx·Opus 등)도 각자 라이선스 전문으로 등록돼야 함
+  testWidgets(
+    'the license page lists WebRTC third-party components with their license texts',
+    (tester) async {
+      registerAppLicenses();
+      final entries = await tester.runAsync(
+        () => LicenseRegistry.licenses.toList(),
+      );
+      String textFor(String package) => entries!
+          .where((e) => e.packages.contains(package))
+          .expand((e) => e.paragraphs)
+          .map((p) => p.text)
+          .join('\n');
+
+      expect(
+        textFor('BoringSSL'),
+        contains('BoringSSL (i.e. libcrypto and libssl)'),
+      );
+      expect(textFor('libvpx'), contains('The WebM Project authors'));
+      expect(textFor('Opus'), contains('Xiph.Org, Skype Limited, Octasic'));
+      expect(textFor('abseil-cpp'), contains('Apache License'));
+      expect(textFor('libsrtp'), contains('Cisco Systems, Inc.'));
+      expect(textFor('libyuv'), contains('The LibYuv Project Authors'));
+      expect(textFor('dav1d'), contains('VideoLAN and dav1d authors'));
+      expect(
+        textFor('libaom'),
+        contains('Alliance for Open Media. All rights reserved.'),
+      );
+
+      final raw = await tester.runAsync(
+        () => rootBundle.loadString('assets/licenses/WEBRTC_NOTICES.md'),
+      );
+      final lf = parseWebrtcNoticeEntries(raw!.replaceAll('\r\n', '\n'));
+      final crlf = parseWebrtcNoticeEntries(
+        raw.replaceAll('\r\n', '\n').replaceAll('\n', '\r\n'),
+      );
+      expect(lf, hasLength(39));
+      expect(
+        crlf.map((e) => e.packages.toList()),
+        lf.map((e) => e.packages.toList()),
+      );
+    },
+  );
 
   testWidgets('settings open the license page', (tester) async {
     // 설정 목록 전체가 한 화면에 표시되도록 뷰포트 높이를 충분히 확보함
