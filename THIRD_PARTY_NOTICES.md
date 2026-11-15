@@ -32,9 +32,8 @@ file, unmodified.
 
 The app links these packages (see `pubspec.lock` for exact versions). Their
 license texts are bundled in the app and shown under *Settings › App ›
-Open-source licenses*, next to Intragram's own license and this file. Counts from the resolved package set
-(119 hosted packages): BSD-3-Clause 89, MIT 22, Apache-2.0 6, BSD-2-Clause 1
-(`timezone`), MPL-2.0 1 (`dbus`, used by the Linux build only). `flutter`,
+Open-source licenses*, next to Intragram's own license and this file. The resolved package set is recorded in `pubspec.lock`; licenses are collected
+from those packages by Flutter. `flutter`,
 `flutter_localizations`, `flutter_test`, `flutter_web_plugins` and `sky_engine`
 are SDK packages. This inventory includes development dependencies; it is not
 a list of packages shipped on every platform.
@@ -45,6 +44,70 @@ from [the pub.dev source archive](https://pub.dev/api/archives/dbus-0.7.15.tar.g
 The [MPL-2.0 license](https://www.mozilla.org/en-US/MPL/2.0/) applies to those
 files; Intragram's MIT license does not replace it. Keep this source-availability
 notice when redistributing the Linux executable.
+
+## Encrypted browser connections
+
+`flutter_webrtc` 1.6.3 and its Dart interfaces (`dart_webrtc`,
+`webrtc_interface`) are MIT-licensed. Native builds also link the prebuilt
+WebRTC library that `flutter_webrtc` declares: WebRTC-SDK 150.7871.04 on
+Android, iOS and macOS, and libwebrtc m150.7871.07 on Windows and Linux
+(https://github.com/flutter-webrtc/flutter-webrtc,
+https://github.com/webrtc-sdk/Specs, https://github.com/webrtc-sdk/libwebrtc).
+The web build bundles no WebRTC code; it uses the browser's own.
+No microphone or camera stream is requested for a data-only encrypted chat;
+voice messages use the app's separately consented recording flow.
+
+WebRTC is distributed under the BSD 3-Clause license below, the `LICENSE` file
+of the WebRTC-SDK framework, unmodified. The prebuilt library also contains
+third-party components under their own licenses, among them BoringSSL, libvpx,
+libaom, dav1d, Opus, libyuv, libsrtp and Abseil. The upstream binary
+distribution does not ship their collected notices; their license files are in
+the WebRTC source tree for this milestone
+(https://webrtc.googlesource.com/src/+/branch-heads/7871) and the `third_party`
+repositories it pins.
+
+```text
+Copyright (c) 2011, The WebRTC project authors. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+  * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+  * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the
+    distribution.
+
+  * Neither the name of Google nor the names of its contributors may
+    be used to endorse or promote products derived from this software
+    without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+## Fonts
+
+Shared native/browser typography uses unmodified Noto Sans KR and Noto Emoji
+from the Google Fonts repository. The local browser engine fallback additionally
+bundles Noto Sans Symbols (v43 woff2 from fonts.gstatic.com). These Noto fonts
+are under the SIL Open Font License 1.1. Roboto
+is bundled from Flutter's material fonts under Apache License 2.0. Their full
+license texts ship in `assets/fonts/` and are listed in Settings › Open-source
+licenses. Fonts and browser rendering assets are served locally; no runtime
+Google Fonts request is needed for Korean/English or the bundled emoji set.
 
 ## Voice playback
 

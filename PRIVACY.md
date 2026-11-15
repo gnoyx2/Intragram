@@ -1,6 +1,6 @@
 # Privacy / 개인정보 처리 방침
 
-The same text is in the app under *Settings › App › Privacy policy*. 앱의 *설정 › 앱 › 개인정보 처리 방침*에도 같은 내용이 있습니다.
+This policy is also available under *Settings › App › Privacy policy* in the shared Flutter app. The primary Flutter web app, auxiliary HTML client and legacy HTTP guest portal have different storage/transport behavior as described below. 앱과 주 웹의 정책은 *설정 › 앱 › 개인정보 처리 방침*에서도 볼 수 있습니다. 주 Flutter 웹·HTML 보조 클라이언트·레거시 HTTP 포털의 저장·전송 방식을 아래에서 구분합니다.
 
 ## English
 
@@ -24,6 +24,20 @@ macOS does not donate conversations or aliases to Siri, Spotlight or NSUserActiv
 
 So that nearby devices can find it, the app announces your display name, platform and port on the local network (mDNS). Anyone on the same network can see them.
 
+### Primary Flutter web and auxiliary HTML client
+
+Opening the public website or `web/` page requests its static files from the hosting provider (GitHub Pages for the project site at https://gnoyx2.github.io/Intragram/), which can see ordinary web request information such as your IP address, browser and the page requested, under its own privacy policy. The web client uses no analytics, external fonts, signaling, STUN or TURN service. Browser-to-browser and the new native app-to-browser messages and file bytes travel over an encrypted WebRTC data channel, not through the website host. Connection codes contain session credentials, certificate fingerprints and local connection addresses or mDNS names; share them only with the intended peer. Browser copying uses the ordinary clipboard, so clipboard history or synchronization can retain a code.
+
+The primary Flutter web app keeps conversations in memory by default. Received files stay in browser memory or in a per-tab folder of the browser's origin-private file system (OPFS) until you choose **Save to device**; they are removed when their message is deleted, at Panic wipe, and when the app next starts after that tab was closed or reloaded. Turning on the vault uses the shared native vault codec and selected save scope in IndexedDB; it is PIN-encrypted only when PIN protection is enabled. Transfer history does not contain file bytes. Revision checks reject stale tab writes to protect a newer vault. Before a file is accepted, the browser's storage quota is checked; where OPFS cannot be written, a received file is held in memory up to 100 MiB. Closing a conversation does not remove an already downloaded file. Reloading without a saved vault loses memory-only messages; with a vault, selected history can be restored after any required PIN unlock. Browser storage and downloaded files can be copied, cleared or evicted by the browser/OS. Browser routing and mDNS are not controlled by the native app's NetworkGuard.
+
+`web/lite.html` is an auxiliary HTML client with its own UI and tests. Its explicitly saved password vault and JSON backups use PBKDF2-SHA256 + AES-256-GCM, a separate format from the primary app. Its 500-message display bound and backup/import flow do not describe the primary Flutter vault. Neither client promises physical memory erasure or removal of saved downloads/backups.
+
+The encrypted web client rejects legacy `IGA1.`/HTTP invitations. The native app's explicitly marked legacy HTTP guest portal remains plaintext and follows the old guest policy above. The new encrypted native WebRTC connection does not send file bytes through the HTTP upload/download endpoints.
+
+### Encrypted web connections
+
+The web app uses the same screens, messages and PIN vault code as the native app. Initial program files come from the website host. App/web messages and files use encrypted WebRTC DTLS without signaling, STUN or TURN services; users exchange connection codes themselves. Optional web vaults and remembered names remain in browser IndexedDB. PIN protection uses the same PBKDF2 and ChaCha20-Poly1305 as the app; enabling a vault without a PIN stores unencrypted data. Received files require an explicit download, and saved transfer history contains no file bytes. Browsers cannot enforce OS screenshot exclusion, clipboard synchronization exclusion or automatic mDNS discovery. Text fields in the app and the web app (messages, connection codes, PINs, search) opt out of browser and OS autofill, so their contents are not offered as form history; a browser may still offer to save a typed PIN as a password, which you can decline. The legacy HTTP guest portal is a separate plaintext feature.
+
 ### Permissions
 
 Local network: to find and talk to nearby devices. Microphone: only while you record a voice message. Camera: only to scan connection and security codes; no photos are kept. Notifications: new messages while the app is in the background. Photos: only the ones you pick.
@@ -34,7 +48,7 @@ Intragram sends no telemetry or automatic reports to third parties. Your connect
 
 ### Questions
 
-Open an issue on the project's GitHub page for general questions. See https://github.com/gnoyx2/Intragram/security/policy for private security reporting instructions and current availability. GitHub's private reporting form must be enabled on a public repository before it can be used. Backup email jung@yonghun.pro is not yet available and cannot receive reports. Do not post vulnerability details in public issues.
+Open an issue on the project's GitHub page for general questions. Report a security problem privately with the Report a vulnerability form linked from https://github.com/gnoyx2/Intragram/security/policy (a GitHub account is needed). Do not post vulnerability details in public issues.
 
 ## 한국어
 
@@ -58,6 +72,20 @@ macOS는 대화나 별칭을 Siri·Spotlight·NSUserActivity에 기부하지 않
 
 근처 기기가 찾을 수 있게 앱이 표시 이름·플랫폼·포트를 로컬 네트워크에 알려요(mDNS). 같은 네트워크의 누구나 볼 수 있어요.
 
+### 주 Flutter 웹과 HTML 보조 클라이언트
+
+공개 웹사이트나 `web/` 페이지를 열면 호스팅 업체(프로젝트 사이트 https://gnoyx2.github.io/Intragram/ 는 GitHub Pages)에서 정적 파일을 받아요. 업체는 IP 주소·브라우저 종류·요청한 페이지 같은 일반적인 웹 요청 정보를 볼 수 있고, 그 정보에는 업체의 개인정보 처리 방침이 적용돼요. 웹 클라이언트에는 분석 도구·외부 글꼴·연결 서버·STUN·TURN 서비스가 없어요. 브라우저끼리 또는 앱의 새 암호화 웹 연결에서 메시지와 파일 바이트는 웹사이트 서버를 거치지 않고 암호화된 WebRTC 데이터 채널로 전달돼요. 연결 코드에는 세션 인증 정보·인증서 지문·로컬 연결 주소나 mDNS 이름이 담겨요. 대화할 상대에게만 전달하세요. 브라우저는 일반 클립보드를 사용하므로 클립보드 기록이나 동기화에 코드가 남을 수 있어요.
+
+주 Flutter 웹은 대화를 기본적으로 메모리에 둬요. 받은 파일은 **기기에 저장**을 누를 때까지 브라우저 메모리나 탭별 OPFS(사이트 전용 파일 공간) 폴더에 두고, 메시지를 지우거나 긴급 소거하거나 그 탭을 닫거나 새로 고친 뒤 앱을 다시 열면 지워요. 보관소를 켜면 공통 앱의 저장 범위와 형식으로 IndexedDB에 보관하고, PIN 보호를 켠 경우에만 암호화해요. 전송 기록에는 파일 바이트를 담지 않아요. 오래된 탭이 새 보관소를 덮어쓰지 않도록 revision 충돌을 거부해요. 파일을 수락하기 전에 브라우저 저장 공간을 확인하고, OPFS에 쓸 수 없는 브라우저에서는 받은 파일을 메모리에 100 MiB까지만 둬요. 대화를 닫아도 이미 다운로드한 파일은 지우지 않아요. 저장하지 않은 대화는 새로고침하면 사라지고, 보관소를 켠 대화는 필요한 PIN을 해제한 뒤 선택한 기록을 복원해요. 브라우저·OS가 저장소와 다운로드를 복사·삭제할 수 있고, 저장소를 자동으로 비울 수도 있어요. 브라우저의 WebRTC 경로·mDNS에는 네이티브 NetworkGuard가 적용되지 않아요.
+
+`web/lite.html`은 UI와 검사가 별도인 HTML 보조 클라이언트예요. 직접 저장하는 비밀번호 보관소와 JSON 백업은 PBKDF2-SHA256·AES-256-GCM을 사용하며 주 앱과 형식이 달라요. 보조 앱의 메시지 500개 표시 상한과 백업 가져오기 흐름을 주 Flutter 보관소의 정책으로 해석하면 안 돼요. 두 웹 모두 물리 메모리 소거나 저장한 다운로드·백업 제거를 보장하지 않아요.
+
+새 암호화 웹 클라이언트는 이전 `IGA1.`/HTTP 초대를 거부해요. 앱에서 레거시로 표시된 HTTP 게스트 포털은 별도 평문 기능이며 위의 기존 게스트 정책을 따라요. 새 앱↔웹 WebRTC 연결의 파일 바이트는 HTTP 업로드·다운로드 경로로 보내지 않아요.
+
+### 암호화 웹 연결
+
+웹은 앱과 동일한 화면·메시지·PIN 보관소 코드를 사용해요. 최초 페이지와 프로그램 파일은 웹 호스팅에서 받아요. 앱·웹 사이 메시지와 파일은 외부 연결 서버·STUN·TURN 없이 WebRTC DTLS로 암호화하며 연결 코드를 직접 교환해요. 웹의 선택 보관소와 저장한 이름은 브라우저 IndexedDB에 남아요. PIN을 켜면 앱과 같은 PBKDF2·ChaCha20-Poly1305로 봉인하고, PIN 없이 보관소를 켜면 암호화되지 않아요. 받은 파일은 별도로 다운로드해야 하며 보관소의 전송 기록에는 파일 바이트를 담지 않아요. 브라우저는 OS 화면 캡처 차단·클립보드 동기화 제외·자동 mDNS 탐색을 강제할 수 없어요. 앱과 웹의 입력칸(메시지·연결 코드·PIN·검색)은 브라우저·OS 자동 완성에 참여하지 않아 입력한 내용이 입력 기록으로 제안되지 않아요. 브라우저가 입력한 PIN을 비밀번호로 저장할지 물으면 거절하세요. 이전 HTTP 게스트 포털은 별도의 평문 기능이에요.
+
 ### 권한
 
 로컬 네트워크: 근처 기기를 찾고 대화하려고. 마이크: 음성 메시지를 녹음하는 동안만. 카메라: 연결 코드와 보안 코드를 스캔할 때만, 사진은 남기지 않아요. 알림: 앱이 백그라운드일 때 새 메시지. 사진: 고른 것만.
@@ -68,6 +96,6 @@ Intragram은 제3자에게 원격 분석이나 자동 보고를 보내지 않아
 
 ### 문의
 
-일반 문의는 프로젝트 GitHub 페이지에 이슈를 남겨 주세요. 보안 문제의 비공개 신고 절차와 사용 가능 여부는 https://github.com/gnoyx2/Intragram/security/policy 페이지에서 확인해 주세요. GitHub 비공개 신고 폼은 공개 저장소에서 활성화해야 사용할 수 있어요. 보조 이메일 jung@yonghun.pro는 아직 수신할 수 없어 신고에 사용할 수 없어요. 취약점 세부 내용은 공개 이슈에 남기지 마세요.
+일반 문의는 프로젝트 GitHub 페이지에 이슈를 남겨 주세요. 보안 문제는 https://github.com/gnoyx2/Intragram/security/policy 페이지에 연결된 비공개 신고 폼(Report a vulnerability)으로 알려 주세요. GitHub 계정이 필요해요. 취약점 세부 내용은 공개 이슈에 남기지 마세요.
 
 Capture API scope: [Apple NSWindow sharing type](https://developer.apple.com/documentation/appkit/nswindow/sharingtype-swift.enum), [Microsoft SetWindowDisplayAffinity](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowdisplayaffinity).

@@ -2,17 +2,13 @@
 
 ## Reporting a vulnerability
 
-Use this repository's **Security › Report a vulnerability** form when it is
-available. The publication repository is
-[gnoyx2/Intragram](https://github.com/gnoyx2/Intragram/security/policy).
-GitHub private vulnerability reporting must be enabled on the public
-repository; this policy alone does not enable it.
-
-Planned backup contact: **jung@yonghun.pro — not yet available**. The receiving
-mail service is not activated, so do not rely on this address until its status
-is updated after a successful receipt check. If no private reporting form is
-available either, wait for a working private route; do not post details in an
-issue or pull request. Reports in English or Korean are welcome.
+Report privately with the **Security › Report a vulnerability** form of
+[gnoyx2/Intragram](https://github.com/gnoyx2/Intragram/security/policy)
+(GitHub private vulnerability reporting, which needs a GitHub account). This is
+the only private route; there is no security e-mail address. If the form is
+ever unavailable, open an issue that says only that you have a security report
+and want a private route. Do not post details in an issue or pull request.
+Reports in English or Korean are welcome.
 
 Include the app version or commit, OS, steps to reproduce and expected impact.
 Use synthetic data instead of real conversations, private keys, tokens or PINs.
@@ -41,7 +37,7 @@ Do not rely on it where a failure would put someone in danger.
   handshake with it. A 6-digit code lets two people compare out loud to catch a
   man in the middle. This covers a 1:1 chat end to end, but a group room only
   hop by hop (see below).
-- **Any path to the public internet.** Every outbound socket goes through
+- **Native app paths to the public internet.** Every native outbound socket goes through
   `NetworkGuard` and is limited to RFC 1918, link-local, loopback and IPv6
   unique local (`fc00::/7`) addresses. Dialing a peer accepts only canonical
   dotted-decimal RFC 1918 IPv4. This checks destinations, not the route: a VPN
@@ -67,6 +63,99 @@ Do not rely on it where a failure would put someone in danger.
   connects per 10 seconds per host, 96 overall). The guest portal takes at
   most 32 browser guests, and an HTTP connection that never finishes its
   request is closed after 10 to 20 seconds.
+
+## Encrypted web connections (browser and native app)
+
+The primary browser entry runs `lib/main_web.dart` and the same `IntragramApp`,
+store and chat/settings/PIN/audit components as the native app. Its WebRTC
+transport is separate from the native v7 wire protocol. `docs/web/lite.html` is
+an auxiliary HTML client with its own UI, storage format and tests. The website
+host serves program files; messages, file chunks and controls use reliable
+ordered SCTP-over-DTLS between peers. ICE servers are empty. Users manually
+exchange `IGW1.` offer/answer codes and compare a six-digit value derived from
+both DTLS certificate fingerprints. Code possession is not proof of identity.
+Codes are encoded, not encrypted, and reveal session credentials and metadata.
+
+The parser limits code/frame sizes and accepts only host ICE candidates with
+private, loopback, link-local or `.local` addresses. This differs from native
+`NetworkGuard` and is not a firewall. Browsers resolve mDNS and choose routes;
+VPNs, local-network permissions, privacy settings and isolation can change
+availability. This mode does not establish an air gap or guarantee one physical
+LAN. SDP is data-only; voice notes use a separate recording permission flow.
+
+WebRTC text follows the receiver's **Large messages** setting like native v7:
+frames are at most 16 KiB, longer text and signed room frames are split into
+bounded parts and reassembled only up to the 64 MiB frame ceiling. Files of up to
+64 GiB stream in 64 KiB chunks under receiver-granted credit, up to three files
+at once per direction (one for a peer that does not announce the ability, such as
+the auxiliary HTML client), into the app's chosen folder or the browser's origin-private file
+system (or browser memory up to 100 MiB where OPFS writing is unavailable); free
+space is checked before accepting. Up to 32 offers of one batch can wait for a
+decision. Ordinary files need acceptance; voice notes follow the
+app's voice auto-receive policy only within the native 4 MiB voice bound.
+Oversized voice sends are rejected; an ordinary file larger than 4 MiB whose
+name matches `voice-*.wav` follows ordinary file consent instead of gaining the
+voice auto-receive exemption. Host-accepted group files are offered over
+encrypted links with separate recipient consent; a member's batch stays one
+batch for the other members. WebRTC rooms hold up to 32 members. Completion means receipt of
+the declared bytes, not successful browser download. Host-relayed groups are
+hop-by-hop encrypted; the host can read the traffic. Supporting Flutter peers
+use common signed author events/checkpoints and RoomIntegrityBook checks.
+The host's claim alone does not prove a member authored a message. A signature
+covers a message's text, reply target and timer: a host that alters the text,
+strips the signature of an author already seen signing, or replays a signed
+message makes the other members show a conflict or ignore the frame. Reactions,
+read marks, typing, renames and burn or delete requests are not signed. The host
+relays them and could invent them in a member's name, for example to make a
+delivered message disappear for the others, and it can always withhold traffic.
+
+Ed25519 identity proofs, file receipt content hashes, organization proofs and
+signed evidence are bound to the complete DTLS session binding. Their
+verification is separate from SAS confirmation and does not prove a person's
+real-world identity or physical data erasure. Optional primary web storage uses
+the native vault codec in IndexedDB: PIN protection means PBKDF2-SHA256 and
+ChaCha20-Poly1305; a vault enabled without a PIN is unencrypted. The auxiliary
+HTML client's AES-GCM password vault is a different format. Clearing a session
+cannot erase clipboard history, saved downloads, OS swap or browser-owned copies.
+
+An app already linked over v7 can join a WebRTC room without anyone typing a
+code: the authenticated v7 link carries the IGW1 invitation and response. The
+receiving app applies the v7 room-invite rule (the host of a room it is in, or a
+1:1 peer it dialled itself or mutually confirmed) and refuses otherwise. The new
+WebRTC link must then prove the same Ed25519 device identity as that v7 link
+before the device counts as a room member or receives any room frame; a
+different device answering in its place is dropped. The new link's security code
+starts unconfirmed and is not inherited from the v7 chat. After an automatic
+invitation that failed (it could not be joined, never connected within 30
+seconds, or closed before it opened) the app refuses new automatic invitations
+on that v7 link for 60 seconds, so a peer cannot keep making it open WebRTC
+connections by repeating failed invitations. The wait belongs to that v7 link
+and ends with it. A room that opened is not a failure: a peer can open and
+close rooms one after another, each costing a full WebRTC handshake, and only
+one automatically joined room per link is live at a time. Blocking is per device
+identity: it closes the v7 chat, any separate WebRTC chat and that device's link
+in every WebRTC room. A v7 room stays managed by its host: blocking does not
+remove that device from a v7 room you share. A peer's notice that it queued an
+accepted file counts only while a transfer to that peer is in flight, so a peer
+cannot hold the sender's file budget by queueing offers it never accepts.
+
+The public web app is served by GitHub Pages at
+https://gnoyx2.github.io/Intragram/web/. Whoever controls that site or the
+repository's `main` branch controls the program the browser runs, as with any
+web app; the page loads no third-party scripts, fonts or analytics, and its
+Content Security Policy allows only same-origin program files. Static hosting
+cannot send response headers, so the policy is a `<meta>` tag and
+`frame-ancestors` cannot be enforced that way: instead the app and the
+auxiliary client refuse to start inside another site's frame. No service worker
+is registered; a browser can reuse the previous files for up to ten minutes
+after a deployment.
+
+Native **Encrypted app–web connection** uses `flutter_webrtc` and the same IGW1
+protocol. File bytes never use plaintext HTTP transfer routes. The primary and
+auxiliary web clients reject old `IGA1.`/HTTP invitations instead of downgrading.
+The marked legacy HTTP guest portal remains a separate plaintext feature;
+its tokens, origin restrictions and existing v7 transport behavior are unchanged.
+See [the web guide](docs/WEB.md) for feature gaps and reproducible checks.
 
 ## Signed evidence, organization credentials and app room integrity
 
@@ -107,8 +196,12 @@ Do not rely on it where a failure would put someone in danger.
   and fills within existing gaps remain accepted. Checkpoint comparisons use
   the latest 256 observations and detect disagreements only when both views
   are observed. The host can still read, withhold and reorder traffic; no
-  distributed consensus or group E2EE is added. Legacy unsigned peers can chat
-  until signed capability is observed. Author payload/signature domains are v2
+  distributed consensus or group E2EE is added. Legacy unsigned authors can chat
+  until their first valid signature is observed in that room. A signature
+  stripped before that first observation cannot be distinguished from a legacy
+  message; a room badge does not prove every author's every message. WebRTC
+  waits for identity proof before processing early events in an observed room,
+  so reconnecting signed authors cannot bypass this check. Author domains are v2
   with a required 32-byte payload salt; prior prerelease signed-v1 envelopes
   without it are rejected. Browser portal rooms are separate and
   have none of these author/checkpoint guarantees.

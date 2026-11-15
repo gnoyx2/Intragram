@@ -9,6 +9,48 @@ different protocol versions refuse to talk to each other.
 Protocol 7. Not a supported release yet: device QA is pending on every
 platform (see `DEVICE_QA.md`).
 
+Added after `v1.0.0-rc.1` (app `1.0.0+9`; the v7 wire protocol is unchanged):
+
+- Web app (preview, beta): the same Flutter app runs in a browser
+  (`lib/main_web.dart`) at https://gnoyx2.github.io/Intragram/web/, deployed by
+  the new `pages` workflow. It shares the home, chat, search, settings, PIN
+  vault, audit and organization screens with the installed app. Checked by
+  automated Chromium and Firefox runs on one computer only; Safari, phone
+  browsers and two-device Wi-Fi are not run yet.
+- Encrypted app–web connection: browsers and apps exchange `IGW1.` invitation
+  and response codes and talk over one WebRTC data channel (SCTP over DTLS, no
+  signaling, STUN or TURN server), with a six-digit security code per link.
+  1:1 chats, rooms of up to 32 members relayed by the host, text up to the
+  **Large messages** setting, files up to 64 GiB streamed with flow control
+  (three at once per direction, batches with **Accept all**), voice messages,
+  signed receipts, room author signatures, audit bundles and organization
+  credentials. The `v1.0.0-rc.1` builds cannot use this connection.
+- Apps already linked over v7 join a WebRTC room without typing a code: the
+  authenticated v7 link carries the codes, the new link must prove the same
+  device identity, and its security code starts unconfirmed. After an automatic
+  invitation that failed, the app refuses new ones on that link for 60 seconds.
+- An auxiliary HTML client (`/web/lite.html`) with its own storage format.
+- Hosting safeguards: the web app and the auxiliary client refuse to run inside
+  another site's frame, register no service worker and load no third-party
+  resources.
+- Accessibility: screen readers get names for read-only text on the web (peer
+  ID, credential details, Merkle root, error details); a message longer than
+  4,000 characters is announced as a notice plus its first 4,000 characters,
+  and a reply quote or search result carries the first 1,000.
+- Fixed: an open search (global and in-chat) now follows new, deleted and
+  burned messages instead of keeping stale results.
+- Fixed: a peer that only announced it had queued file offers and never
+  accepted them could hold the sender's file budget until the room closed.
+- Fixed: picking a file over 64 GiB for an encrypted web connection raised an
+  unhandled error and dropped the other files picked with it. Now that file is
+  left out with a notice and the others are offered.
+- Bundled Noto Sans KR, Noto Emoji and Roboto so no font is fetched at run
+  time, and the license page now carries the WebRTC license text next to the
+  package notices.
+- Security contact: GitHub private vulnerability reporting is the only private
+  route; the unavailable backup e-mail address was removed from the documents
+  and the in-app privacy text.
+
 - Fixed: serialized and coalesced mDNS broadcast restarts (`DiscoveryController`)
   and excluded browser guest portal rooms (`PeerTransport.web`) from app-peer
   mDNS room hints, preventing an iOS/macOS main-thread `DNSServiceProcessResult`

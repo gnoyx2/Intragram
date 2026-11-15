@@ -17,7 +17,7 @@ No server, no account. Chats stay in memory unless you choose to keep them.
 [![ci](https://github.com/gnoyx2/Intragram/actions/workflows/ci.yml/badge.svg)](https://github.com/gnoyx2/Intragram/actions/workflows/ci.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**[Website / 공식 페이지](https://gnoyx2.github.io/Intragram/)** · **[Downloads / 다운로드](https://github.com/gnoyx2/Intragram/releases)** · [Install](#install) · [설치 안내](#설치)
+**[Website / 공식 페이지](https://gnoyx2.github.io/Intragram/)** · **[Web / 웹](https://gnoyx2.github.io/Intragram/web/)** · **[Downloads / 다운로드](https://github.com/gnoyx2/Intragram/releases)** · [Install](#install) · [설치 안내](#설치)
 
 [English](#english) · [한국어](#한국어)
 
@@ -31,7 +31,7 @@ Intragram is a messenger for phones, tablets and computers on the same Wi-Fi or 
 
 The name is *intranet* plus *-gram*, and the mascot is a carrier pigeon: messages go straight from one device to another on the local network without passing through an outside server. Intragram is not affiliated with Instagram, Telegram or Meta.
 
-[Status](#status) · [Features](#features) · [Why Intragram](#why-intragram) · [Install](#install) · [Troubleshooting](#troubleshooting) · [Build from source](#build-from-source) · [How it works](#how-it-works) · [Project structure](#project-structure) · [Development and CI](#development-and-ci) · [Security model](#security-model) · [Contributing](#contributing) · [Credits](#credits) · [License](#license)
+[Status](#status) · [Features](#features) · [Why Intragram](#why-intragram) · [Install](#install) · [Web](#use-in-a-browser) · [Troubleshooting](#troubleshooting) · [Build from source](#build-from-source) · [How it works](#how-it-works) · [Project structure](#project-structure) · [Development and CI](#development-and-ci) · [Security model](#security-model) · [Contributing](#contributing) · [Credits](#credits) · [License](#license)
 
 ### Status
 
@@ -49,6 +49,7 @@ Intragram is a release candidate (app 1.0.0, wire protocol 7). It builds for six
 | Windows | 10, x64 | portable `.zip` | not signed | not run |
 | Linux | x64, GTK 3 | `.tar.gz` bundle (experimental) | none | not run |
 | Browser guest | current browsers | page served by the host app | n/a | not run |
+| Web app (preview, beta) | current Chromium and Firefox; Safari and phone browsers not checked yet | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), the same Flutter app (`lib/main_web.dart`) | n/a | automated browser runs on one computer only, see [DEVICE_QA.md](DEVICE_QA.md) |
 
 CI runs the test suite and an Android debug build on every push, and builds the Apple, Windows and Linux apps whenever their native code changes (see [Development and CI](#development-and-ci)). Automated tests do not replace a run on real devices and a real network.
 
@@ -61,9 +62,10 @@ Bug reports and questions go to Issues. Include your OS and device, the app vers
 </p>
 
 - 1:1 chats are end-to-end encrypted with X25519 and ChaCha20-Poly1305. Both screens show the same 6-digit code. Read it out loud once to make sure nobody is sitting in the middle; until then the chat is marked unverified.
-- Group rooms use one app as the hub. Each member's link to the host is encrypted, but the host decrypts every message to relay it, so a room is encrypted hop by hop, not end to end. Room files go directly between devices without encryption, and the receiver checks them against a SHA-256 that arrives over the encrypted link. Every room shows a banner that says this.
-- People without the app scan the QR code under *Guest portal* on the host and chat in their browser, with nothing to install. Up to 32 guests can share the portal room. A browser can't run the app's handshake, so guest traffic is plaintext on the local network. The portal room is separate from app group rooms.
-- Files and whole folders of any size. They are streamed in 2 MiB chunks, so the limit is the receiver's free disk space, not RAM. Each transfer can be accepted, declined, cancelled or retried, and desktop builds accept drag and drop.
+- Native v7 group rooms use one app as the hub. Each member's link to the host is encrypted, but the host decrypts every message to relay it, so a room is encrypted hop by hop, not end to end. Room files go directly between devices without encryption, and the receiver checks them against a SHA-256 that arrives over the encrypted link. Every room shows a banner that says this.
+- People without the app scan the QR code under *Guest portal* on the host and chat in their browser, with nothing to install. Up to 32 guests can share the portal room. This legacy HTTP portal uses plaintext; use Encrypted web connection for encrypted app-to-browser chat. The portal room is separate from app group rooms.
+- The web app (preview, beta) is the same Flutter app running in a browser at [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/). Browsers and installed apps exchange `IGW1.` connection codes and then use encrypted WebRTC for 1:1 chats, rooms of up to 32 people, files up to 64 GiB and voice messages, with no signaling, STUN or TURN server. See [Use in a browser](#use-in-a-browser).
+- Native v7 files and whole folders of any size. They are streamed in 2 MiB chunks, so the limit is the receiver's free disk space, not RAM. Each transfer can be accepted, declined, cancelled or retried, and desktop builds accept drag and drop.
 - Voice messages up to two minutes, held in memory and played through the OS audio API.
 - Replies, reactions, typing and read indicators, delete for everyone, and search.
 - A burn timer of 5, 30 or 60 seconds, off by default. The countdown starts when the other side reads the message. A timed message that is never read burns 24 hours after it was sent.
@@ -84,6 +86,8 @@ Bug reports and questions go to Issues. Include your OS and device, the app vers
 - A browser guest can send text and files, add a thumbs-up, use the burn timer and play voice messages, but it can't quote-reply. Its files go only to the host, and a file it downloads is held in browser memory until it is saved, so a very large file can fail on a phone.
 - Received files go to the folder you pick on the first accept (desktop), to *Files › On My iPhone › Intragram* (iPhone, iPad), or to the app's private folder (Android, where *Share or save* on the file moves it elsewhere).
 - The iOS photo picker sends photos only, up to 10 at a time and 50 MiB in total. Send videos from the Files app.
+- Screen readers: on macOS, VoiceOver does not announce the names of text fields (a Flutter limitation, [flutter/flutter#120779](https://github.com/flutter/flutter/issues/120779)). A message longer than 4,000 characters is read as a notice and its first 4,000 characters; copy the message to read all of it.
+- The web app is a preview. It needs an open tab, cannot find devices by itself and cannot apply OS privacy controls; [the web guide](docs/WEB.md#differences-that-remain) lists the differences.
 
 ### Why Intragram
 
@@ -115,6 +119,8 @@ It fits places where the internet is blocked, slow or unwanted: an internal netw
 
 **[Open Downloads (GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**, select a version and expand **Assets**. [v1.0.0-rc.1](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.0-rc.1) is available as a **testing pre-release**. Automated tests and artifact verification passed, but **real-device QA has not been completed on any platform**. Store and TestFlight links will be added when available.
 
+The v1.0.0-rc.1 files were built before the encrypted app–web connection existed. They talk to other v1.0.0-rc.1 apps and to the legacy guest portal, but they cannot connect to the web app. Use a later release when one is published, or [build from source](#build-from-source), for that. Two browsers can already connect through the web app.
+
 | Device | File to download from Assets | Installation |
 | :--- | :--- | :--- |
 | Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.1/intragram-android.apk) | One APK for supported ARM and x64 devices. Open it on the phone and allow installation from that browser or file manager if prompted. |
@@ -136,6 +142,18 @@ Intragram only listens on and connects to private addresses, so allow firewall p
 - **Android**: install updates over the existing app using an APK signed by the same release key. Keep a copy of any data you need before removing an existing test installation.
 
 The vault (`vault.json`) and a remembered display name (`identity.json`) live in the app's Application Support/IntraGram folder, apart from received files. The legacy folder spelling is retained so existing data remains accessible after the display-name change. On iOS the app asks for backup exclusion and complete file protection for that folder. macOS backups can include the vault. Android's OS backup and device transfer of app data are turned off. [PRIVACY.md](PRIVACY.md) lists everything the app keeps and sends.
+
+### Use in a browser
+
+The web app is a **preview (beta)** at **[gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/)**. It passed automated runs in Chromium and Firefox on one computer. Safari, phone browsers, two devices on a real Wi-Fi and screen readers have not been checked yet ([DEVICE_QA.md](DEVICE_QA.md) has the list and the results so far), so treat it as a test version.
+
+Open **Open web app** on the website. For two browsers, choose **Encrypted app–web connection** › **Create a connection** › **Create invitation code**, send the `IGW1.` invitation (text or QR image) to your partner, and keep the tab open. They choose **Join with a code** and return their response code. Paste that response on the inviting browser and compare the six-digit number on both screens before sending messages or files. No app, account, signaling server, STUN or TURN server is needed; the web page itself must first be loaded from its host.
+
+For an installed app, open **Guest portal** (QR icon on the home screen) › **Encrypted app–web connection**. The app and browser exchange the same `IGW1.` invitation/response codes and compare the same six-digit number. Both text and file bytes use SCTP-over-DTLS; file data never falls back to the legacy HTTP endpoints. Keep both devices on the same Wi-Fi or hotspot and keep the app open.
+
+The primary web app uses the same Flutter Home/ChatRoom/Settings/PIN/audit screens and store as the installed app. Its optional vault uses the native PBKDF2 + ChaCha20-Poly1305 codec in IndexedDB; enabling it without a PIN stores unencrypted data. Text follows the same **Large messages** setting as the app (up to the 64 MiB frame ceiling), files of up to 64 GiB are streamed with flow control, up to three files flow at once in each direction as in the app, batches offer **Accept all**, and WebRTC rooms hold up to 32 members. A browser cannot join a v7 chat; instead **Add people › Encrypted app–web connection** opens a WebRTC room and brings the chat's apps into it without anyone typing a code for them. An app takes such an automatic invitation only from the device it is already talking to (one it dialled, or one whose code both sides confirmed), and after an invitation that failed it refuses new ones on that link for 60 seconds. The web app needs a tab that stays open: a closed tab receives nothing, and the page does not run inside another site's frame. Browsers cannot discover devices, open sockets or apply OS privacy controls, so code exchange, downloads, QR images and browser permissions replace them; [the web guide](docs/WEB.md#differences-that-remain) lists every remaining difference. `web/lite.html` is a separate auxiliary HTML client with a different password-encrypted vault/backup format. See [the web guide](docs/WEB.md) for builds, exact limits and verification scope.
+
+Legacy `IGA1.`/HTTP invitations are rejected by the new encrypted web client. The old host-served guest portal is a separate legacy plaintext feature, clearly marked in the app; it must not be used for confidential traffic.
 
 ### Troubleshooting
 
@@ -224,7 +242,7 @@ graph TD
 
 1. **Nothing on disk by default.** There is no SQLite, Hive, `SharedPreferences` or `localStorage` in the tree. The persistent data the app manages is limited to files you accept into a folder you chose (desktop also records that folder in `download_directories.json`, as a sandbox bookmark on macOS, so a half-received file can be removed after a crash), the vault if you turn it on, and a display name you choose to remember (inside the vault, or in plaintext `identity.json` when the vault is off). Byte buffers the app owns, such as frame plaintext, file chunks, voice audio and the session and vault keys, are overwritten when released. Message text passes through Dart strings, which can't be overwritten, so the store only drops its reference; copies made inside the crypto library are also only released. File pickers, share sheets and the OS can still leave temporary copies and caches.
 2. **Private addresses only.** `NetworkGuard` (`lib/core/network_guard.dart`) classifies every address. The server binds to a private IPv4 address (a link-local one if that is all the network offers, or an IPv6 unique local address when there is no IPv4 LAN), and an outbound socket throws `SecurityException` unless the target is in `10/8`, `172.16/12`, `192.168/16`, loopback, `169.254/16`, `::1` or `fc00::/7`. Dialing a peer is stricter: `NetworkGuard.parsePeerEndpoint` accepts only canonical dotted-decimal RFC 1918 IPv4, whether the address came from discovery, a QR code or the IP dialog. This checks where the app's own sockets go. It is not a firewall or an air gap: a VPN that hands out private addresses carries the traffic through its tunnel, a link you tap opens in your browser, and a file you open goes to another app.
-3. **One codebase.** One Flutter codebase for iOS, iPadOS, Android, macOS, Windows and Linux, plus a browser client in plain HTML, CSS and JavaScript that the app serves itself.
+3. **One repository.** The primary app uses one Flutter UI for native platforms and the web (`lib/main_web.dart`). A separate auxiliary HTML client (`docs/web/lite.html`) and the legacy host-served plaintext guest portal remain distinct.
 
 ### Project structure
 
@@ -236,6 +254,7 @@ graph TD
 .
 ├── lib/
 │   ├── main.dart            startup: leftover file cleanup, per-launch identity, wipe on desktop shutdown
+│   ├── main_web.dart        browser startup: the same app and screens, files kept in browser storage
 │   ├── app.dart             MaterialApp, theme, locale, PIN gate and auto-lock
 │   ├── app_commands.dart    keyboard shortcuts and macOS menu commands
 │   ├── app_lock.dart        relock: seal the vault, stop links, wipe memory
@@ -254,6 +273,9 @@ graph TD
 ├── assets/
 │   ├── illustrations/       carrier pigeon mascot and state cutouts (480x480 RGBA PNG)
 │   └── web/                 browser guest client (HTML, CSS, JavaScript, no external files)
+├── web/                     Flutter web shell: index.html with the CSP, loader, local symbol fallback font
+├── docs/                    landing page and web guide; web/ entry page and auxiliary web/lite.html client;
+│                            web/app/ is generated by tool/build_web_app.sh and not committed
 ├── test/                    unit and integration tests; test/ui for widgets, test/support for rigs
 ├── tool/                    line-count check, Node checks for the web client,
 │                            icon generation, Linux desktop helper test
@@ -288,16 +310,25 @@ flutter analyze                      # stays at 0 issues
 flutter test --exclude-tags large    # unit, integration and widget tests
 node tool/browser_guard_test.js      # runs the real web client JS in Node: LAN address guard, guest page behavior
 node tool/web_design_test.js         # guest page branding, contrast and layout
+node tool/landing_web_test.js        # landing page web entry points and preferences
+node tool/web_peer_test.mjs          # standalone WebRTC protocol and transfer regression checks
+node tool/web_portal_test.mjs        # app invitation/URL validation and native theme parity
+node tool/web_experience_test.mjs    # auxiliary web client: chat, room and limit rules
+node tool/web_file_queue_test.mjs    # auxiliary web client: file offer queue
+node tool/web_chat_replay_test.mjs   # auxiliary web client: replayed frames are dropped
+node tool/web_identity_reflection_test.mjs  # a reflected identity proof is rejected
+node tool/web_entry_test.mjs         # /web/ entry page, loading screen, refusal to run in a frame
 git diff --check
 ```
 
 `flutter test --tags large` runs the slow 64 and 256 MiB streaming and memory tests; add `--dart-define=LARGE_SIZES_MIB=1024,4096` for 1 and 4 GiB. CI leaves this suite out.
 
-Three workflows live in `.github/workflows/`. Third-party actions are pinned to commit SHAs and the default token is read-only.
+Four workflows live in `.github/workflows/`. Third-party actions are pinned to commit SHAs and the default token is read-only.
 
 | Workflow | Trigger | What it does |
 | :--- | :--- | :--- |
 | `ci.yml` | every push and pull request | `verify` on Ubuntu runs the checks above; `android` builds a debug APK |
+| `pages.yml` | changes to the web app, the site or their build files on `main`, a pull request touching them, or a manual run | builds the Flutter web app for `/<repository>/web/app/` and, on `main`, deploys `docs/` with it to GitHub Pages; a pull request only builds |
 | `native.yml` | changes under `ios/`, `macos/`, `windows/`, `linux/` or in `pubspec`, or a manual run | debug builds of macOS and iOS (Xcode 27.1), Windows (`windows-2022`) and Linux (`ubuntu-24.04`), plus a C++ test of the Linux desktop helpers and a syntax check of `install.sh` |
 | `release.yml` | a `v*` tag, or a manual run | runs `verify` again, builds release files for every platform and writes `SIGNING-<platform>.txt` from the built files. On a tag it adds `SHA256SUMS.txt` and a build provenance attestation and opens a draft release, marked pre-release until the repository variable `DEVICE_QA_PASSED` is `true` |
 
@@ -312,6 +343,7 @@ A debug-signed Android APK is never attached to a release; it stays a workflow a
 | Wire protocol | `protocol_*_test`, `handshake_e2ee_*_test` |
 | File transfer | `file_transfer_*_test`, `file_chunks_test`, `large_transfer_test` (tag `large`) |
 | Group rooms and portal | `member_room_*_test`, `portal_relay_*_test` |
+| Encrypted web connection | `web_peer_*_test`, `web_chat_*_test`, `web_auto_invite*_test`, `web_invite_test`, `web_stream_io_test` |
 | Link admission | `link_registry_pre_proof_test`, `link_registry_pending_cap_test`, `link_registry_admission_test` |
 | Evidence and credentials | `audit_*_test`, `delivery_receipt_test`, `org_credential*_test`, `room_integrity*_test` |
 | Vault and wipe | `vault_*_test`, `panic_*_test` |
@@ -334,7 +366,7 @@ What it is built to defend against:
 What it does not cover:
 
 - The host of a group room can read the whole room, and room files cross the LAN unencrypted.
-- Browser guests can't run the handshake, so their traffic is plaintext on the local link.
+- Legacy HTTP portal guests use plaintext; the new encrypted web connection uses WebRTC DTLS.
 - Names and platforms shown in the app are self-declared, and a first contact is only as trustworthy as the code you compared.
 - The app fetches nothing by itself, but a link you tap opens in your browser after you confirm the real address (shown in punycode when it mixes scripts), and a received file you open is handed to another app. The app asks first for file types such as web pages and shortcuts.
 - The QR scanner decodes camera frames on the device with `zxing2`, a pure-Dart port of ZXing, and has no network component.
@@ -384,7 +416,7 @@ Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰�
 
 이름은 *intranet*과 *-gram*을 합친 것이고, 마스코트는 전서구입니다. 외부 서버를 거치지 않고 같은 네트워크 안의 기기끼리 직접 소식을 전한다는 뜻을 담았습니다. Intragram은 Instagram, Telegram, Meta와 관계가 없습니다.
 
-[현재 상태](#현재-상태) · [기능](#기능) · [왜 만들었나](#왜-만들었나) · [설치](#설치) · [문제 해결](#문제-해결) · [소스에서 빌드](#소스에서-빌드) · [동작 방식](#동작-방식) · [프로젝트 구조](#프로젝트-구조) · [개발과 CI](#개발과-ci) · [보안 모델](#보안-모델) · [기여](#기여) · [감사의 말](#감사의-말) · [라이선스](#라이선스)
+[현재 상태](#현재-상태) · [기능](#기능) · [왜 만들었나](#왜-만들었나) · [설치](#설치) · [웹](#웹에서-사용하기) · [문제 해결](#문제-해결) · [소스에서 빌드](#소스에서-빌드) · [동작 방식](#동작-방식) · [프로젝트 구조](#프로젝트-구조) · [개발과 CI](#개발과-ci) · [보안 모델](#보안-모델) · [기여](#기여) · [감사의 말](#감사의-말) · [라이선스](#라이선스)
 
 ### 현재 상태
 
@@ -402,6 +434,7 @@ Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰�
 | Windows | 10, x64 | 포터블 `.zip` | 서명 없음 | 미실시 |
 | Linux | x64, GTK 3 | `.tar.gz` 번들 (실험 단계) | 없음 | 미실시 |
 | 브라우저 게스트 | 최신 브라우저 | 호스트 앱이 내려주는 페이지 | 해당 없음 | 미실시 |
+| 웹 앱 (미리보기, beta) | 최신 Chromium·Firefox. Safari와 휴대폰 브라우저는 아직 확인 전 | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), 같은 Flutter 앱(`lib/main_web.dart`) | 해당 없음 | 컴퓨터 한 대의 자동 브라우저 검사만, [DEVICE_QA.md](DEVICE_QA.md) 참고 |
 
 CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티브 코드가 바뀌면 Apple, Windows, Linux 앱도 빌드합니다([개발과 CI](#개발과-ci) 참고). 자동 테스트가 실기기와 실제 네트워크에서 돌려 보는 일을 대신하지는 않습니다.
 
@@ -415,7 +448,8 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
 
 - 1:1 대화는 X25519와 ChaCha20-Poly1305로 종단 간 암호화됩니다. 양쪽 화면에 같은 6자리 코드가 뜹니다. 한 번 소리 내어 맞춰 보면 중간에 누가 끼어들지 않았는지 확인할 수 있고, 맞춰 보기 전까지는 대화에 미확인 표시가 붙습니다.
 - 그룹 방은 앱 하나가 허브가 됩니다. 멤버와 호스트 사이의 연결은 각각 암호화되지만 호스트가 메시지를 복호화해서 중계하므로, 종단 간이 아니라 구간별(hop-by-hop) 암호화입니다. 방에서 보낸 파일은 암호화 없이 기기끼리 바로 오가고, 받는 쪽은 암호화된 연결로 먼저 받은 SHA-256으로 내용을 확인합니다. 방마다 위쪽 배너에 이 사실이 표시됩니다.
-- 앱이 없는 사람은 호스트의 *게스트 포털* QR 코드를 찍으면 아무것도 설치하지 않고 브라우저에서 바로 대화합니다. 포털 방 하나에 게스트 32명까지 들어옵니다. 브라우저는 앱의 핸드셰이크를 할 수 없어서 게스트 트래픽은 로컬 네트워크에서 평문으로 오갑니다. 포털 방은 앱 그룹 방과 따로 돌아갑니다.
+- 앱이 없는 사람은 호스트의 *게스트 포털* QR 코드를 찍으면 아무것도 설치하지 않고 브라우저에서 바로 대화합니다. 포털 방 하나에 게스트 32명까지 들어옵니다. 이 레거시 HTTP 포털은 평문이며, 암호화된 앱↔웹 대화는 암호화 웹 연결을 사용합니다. 포털 방은 앱 그룹 방과 따로 돌아갑니다.
+- 웹 앱(미리보기, beta)은 같은 Flutter 앱을 브라우저에서 실행합니다. 주소는 [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/)입니다. 브라우저와 설치 앱이 `IGW1.` 연결 코드를 교환한 뒤 암호화된 WebRTC로 1:1 대화, 최대 32명 방, 64 GiB까지의 파일, 음성 메시지를 주고받습니다. 연결 서버·STUN·TURN 서버가 필요 없습니다. [웹에서 사용하기](#웹에서-사용하기)를 참고하세요.
 - 파일과 폴더를 크기 제한 없이 보냅니다. 2 MiB 단위로 나눠 흘려보내므로 한계는 RAM이 아니라 받는 쪽의 남은 디스크 용량입니다. 전송마다 수락, 거절, 취소, 재시도를 할 수 있고 데스크톱에서는 끌어다 놓기도 됩니다.
 - 최대 2분짜리 음성 메시지를 보냅니다. 메모리에만 두고 OS 오디오 API로 재생합니다.
 - 답장, 리액션, 입력 중·읽음 표시, 모두에게서 삭제, 검색을 지원합니다.
@@ -437,6 +471,8 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
 - 브라우저 게스트는 텍스트와 파일을 보내고, 좋아요 반응을 달고, 소각 타이머를 쓰고, 음성 메시지를 들을 수 있지만 인용 답장은 못 합니다. 게스트가 보낸 파일은 호스트에게만 갑니다. 게스트가 받는 파일은 저장하기 전까지 브라우저 메모리에 통째로 올라가므로 아주 큰 파일은 폰에서 실패할 수 있습니다.
 - 받은 파일은 데스크톱에서는 처음 수락할 때 고른 폴더, iPhone과 iPad에서는 *파일 › 나의 iPhone › Intragram*, Android에서는 앱 전용 폴더에 저장됩니다. Android에서는 파일의 *공유·저장*으로 다른 곳에 옮기세요.
 - iOS 사진 선택기는 사진만 보냅니다. 한 번에 10장, 합계 50 MiB까지이고, 동영상은 파일 앱에서 보내면 됩니다.
+- 스크린 리더: macOS에서 VoiceOver가 입력칸의 이름을 읽지 못합니다(Flutter의 한계, [flutter/flutter#120779](https://github.com/flutter/flutter/issues/120779)). 4,000자를 넘는 메시지는 안내 문구와 앞 4,000자만 읽으며, 전체는 메시지를 복사해서 확인합니다.
+- 웹 앱은 미리보기입니다. 탭을 열어 두어야 하고, 기기를 스스로 찾지 못하며, OS 개인정보 제어를 쓸 수 없습니다. 차이는 [웹 안내](docs/WEB.md#differences-that-remain)에 적었습니다.
 
 ### 왜 만들었나
 
@@ -468,6 +504,8 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
 
 **[다운로드 페이지(GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**에서 버전을 고른 뒤 **Assets**를 펼치세요. [v1.0.0-rc.1](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.0-rc.1)을 **테스트용 프리릴리스**로 제공합니다. 자동 테스트와 빌드 파일 검증은 통과했지만, **모든 플랫폼의 실기기 QA는 아직 미완료**입니다. 스토어와 TestFlight 링크는 배포가 준비되면 추가합니다.
 
+v1.0.0-rc.1 파일은 앱·웹 암호화 연결이 생기기 전에 만든 것입니다. 다른 v1.0.0-rc.1 앱이나 레거시 게스트 포털과는 통하지만 웹 앱과는 연결할 수 없습니다. 앱과 웹을 연결하려면 이후 릴리스가 게시될 때까지 기다리거나 [소스에서 빌드](#소스에서-빌드)하세요. 브라우저 두 개는 지금도 웹 앱으로 연결할 수 있습니다.
+
 | 기기 | Assets에서 받을 파일 | 설치 방법 |
 | :--- | :--- | :--- |
 | Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.1/intragram-android.apk) | 지원하는 ARM·x64 기기용 통합 APK입니다. 폰에서 파일을 열고, 요청이 뜨면 해당 브라우저나 파일 관리자의 앱 설치를 허용하세요. |
@@ -489,6 +527,18 @@ Intragram은 사설 주소에서만 연결을 받고 겁니다. 방화벽 팝업
 - **Android**: 업데이트할 때는 같은 릴리스 키로 서명된 APK를 기존 앱 위에 설치하세요. 기존 시험용 앱을 삭제해야 한다면 필요한 데이터를 먼저 따로 보관하세요.
 
 보관소(`vault.json`)와 기억해 둔 기기 이름(`identity.json`)은 받은 파일과 떨어진 앱의 Application Support/IntraGram 폴더에 있습니다. 표시 이름을 바꾼 뒤에도 기존 데이터를 계속 찾도록 저장 폴더의 이전 표기는 유지합니다. iOS에서는 이 폴더에 백업 제외와 완전 파일 보호를 요청합니다. macOS 백업에는 보관소가 들어갈 수 있습니다. Android는 앱 데이터의 OS 백업과 기기 간 전송을 꺼 두었습니다. 앱이 남기고 보내는 것은 [PRIVACY.md](PRIVACY.md)에 모두 적어 두었습니다.
+
+### 웹에서 사용하기
+
+웹 앱은 **미리보기(beta)**이고 주소는 **[gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/)**입니다. 컴퓨터 한 대의 Chromium과 Firefox 자동 검사는 통과했습니다. Safari, 휴대폰 브라우저, 실제 Wi-Fi의 두 기기, 스크린 리더는 아직 확인하지 못했으므로 시험판으로 써 주세요. 확인 항목과 지금까지의 결과는 [DEVICE_QA.md](DEVICE_QA.md)에 있습니다.
+
+공식 페이지의 **웹에서 시작**을 엽니다. 브라우저끼리 연결하려면 **앱·웹 암호화 연결** › **새 연결 만들기** › **초대 코드 만들기**로 만든 `IGW1.` 초대 코드(텍스트나 QR 이미지)를 상대에게 보내고 탭을 열어 둡니다. 상대는 **코드로 참여**에 코드를 넣고 응답 코드를 돌려줍니다. 초대한 쪽에서 응답 코드를 입력한 뒤, 양쪽의 6자리 번호가 같은지 확인하고 대화와 파일 전송을 시작하세요. 앱·계정·연결 서버·STUN·TURN 서버는 필요 없지만, 웹페이지 자체는 먼저 호스팅 서버에서 불러와야 합니다.
+
+설치된 앱과 연결하려면 홈 화면의 QR 아이콘 **게스트 포털** › **앱·웹 암호화 연결**을 엽니다. 앱과 웹이 같은 `IGW1.` 초대·응답 코드를 교환하고 양쪽의 6자리 번호를 비교합니다. 메시지와 파일 바이트 모두 SCTP-over-DTLS로 암호화하며 이전 HTTP 파일 경로로 전환하지 않습니다. 같은 Wi-Fi나 핫스팟을 사용하고 앱을 열어 두세요.
+
+주 웹은 설치 앱의 실제 Flutter 홈·대화·설정·PIN·증적 화면과 같은 상태를 사용합니다. 선택 보관소는 앱과 같은 PBKDF2·ChaCha20-Poly1305 형식으로 IndexedDB에 저장하며, PIN 없이 켜면 평문입니다. 긴 글은 앱과 같은 **긴 메시지** 설정을 따르고(프레임 상한 64 MiB), 64 GiB까지의 파일은 흐름 제어로 스트리밍하며, 앱처럼 방향마다 최대 3개 파일이 동시에 오가고, 여러 파일은 **모두 수락**할 수 있고, WebRTC 방은 최대 32명입니다. 브라우저는 v7 대화에 들어올 수 없습니다. 대신 **사람 추가 › 앱·웹 암호화 연결**이 WebRTC 방을 새로 열고, 그 대화의 앱은 코드를 입력하지 않아도 그 방으로 들어옵니다. 앱은 이미 대화 중인 기기(내가 건 상대이거나 양쪽이 코드를 확인한 상대)의 자동 초대만 받고, 자동 초대가 실패하면 그 링크의 새 자동 초대를 60초 동안 거절합니다. 웹 앱은 탭을 열어 두어야 합니다. 닫힌 탭은 아무것도 받지 못하고, 다른 사이트의 프레임 안에서는 실행되지 않습니다. 브라우저는 기기 탐색·소켓·OS 개인정보 제어를 쓸 수 없어 코드 교환·다운로드·QR 이미지·브라우저 권한으로 대신합니다. 남은 차이는 [웹 안내](docs/WEB.md#differences-that-remain)에 모두 적었습니다. `web/lite.html`은 별도 HTML 보조 화면이며 비밀번호 보관소·백업 형식도 다릅니다. 빌드 방법·상한·실제 검증 범위는 [웹 안내](docs/WEB.md)를 보세요.
+
+새 암호화 웹 클라이언트는 이전 `IGA1.`/HTTP 초대를 거부합니다. 앱의 기존 HTTP 게스트 포털은 별도의 레거시 평문 기능으로 표시됩니다. 민감한 대화에는 사용하지 마세요.
 
 ### 문제 해결
 
@@ -577,7 +627,7 @@ graph TD
 
 1. **기본은 디스크에 아무것도 남기지 않음.** 코드 어디에도 SQLite, Hive, `SharedPreferences`, `localStorage`가 없습니다. 앱이 관리하는 영구 데이터는 직접 고른 폴더에 직접 수락한 파일(데스크톱은 크래시 뒤 받다 만 파일을 지울 수 있도록 그 폴더를 `download_directories.json`에 적고, macOS는 샌드박스 북마크로 적음), 직접 켠 보관소, 다음에도 쓰겠다고 고른 기기 이름(보관소 안, 보관소가 꺼져 있으면 평문 `identity.json`)뿐입니다. 프레임 평문, 파일 청크, 음성, 세션 키와 보관소 키처럼 앱이 가진 바이트 버퍼는 해제할 때 덮어씁니다. 메시지 텍스트는 덮어쓸 수 없는 Dart 문자열을 거치므로 스토어는 참조만 놓고, 암호 라이브러리 안에서 생긴 사본도 해제만 됩니다. 파일 선택기, 공유 시트, OS는 여전히 임시 사본과 캐시를 남길 수 있습니다.
 2. **사설 주소만.** `NetworkGuard`(`lib/core/network_guard.dart`)가 모든 주소를 분류합니다. 서버는 사설 IPv4 주소에 바인딩하고(네트워크가 그것만 주면 링크 로컬 주소, IPv4 LAN이 없으면 IPv6 고유 로컬 주소), 나가는 소켓은 대상이 `10/8`, `172.16/12`, `192.168/16`, 루프백, `169.254/16`, `::1`, `fc00::/7`이 아니면 `SecurityException`을 던집니다. 피어에 거는 연결은 더 엄격해서, 주소가 탐색, QR 코드, IP 입력 중 어디서 왔든 `NetworkGuard.parsePeerEndpoint`가 정규 dotted-decimal RFC 1918 IPv4만 받습니다. 이것은 앱 자신의 소켓이 어디로 가는지 검사하는 것이지 방화벽이나 에어갭이 아닙니다. 사설 주소를 나눠 주는 VPN은 트래픽을 자기 터널로 실어 나르고, 탭한 링크는 브라우저로 열리며, 연 파일은 다른 앱으로 넘어갑니다.
-3. **하나의 코드베이스.** Flutter 코드베이스 하나로 iOS, iPadOS, Android, macOS, Windows, Linux를 대상으로 하고, 앱이 직접 내려주는 브라우저 클라이언트는 평범한 HTML, CSS, JavaScript로 되어 있습니다.
+3. **하나의 저장소.** 주 앱은 네이티브와 웹(`lib/main_web.dart`)에서 같은 Flutter 화면을 사용합니다. HTML 보조 클라이언트(`docs/web/lite.html`)와 이전 호스트의 평문 게스트 포털은 별도 기능입니다.
 
 ### 프로젝트 구조
 
@@ -589,6 +639,7 @@ graph TD
 .
 ├── lib/
 │   ├── main.dart            시작: 남은 파일 정리, 실행별 신원 생성, 데스크톱 종료 시 메모리 소거
+│   ├── main_web.dart        브라우저 시작: 같은 앱과 화면, 파일은 브라우저 저장소에 둠
 │   ├── app.dart             MaterialApp, 테마, 언어, PIN 게이트와 자동 잠금
 │   ├── app_commands.dart    키보드 단축키와 macOS 메뉴 명령
 │   ├── app_lock.dart        재잠금: 보관소 봉인, 연결 정지, 메모리 소거
@@ -607,6 +658,9 @@ graph TD
 ├── assets/
 │   ├── illustrations/       전서구 마스코트와 상태별 컷아웃(480x480 RGBA PNG)
 │   └── web/                 브라우저 게스트 클라이언트(HTML, CSS, JavaScript, 외부 파일 없음)
+├── web/                     Flutter 웹 껍데기: CSP가 든 index.html, 로더, 로컬 기호 대체 글꼴
+├── docs/                    랜딩 페이지와 웹 안내, web/ 진입 페이지와 보조 클라이언트 web/lite.html.
+│                            web/app/은 tool/build_web_app.sh가 만들며 커밋하지 않음
 ├── test/                    단위·통합 테스트, test/ui는 위젯 테스트, test/support는 테스트 도구
 ├── tool/                    줄 수 검사, 웹 클라이언트 Node 검사, 아이콘 생성,
 │                            Linux 데스크톱 보조 코드 테스트
@@ -641,16 +695,25 @@ flutter analyze                      # 이슈 0건 유지
 flutter test --exclude-tags large    # 단위·통합·위젯 테스트
 node tool/browser_guard_test.js      # 실제 웹 클라이언트 JS를 Node에서 실행: LAN 주소 가드, 게스트 페이지 동작
 node tool/web_design_test.js         # 게스트 페이지 브랜딩, 대비, 배치
+node tool/landing_web_test.js        # 랜딩 웹 진입점·환경 설정 전달
+node tool/web_peer_test.mjs          # 독립 WebRTC 프로토콜·파일 전송 회귀 검사
+node tool/web_portal_test.mjs        # 앱 초대·URL 검증, 네이티브 테마 일치
+node tool/web_experience_test.mjs    # 보조 웹 클라이언트: 대화·방·상한 규칙
+node tool/web_file_queue_test.mjs    # 보조 웹 클라이언트: 파일 제안 줄
+node tool/web_chat_replay_test.mjs   # 보조 웹 클라이언트: 재생된 프레임 거부
+node tool/web_identity_reflection_test.mjs  # 되돌려 보낸 신원 증명 거부
+node tool/web_entry_test.mjs         # /web/ 진입 페이지, 로딩 화면, 프레임 안 실행 거부
 git diff --check
 ```
 
 `flutter test --tags large`는 느린 64·256 MiB 스트리밍·메모리 테스트입니다. 1·4 GiB는 `--dart-define=LARGE_SIZES_MIB=1024,4096`을 붙입니다. CI에서는 이 묶음을 돌리지 않습니다.
 
-워크플로는 `.github/workflows/`에 세 개 있습니다. 외부 액션은 커밋 SHA로 고정했고, 기본 토큰 권한은 읽기 전용입니다.
+워크플로는 `.github/workflows/`에 네 개 있습니다. 외부 액션은 커밋 SHA로 고정했고, 기본 토큰 권한은 읽기 전용입니다.
 
 | 워크플로 | 실행 조건 | 하는 일 |
 | :--- | :--- | :--- |
 | `ci.yml` | 모든 push와 PR | `verify`는 Ubuntu에서 위 검사를 돌리고, `android`는 디버그 APK를 빌드 |
+| `pages.yml` | `main`에서 웹 앱·사이트·빌드 파일이 바뀔 때, 그 파일을 건드린 PR, 또는 수동 실행 | Flutter 웹 앱을 `/<저장소 이름>/web/app/` 경로로 빌드하고, `main`이면 `docs/`와 함께 GitHub Pages에 배포. PR에서는 빌드만 함 |
 | `native.yml` | `ios/`, `macos/`, `windows/`, `linux/`, `pubspec`이 바뀔 때, 또는 수동 실행 | macOS·iOS(Xcode 27.1), Windows(`windows-2022`), Linux(`ubuntu-24.04`) 디버그 빌드, Linux 데스크톱 보조 코드의 C++ 테스트와 `install.sh` 문법 검사 |
 | `release.yml` | `v*` 태그, 또는 수동 실행 | `verify`를 다시 돌리고, 모든 플랫폼의 릴리스 파일을 빌드해 빌드된 파일에서 `SIGNING-<platform>.txt`를 만듦. 태그일 때는 `SHA256SUMS.txt`와 빌드 출처 증명(attestation)을 더해 초안 릴리스를 열고, 저장소 변수 `DEVICE_QA_PASSED`가 `true`가 되기 전까지 프리릴리스로 표시 |
 
@@ -665,6 +728,7 @@ git diff --check
 | 와이어 프로토콜 | `protocol_*_test`, `handshake_e2ee_*_test` |
 | 파일 전송 | `file_transfer_*_test`, `file_chunks_test`, `large_transfer_test`(`large` 태그) |
 | 그룹 방·포털 | `member_room_*_test`, `portal_relay_*_test` |
+| 암호화 웹 연결 | `web_peer_*_test`, `web_chat_*_test`, `web_auto_invite*_test`, `web_invite_test`, `web_stream_io_test` |
 | 연결 수락 | `link_registry_pre_proof_test`, `link_registry_pending_cap_test`, `link_registry_admission_test` |
 | 증적·자격 | `audit_*_test`, `delivery_receipt_test`, `org_credential*_test`, `room_integrity*_test` |
 | 보관소·소거 | `vault_*_test`, `panic_*_test` |
@@ -687,7 +751,7 @@ git diff --check
 막지 못하는 것:
 
 - 그룹 방의 호스트는 방 안의 모든 내용을 볼 수 있고, 방에서 보낸 파일은 LAN에서 암호화되지 않습니다.
-- 브라우저 게스트는 핸드셰이크를 할 수 없어서 트래픽이 로컬 링크에서 평문입니다.
+- 레거시 HTTP 포털은 평문이며, 새 암호화 웹 연결은 WebRTC DTLS를 사용합니다.
 - 앱에 보이는 이름과 플랫폼은 상대가 스스로 밝힌 값이고, 첫 연결은 직접 맞춰 본 코드만큼만 믿을 수 있습니다.
 - 앱 스스로는 아무것도 내려받지 않습니다. 다만 탭한 링크는 실제 주소(여러 문자 체계가 섞이면 퓨니코드)를 확인한 뒤 브라우저로 열리고, 받은 파일을 열면 다른 앱으로 넘어갑니다. 웹 페이지나 바로 가기 같은 파일은 앱이 먼저 묻습니다.
 - QR 스캐너는 ZXing을 순수 Dart로 옮긴 `zxing2`로 카메라 프레임을 기기 안에서 읽고, 네트워크를 쓰는 부분이 없습니다.

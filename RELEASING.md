@@ -9,6 +9,9 @@ Public source baseline: app `1.0.0+7`, wire protocol `7`, from development
 HEAD `c5b247b` plus the current desktop/web work and Apple CI toolchain update.
 Only selected project files are exported into the separate public history;
 development Git history, local build state and signing material are excluded.
+The current version is `1.0.0+9`: the shared Flutter web app and the encrypted
+app–web connection (IGW1 over WebRTC) were added after `v1.0.0-rc.1`; the v7
+wire protocol is unchanged.
 
 ## 1. Gates (run on the exact commit you will build)
 
@@ -21,6 +24,15 @@ flutter analyze
 flutter test --exclude-tags large
 node tool/browser_guard_test.js
 node tool/web_design_test.js
+node tool/landing_web_test.js
+node tool/web_peer_test.mjs
+node tool/web_portal_test.mjs
+node tool/web_experience_test.mjs
+node tool/web_file_queue_test.mjs
+node tool/web_chat_replay_test.mjs
+node tool/web_identity_reflection_test.mjs
+node tool/web_entry_test.mjs
+python3 tool/build_web_app_test.py
 sh -n linux/install.sh
 flutter build macos --debug
 git diff --check
@@ -84,7 +96,8 @@ Golden Gate profile), Windows 11 25H2/26H2 taskbar attention without Toast,
 GNOME 50/KDE Plasma 6 CSD/SSD, asynchronous XDG portals, sensitive clipboard
 hints and PulseAudio/PipeWire pipes. The guest remains assets/web + inline
 SHA-256 CSP, with streaming cancellation, voice resource disposal, BFCache
-reconnection, 840 px chat width and forced colors. No root web/ target.
+reconnection, 840 px chat width and forced colors. That record predates the
+root `web/` target of the shared Flutter web app; section 7 covers it.
 Capture exclusion cannot certify Visual Intelligence/ScreenCaptureKit blocking
 or absolute Windows capture protection; verify actual capture tools in QA.
 
@@ -299,17 +312,16 @@ file picking and call-interruption checks in DEVICE_QA.
 - [x] **License notices.** The LocalSend modifications retain attribution and
   the Apache-2.0 text. The resolved package license inventory and exact MPL-2.0
   `dbus` source are recorded in `THIRD_PARTY_NOTICES.md` and bundled in the app.
-- [ ] **Backup security email.** The maintainer-selected `jung@yonghun.pro`
-  receiving service is not activated. Keep it marked unavailable in
-  `SECURITY.md` and the app until a harmless test is actually received.
-  An MX record or accepted send does not prove delivery. A working GitHub
-  private reporting route can serve as the primary channel meanwhile.
+- [x] **Private security contact.** Decided on 2026-11-14: GitHub private
+  vulnerability reporting is the only private route and no e-mail address is
+  published. `SECURITY.md`, `PRIVACY.md` and the in-app privacy text say so.
 - [ ] **GitHub reports when publishing.** Private vulnerability reporting is
-  available only for public repositories. After creating the actual public
-  repository, enable it in Settings, Security and quality, Advanced Security;
-  confirm the Report a vulnerability button and maintainer notifications,
-  and verify receipt of a harmless test report. Do not use the private CI
-  mirror as the public reporting destination.
+  enabled on `gnoyx2/Intragram`
+  (`GET /repos/gnoyx2/Intragram/private-vulnerability-reporting` returned
+  `enabled: true` on 2026-11-14). Still to do by the maintainer: confirm the
+  Report a vulnerability button and the notification settings, and verify
+  receipt of a harmless test report. Do not use the private CI mirror as the
+  public reporting destination.
 
 Repository settings: enable Issues and confirm that the issue chooser directs
 reporters to the security policy. The publication repository is `gnoyx2/Intragram`. The chooser uses its HTTPS policy
@@ -343,8 +355,20 @@ For `v1.0.0-rc.1` only, the maintainer approved an untested preview on 2026-10-2
   declaration/code with that result; the current `false` value is not proof of
   exemption. See [Apple's process](https://developer.apple.com/help/app-store-connect/manage-app-information/overview-of-export-compliance/)
   and [France-specific documentation](https://developer.apple.com/help/app-store-connect/reference/export-compliance-documentation-for-encryption/).
-- [ ] **Store listing support contact.** Set the monitored support address or
-  URL in the actual App Review/Play listing before submission.
+- [ ] **WebRTC third-party notices.** Native builds link a prebuilt WebRTC
+  library that also contains BoringSSL, libvpx, libaom, dav1d, Opus, libyuv,
+  libsrtp, Abseil and other components under their own licenses. The upstream
+  binaries ship only WebRTC's BSD text, which `THIRD_PARTY_NOTICES.md` and the
+  app's license page reproduce. Before publishing any native binary or
+  uploading to a store, generate the full notice list for the linked milestone
+  (WebRTC's `tools_webrtc/libs/generate_licenses.py` on branch-heads/7871 for
+  M150) and bundle it with the app and the release. The web app bundles no
+  WebRTC code and is not affected.
+- [ ] **Store listing support contact.** Decided on 2026-11-14: the support
+  URL is `https://github.com/gnoyx2/Intragram/issues`. Enter it in the App
+  Store and Play listings before submission. Play Console also asks for a
+  developer e-mail address; the maintainer enters that in the console and it is
+  not kept in this repository.
 
 1. Before the first tag, run the `release` workflow by hand (Actions, Run
    workflow) and read the `SIGNING-<platform>.txt` files it attaches. The
@@ -371,3 +395,44 @@ For `v1.0.0-rc.1` only, the maintainer approved an untested preview on 2026-10-2
    Add App Store, Google Play and TestFlight links only after those destinations
    are available. Store submission and review are separate from publishing a
    GitHub release.
+
+## 7. Web app (GitHub Pages)
+
+The public web app is the shared Flutter app built from `lib/main_web.dart`. It
+is served from `https://gnoyx2.github.io/Intragram/web/`, which redirects to
+`/web/app/`. It stays labeled **preview (beta)** in the README and on the
+landing page until the web rows of `DEVICE_QA.md` pass on real devices.
+
+- **Source setting.** Repository Settings › Pages › Source must be **GitHub
+  Actions** (`build_type: workflow`). `docs/web/app/` is generated and
+  git-ignored, so the branch source (`main` `/docs`) would publish a `/web/`
+  page that redirects to a missing app. Check with
+  `gh api repos/gnoyx2/Intragram/pages --jq .build_type`; switch with
+  `gh api -X PUT repos/gnoyx2/Intragram/pages -f build_type=workflow` before the
+  first push that contains `.github/workflows/pages.yml`.
+- **Workflow.** `pages.yml` runs on pushes to `main` that touch the app, the
+  site or their build files, and by hand. It runs `tool/build_web_app.sh
+  "/<repository name>/web/app/"` and deploys `docs/` with the generated app. A
+  pull request only builds. The `github-pages` environment must allow `main`.
+- **Base path.** The base path is the repository name with its exact letter
+  case (`/Intragram/web/app/`). A renamed repository or a custom domain changes
+  it; the workflow reads the name from `GITHUB_REPOSITORY`, and a custom domain
+  needs the argument of `tool/build_web_app.sh` changed to `/web/app/`.
+- **Check after a deployment.** Wait for the `pages` run to finish, then run
+  `WEB_BASE_URL=https://gnoyx2.github.io/Intragram/ node tool/live_web_smoke_test.mjs`
+  (two browser contexts connect over the public page; needs `PLAYWRIGHT_MODULE`
+  and `CHROME_PATH`). Browsers may reuse the previous files for up to ten
+  minutes (`Cache-Control: max-age=600`); there is no service worker.
+- **Rollback.** Revert the offending commit with `git revert` and push it; the
+  workflow redeploys the previous app. `main` rejects force pushes. To take the
+  web app offline quickly without a new commit, set the Pages source back to
+  the branch and ask for a branch build: `gh api -X PUT
+  repos/gnoyx2/Intragram/pages -f build_type=legacy -f 'source[branch]=main'
+  -f 'source[path]=/docs'`, then `gh api -X POST
+  repos/gnoyx2/Intragram/pages/builds`. The branch has no `docs/web/app/`, so
+  the landing page stays up and `/web/app/` returns 404 until the source is set
+  to GitHub Actions again and the `pages` workflow is run by hand.
+- **Local check before pushing.** `BUILD_OUTPUT_DIR=build/web-pages
+  tool/build_web_app.sh /Intragram/web/app/` then
+  `WEB_PACKAGE_PREFIX=/Intragram node tool/web_package_browser_test.mjs`;
+  rebuild with `/web/app/` afterwards for the local preview.
