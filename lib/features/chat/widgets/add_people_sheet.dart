@@ -1,12 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:intragram/app_providers.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/network/discovery_engine.dart';
+import 'package:intragram/network/web_peer.dart' show WebPeerProblem;
 import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/widgets/empty_state.dart';
 import 'package:intragram/widgets/empty_state_art.dart';
+import 'package:intragram/features/portal/web_connection_dialog.dart';
+
+// 자동 초대 실패 이유별 안내 문구 키
+String autoInviteError(Object error) => switch (error) {
+  WebPeerProblem(code: 'auto-invite-refused') => 'secureWeb.autoInviteRefused',
+  WebPeerProblem(code: 'room-full') => 'secureWeb.error.room-full',
+  _ => 'secureWeb.autoInviteFailed',
+};
 
 Future<void> showAddPeopleSheet(
   BuildContext context,
@@ -43,6 +54,9 @@ class _AddPeopleSheetState extends ConsumerState<_AddPeopleSheet> {
         .watch(discoveryControllerProvider)
         .where((p) => !(members?.containsKey(p.peerId) ?? false))
         .toList();
+    final registry = ref.read(linkRegistryProvider);
+    final web = registry.isWebConversation(widget.conversationId);
+    final s = S.of(context);
     // 시트 전체가 스크롤됨: 작은 플로팅 창·큰 글씨에서 빈 상태 그림이나 버튼이 시트 밖으로 넘치지 않게 함
     return SafeArea(
       child: ListView(
@@ -64,6 +78,29 @@ class _AddPeopleSheetState extends ConsumerState<_AddPeopleSheet> {
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: AppSpacing.md),
+          // 브라우저는 WebRTC 방에만 들어옴: 이 방이 WebRTC면 여기에, v7 대화면 새 방을 만들고 앱 상대를 그 방으로 초대함
+          OutlinedButton.icon(
+            icon: const Icon(Icons.add_link),
+            label: Text(s.t('secureWeb.open')),
+            onPressed: () async {
+              final navigator = Navigator.of(context);
+              navigator.pop();
+              if (navigator.mounted) {
+                await showWebConnectionDialog(
+                  navigator.context,
+                  conversationId: web ? widget.conversationId : null,
+                  moveFrom: web ? null : widget.conversationId,
+                );
+              }
+            },
+          ),
+          if (!web) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              s.t('secureWeb.moveBody'),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
           if (peers.isEmpty)
             EmptyState(
               art: EmptyStateArt.invite,
@@ -92,9 +129,24 @@ class _AddPeopleSheetState extends ConsumerState<_AddPeopleSheet> {
                     final chosen = peers
                         .where((p) => _picked.contains(p.peerId))
                         .toList();
-                    ref
-                        .read(linkRegistryProvider)
-                        .addPeersToRoom(widget.conversationId, chosen);
+                    final adding = registry.addPeersToRoom(
+                      widget.conversationId,
+                      chosen,
+                    );
+                    // WebRTC 방의 자동 초대는 상대가 안 받을 수 있어서 이유를 알림 (v7 방 초대는 예전 그대로)
+                    if (web) {
+                      final messenger = ScaffoldMessenger.of(context);
+                      unawaited(
+                        adding.catchError((Object error) {
+                          messenger.showSnackBar(
+                            SnackBar(
+                              duration: const Duration(seconds: 8),
+                              content: Text(s.t(autoInviteError(error))),
+                            ),
+                          );
+                        }),
+                      );
+                    }
                     Navigator.of(context).pop();
                   },
             child: Text(

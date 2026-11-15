@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, visibleForTesting;
+    show TargetPlatform, defaultTargetPlatform, visibleForTesting, kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
+import 'browser_received_files.dart';
 
 // 받은 파일 열기·폴더에서 보기 (데스크톱 전용, 모바일은 전부 false). LocalSend open_file·open_folder 방식을 참고해
 // 외부 플러그인 없이 직접 구현함
@@ -12,6 +13,7 @@ final class NativeOpen {
   const NativeOpen._();
 
   static bool get isSupported =>
+      kIsWeb ||
       defaultTargetPlatform == TargetPlatform.macOS ||
       defaultTargetPlatform == TargetPlatform.windows ||
       defaultTargetPlatform == TargetPlatform.linux;
@@ -105,7 +107,7 @@ final class NativeOpen {
   // Windows만: Zone.Identifier ADS에 MOTW(ZoneId=3)를 남겨 SmartScreen·Office 보호 보기가 받은 파일로 다룸.
   // FAT·exFAT처럼 ADS가 없으면 그냥 넘어감
   static Future<void> markFromInternet(String path) async {
-    if (!Platform.isWindows) return;
+    if (kIsWeb || !Platform.isWindows) return;
     try {
       await File(
         '$path:Zone.Identifier',
@@ -116,6 +118,7 @@ final class NativeOpen {
   }
 
   static Future<bool> open(String path) async {
+    if (kIsWeb) return BrowserReceivedFiles.save(path);
     if (!isSupported || !File(path).existsSync()) return false;
     return switch (defaultTargetPlatform) {
       // macOS는 프로세스 안 NSWorkspace(url_launcher)로 엶: 자식 /usr/bin/open엔 사용자가 고른 폴더의 샌드박스 권한이 안 넘어갈 수 있음
@@ -135,6 +138,7 @@ final class NativeOpen {
 
   // 네이티브 파일 관리자에 경로를 직접 넘겨 선택함 (셸 명령 문자열 없음).
   static Future<bool> revealInFolder(String path) async {
+    if (kIsWeb) return BrowserReceivedFiles.save(path);
     if (!isSupported) return false;
     final dir = p.dirname(path);
     if (!File(path).existsSync() && !Directory(dir).existsSync()) return false;

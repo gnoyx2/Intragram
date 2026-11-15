@@ -1,4 +1,6 @@
+import 'package:intragram/core/target_platform.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:intragram/app_providers.dart';
@@ -8,6 +10,7 @@ import 'package:intragram/network/server_controller.dart';
 import 'package:intragram/theme/app_theme.dart';
 import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/widgets/peer_avatar.dart';
+import 'package:intragram/features/portal/web_connection_dialog.dart';
 import 'device_code_dialog.dart';
 import 'rename_identity_dialog.dart';
 import 'wifi_info_dialog.dart';
@@ -64,7 +67,9 @@ class IdentityCard extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    server.running
+                    kIsWeb
+                        ? S.of(context).t('secureWeb.browserReady')
+                        : server.running
                         ? S.of(context).t('identity.visibleOn', {
                             'host': server.host ?? '',
                             'port': '${server.port}',
@@ -76,25 +81,40 @@ class IdentityCard extends ConsumerWidget {
               ),
             ),
             IconButton(
-              tooltip: S.of(context).t('deviceCode.tooltip'),
-              icon: const Icon(Icons.qr_code_2_rounded),
-              onPressed: () => showDeviceCodeDialog(
-                context,
-                host: server.running ? server.host : null,
-                port: server.running ? server.port : null,
-                peerId: identity.peerId,
-              ),
-            ),
-            IconButton(
-              tooltip: S.of(context).t('wifiInfo.title'),
+              tooltip: S
+                  .of(context)
+                  .t(kIsWeb ? 'secureWeb.open' : 'deviceCode.tooltip'),
               icon: Icon(
-                server.running
-                    ? Icons.wifi_tethering
-                    : Icons.wifi_tethering_off,
-                color: server.running ? chat.online : null,
+                Icons.qr_code_2_rounded,
+                semanticLabel: macOSAppName(
+                  S
+                      .of(context)
+                      .t(kIsWeb ? 'secureWeb.open' : 'deviceCode.tooltip'),
+                ),
               ),
-              onPressed: () => showWifiInfoDialog(context),
+              onPressed: () => kIsWeb
+                  ? showWebConnectionDialog(context)
+                  : showDeviceCodeDialog(
+                      context,
+                      host: server.running ? server.host : null,
+                      port: server.running ? server.port : null,
+                      peerId: identity.peerId,
+                    ),
             ),
+            if (!kIsWeb)
+              IconButton(
+                tooltip: S.of(context).t('wifiInfo.title'),
+                icon: Icon(
+                  server.running
+                      ? Icons.wifi_tethering
+                      : Icons.wifi_tethering_off,
+                  color: server.running ? chat.online : null,
+                  semanticLabel: macOSAppName(
+                    S.of(context).t('wifiInfo.title'),
+                  ),
+                ),
+                onPressed: () => showWifiInfoDialog(context),
+              ),
           ],
         ),
       ),

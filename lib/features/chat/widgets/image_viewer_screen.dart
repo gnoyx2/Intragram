@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:share_plus/share_plus.dart';
 
+import 'package:intragram/core/browser_received_files.dart';
 import 'package:intragram/core/target_platform.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/motion.dart';
@@ -181,7 +183,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen>
                 child: SafeArea(
                   child: _ViewerTopBar(
                     path: widget.path,
-                    canShare: isMobileTarget,
+                    canShare: !kIsWeb && isMobileTarget,
                   ),
                 ),
               ),
@@ -212,7 +214,8 @@ class _ImageViewerScreenState extends State<ImageViewerScreen>
                         vertical: AppSpacing.sm,
                       ),
                       child: Text(
-                        p.basename(widget.path),
+                        BrowserReceivedFiles.nameOf(widget.path) ??
+                            p.basename(widget.path),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

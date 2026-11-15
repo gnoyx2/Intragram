@@ -8,9 +8,21 @@ void registerAppLicenses() {
     yield LicenseEntryWithLineBreaks(const [
       'Intragram',
     ], await rootBundle.loadString('LICENSE'));
+    // 이 파일에 LocalSend의 Apache 전문과 네이티브 빌드가 싣는 WebRTC의 BSD 전문이 들어 있음
     yield LicenseEntryWithLineBreaks(const [
       'Intragram',
       'LocalSend',
+      'WebRTC',
     ], await rootBundle.loadString('THIRD_PARTY_NOTICES.md'));
+    for (final entry in const {
+      'Noto Sans KR': 'OFL-NotoSansKR.txt',
+      'Noto Emoji': 'OFL-NotoEmoji.txt',
+      'Noto Sans Symbols': 'OFL-NotoSansSymbols.txt',
+      'Roboto': 'Apache-Roboto.txt',
+    }.entries) {
+      yield LicenseEntryWithLineBreaks([
+        entry.key,
+      ], await rootBundle.loadString('assets/fonts/${entry.value}'));
+    }
   });
 }

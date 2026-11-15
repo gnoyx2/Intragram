@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:intragram/widgets/picker_feedback.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:intragram/core/haptics.dart';
@@ -24,7 +26,7 @@ Future<SasOutcome?> showSasFingerprintDialog(
   required bool verified,
 }) {
   if (sas == null) return Future<SasOutcome?>.value();
-  final canScan = isMobileTarget;
+  final canScan = kIsWeb || isMobileTarget;
   final cupertino = isCupertinoDialog(context);
   final s = S.of(context);
   final muted = Theme.of(context).colorScheme.onSurfaceVariant;
@@ -74,11 +76,17 @@ Future<SasOutcome?> showSasFingerprintDialog(
               const SizedBox(height: AppSpacing.xs),
               TextButton.icon(
                 onPressed: () async {
-                  final matched = await Navigator.of(dialogContext).push<bool>(
-                    MaterialPageRoute<bool>(
-                      builder: (_) => SasScanScreen(expected: sas),
-                    ),
-                  );
+                  final bool? matched;
+                  if (kIsWeb) {
+                    final raw = await pickQrImageOrExplain(dialogContext);
+                    matched = raw == null ? null : sasScanVerdict(raw, sas);
+                  } else {
+                    matched = await Navigator.of(dialogContext).push<bool>(
+                      MaterialPageRoute<bool>(
+                        builder: (_) => SasScanScreen(expected: sas),
+                      ),
+                    );
+                  }
                   if (matched == null || !dialogContext.mounted) return;
                   Navigator.of(
                     dialogContext,

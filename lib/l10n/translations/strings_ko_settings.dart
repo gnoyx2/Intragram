@@ -43,7 +43,7 @@ const Map<String, String> kStringsKoSettings = {
       '크기 제한이 없어요. 피어가 아주 큰 메시지를 이 기기 메모리에 바로 밀어 넣을 '
       '수 있으니 신뢰하는 네트워크에서만 쓰세요.',
   'settings.large.fileDesc':
-      '64 KB가 넘는 메시지는 저장·열람하는 "Long message.txt" 파일로 전송돼요. '
+      '64 KB가 넘는 메시지는 저장·열람하는 "message.txt" 파일로 전송돼요. '
       '메모리를 작게 유지해요.',
   'settings.iosForegroundOnly':
       'iPhone·iPad에서는 Intragram을 열어 둔 동안만 연결돼요. 앱을 나가면 iOS가 '

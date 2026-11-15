@@ -1,5 +1,8 @@
 // 개인정보 처리 방침 (설정 › 앱 › 개인정보 처리 방침, PRIVACY.md와 같은 문구)
 const Map<String, String> kStringsEnPrivacy = {
+  'privacy.encryptedWebTitle': 'Encrypted web connections',
+  'privacy.encryptedWebBody':
+      'The web app uses the same screens, messages and PIN vault code as the native app. Initial program files come from the website host. App/web messages and files use encrypted WebRTC DTLS without signaling, STUN or TURN services; users exchange connection codes themselves. Optional web vaults and remembered names remain in browser IndexedDB. PIN protection uses the same PBKDF2 and ChaCha20-Poly1305 as the app; enabling a vault without a PIN stores unencrypted data. Received files require an explicit download, and saved transfer history contains no file bytes. Browsers cannot enforce OS screenshot exclusion, clipboard synchronization exclusion or automatic mDNS discovery. Text fields in the app and the web app (messages, connection codes, PINs, search) opt out of browser and OS autofill, so their contents are not offered as form history; a browser may still offer to save a typed PIN as a password, which you can decline. The legacy HTTP guest portal is a separate plaintext feature.',
   'privacy.title': "Privacy policy",
   'privacy.noServerTitle': "No server, no account",
   'privacy.noServerBody':
@@ -86,10 +89,8 @@ const Map<String, String> kStringsEnPrivacy = {
   'privacy.contactTitle': "Questions",
   'privacy.contactBody':
       "Open an issue on the project's GitHub page for general questions. "
-      "See https://github.com/gnoyx2/Intragram/security/policy for private "
-      "security reporting instructions and current availability. GitHub's "
-      "private reporting form must be enabled on a public repository before "
-      "it can be used. Backup email jung@yonghun.pro is not yet available "
-      "and cannot receive reports. Do not post vulnerability details in "
+      "Report a security problem privately with the Report a vulnerability "
+      "form linked from https://github.com/gnoyx2/Intragram/security/policy "
+      "(a GitHub account is needed). Do not post vulnerability details in "
       "public issues.",
 };

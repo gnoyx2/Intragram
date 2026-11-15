@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 
 import 'channel_voice_clip.dart';
+import 'browser_voice_clip.dart';
 import 'pacat_voice_clip.dart';
 import 'voice_wav.dart';
 import 'wave_out_voice_clip.dart';
@@ -44,7 +45,9 @@ Future<VoiceClip> loadVoiceClip(Uint8List bytes) async {
   if (wav == null) throw const FormatException('not a 16-bit PCM voice note');
   final loader =
       debugVoiceClipLoader ??
-      (Platform.isWindows
+      (kIsWeb
+          ? BrowserVoiceClip.load
+          : Platform.isWindows
           ? WaveOutVoiceClip.load
           : Platform.isLinux
           ? PacatVoiceClip.load

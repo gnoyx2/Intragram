@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:intragram/features/chat/audit/audit_bundle_exchange.dart';
 import 'package:intragram/features/chat/audit/audit_entry_tile.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/tokens.dart';
+import 'package:intragram/widgets/named_selectable_text.dart';
 
 Future<void> showAuditProofSheet(
   BuildContext context,
@@ -79,7 +81,10 @@ class _AuditProofSheetState extends State<AuditProofSheet> {
                       IconButton(
                         tooltip: s.t('common.close'),
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
+                        icon: Icon(
+                          Icons.close,
+                          semanticLabel: macOSAppName(s.t('common.close')),
+                        ),
                       ),
                     ],
                   ),
@@ -126,7 +131,7 @@ class _AuditProofSheetState extends State<AuditProofSheet> {
                                 'count': '${batch.header.leafCount}',
                               }),
                             ),
-                            SelectableText(
+                            NamedSelectableText(
                               base64.encode(batch.header.root),
                               style: Theme.of(context).textTheme.bodySmall,
                             ),

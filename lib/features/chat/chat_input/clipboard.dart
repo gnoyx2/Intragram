@@ -5,6 +5,19 @@ part of '../chat_input.dart';
 // 내용은 붙여넣기를 눌렀을 때만 읽음. 종류만 물을 방법이 없는 Linux만 내용으로 확인함
 mixin _ChatInputClipboard on _ChatInputStateBase {
   Future<void> _refreshClipboard() async {
+    if (kIsWeb) {
+      // Availability cannot be probed without a clipboard permission/read.
+      if (mounted) {
+        setState(() {
+          _hasClipboardText = true;
+          _hasClipboardImage =
+              BrowserClipboard.canRead && widget.onSendImage != null;
+          _hasClipboardFiles =
+              BrowserClipboard.canRead && widget.onAttachPaths != null;
+        });
+      }
+      return;
+    }
     bool has;
     try {
       has = await Clipboard.hasStrings();
@@ -26,6 +39,7 @@ mixin _ChatInputClipboard on _ChatInputStateBase {
       defaultTargetPlatform == TargetPlatform.linux;
 
   Future<void> _refreshClipboardKinds() async {
+    if (kIsWeb) return;
     final wantImage = widget.onSendImage != null;
     final wantFiles = widget.onAttachPaths != null && _isDesktop;
     if (!wantImage && !wantFiles) return;
@@ -48,6 +62,7 @@ mixin _ChatInputClipboard on _ChatInputStateBase {
 
   Future<List<String>> _filesByContent() async {
     try {
+      if (kIsWeb) return await BrowserClipboard.readFiles();
       return await Pasteboard.files();
     } on Object {
       return const <String>[];
@@ -56,7 +71,14 @@ mixin _ChatInputClipboard on _ChatInputStateBase {
 
   // Windows는 플러그인이 %TEMP%에 BMP를 쓰니 메모리에서 바로 읽음
   Future<Uint8List?> _imageByContent() async {
-    if (Platform.isWindows) return WindowsClipboard.readImage();
+    if (kIsWeb) {
+      try {
+        return await BrowserClipboard.readImage();
+      } on Object {
+        return null;
+      }
+    }
+    if (!kIsWeb && Platform.isWindows) return WindowsClipboard.readImage();
     try {
       return await Pasteboard.image;
     } on Object {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/tokens.dart';
+import 'package:intragram/widgets/named_selectable_text.dart';
 import 'illustration.dart';
 
 // 원본 오류는 숨기지만 지우진 않음 (제목으론 안 씀): LAN 앱이라 사용자가 곧 네트워크 관리자인 경우가 많아 펼쳐서 복사할 수 있게 둠
@@ -82,7 +83,7 @@ class _ErrorStateState extends State<ErrorState> {
                       color: scheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
-                    child: SelectableText(
+                    child: NamedSelectableText(
                       '${widget.detail}',
                       style: textTheme.labelSmall,
                     ),

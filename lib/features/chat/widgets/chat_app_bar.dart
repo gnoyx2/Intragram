@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -165,7 +166,10 @@ class UnverifiedBanner extends StatelessWidget {
 
 // 방은 호스트가 풀어서 중계하고 파일은 기기끼리 평문이라 종단 간 암호화가 아님을 늘 보여 줌
 class RoomRelayBanner extends StatelessWidget {
-  const RoomRelayBanner({super.key});
+  const RoomRelayBanner({super.key, this.encryptedLinks = false});
+
+  // WebRTC 방은 멤버↔호스트 링크가 파일까지 DTLS라 v7 방의 평문 파일 문구를 쓰지 않음
+  final bool encryptedLinks;
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +191,13 @@ class RoomRelayBanner extends StatelessWidget {
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
-                S.of(context).t('chat.relayBanner'),
+                S
+                    .of(context)
+                    .t(
+                      encryptedLinks
+                          ? 'secureWeb.relayBanner'
+                          : 'chat.relayBanner',
+                    ),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: scheme.onSurfaceVariant,
                 ),

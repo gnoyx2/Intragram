@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'platform_files.dart';
 
 import 'package:flutter/services.dart' show MissingPluginException;
 import 'package:path/path.dart' as p;

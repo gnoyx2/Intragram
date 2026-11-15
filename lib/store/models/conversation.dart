@@ -175,6 +175,8 @@ class Conversation {
       other is Conversation &&
       other.id == id &&
       other.peerAlias == peerAlias &&
+      // 연결 뒤에 따로 알려지는 기기 종류만 바뀌어도 화면이 갱신돼야 함 (hashCode는 인자 20개 상한이라 뺌)
+      other.peerPlatform == peerPlatform &&
       other.peerId == peerId &&
       other.online == online &&
       other.secure == secure &&

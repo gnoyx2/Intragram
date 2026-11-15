@@ -165,14 +165,25 @@ class _BannerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Tooltip(
     message: tooltip,
-    // 시각 아이콘은 작게 두고 탭 영역은 48dp 확보 (reaction_chips.dart와 같은 패턴)
-    child: SizedBox(
-      width: 48,
-      height: 48,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Center(child: Icon(icon, color: Colors.white, size: 18)),
+    // 시각 아이콘은 작게 두고 탭 영역은 48dp 확보 (reaction_chips.dart와 같은 패턴).
+    // InkWell만으론 버튼이 아니라서 macOS VoiceOver엔 정적 텍스트로 보였음: 버튼임을 밝힘
+    child: Semantics(
+      button: true,
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const CircleBorder(),
+          child: Center(
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 18,
+              semanticLabel: macOSAppName(tooltip),
+            ),
+          ),
+        ),
       ),
     ),
   );

@@ -53,6 +53,10 @@ void main() {
   test('markVerified only flips to verified once both sides confirm', () async {
     store.upsertConversation(conv('c1'));
     expect(store.conversation('c1')!.verified, isFalse);
+    // A null SAS is never confirmable; the fixture needs a live session code.
+    registry.markVerified('c1', expectedSas: null);
+    expect(store.conversation('c1')!.localVerified, isFalse);
+    store.setConversationSas('c1', 'AAA111');
 
     registry.markVerified('c1', expectedSas: store.conversation('c1')!.sas);
     expect(store.conversation('c1')!.localVerified, isTrue);
@@ -197,6 +201,7 @@ void main() {
       reason: 'an unverified peer can never auto-accept',
     );
 
+    store.setConversationSas('c1', 'AAA111');
     registry.markVerified('c1', expectedSas: store.conversation('c1')!.sas);
     registry.setAutoAcceptFiles('c1', enabled: true);
     expect(

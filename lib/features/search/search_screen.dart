@@ -1,7 +1,10 @@
+import 'package:intragram/widgets/field_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:intragram/app_providers.dart';
+import 'package:intragram/core/constants.dart';
+import 'package:intragram/core/text_clip.dart';
 import 'package:intragram/features/chat/open_chat.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/store/models.dart';
@@ -39,6 +42,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final store = ref.watch(inMemoryStoreProvider);
     final vaultOn = ref.watch(vaultSettingsProvider).enabled;
     final trimmed = _query.trim();
+    // 열어 둔 동안 새로 오거나 지워진(소각·삭제) 메시지를 결과에 반영함: 방 스트림은 갱신 신호로만 씀.
+    // 안 그러면 소각된 본문이 검색어를 바꿀 때까지 결과에 남음
+    // 한계: 신호마다 RAM의 모든 메시지를 다시 훑음(2만 개에 약 13 ms). 대화가 아주 많아 느려지면 디바운스나 방별 결과 캐시
+    final rooms = ref.watch(conversationsProvider).value ?? const [];
+    for (final room in rooms) {
+      ref.watch(roomMessagesProvider(room.id));
+    }
 
     final grouped = <String, List<EphemeralMessage>>{};
     if (trimmed.isNotEmpty) {
@@ -49,15 +59,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          enableIMEPersonalizedLearning: false,
+        title: FieldName(
           controller: _controller,
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: S.of(context).t('home.searchMessages'),
-            border: InputBorder.none,
+          name: S.of(context).t('home.searchMessages'),
+          child: TextField(
+            enableIMEPersonalizedLearning: false,
+            autofillHints: null,
+            controller: _controller,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: S.of(context).t('home.searchMessages'),
+              border: InputBorder.none,
+            ),
+            onChanged: (value) => setState(() => _query = value),
           ),
-          onChanged: (value) => setState(() => _query = value),
         ),
       ),
       body: trimmed.isEmpty
@@ -115,7 +130,7 @@ class _ConversationGroup extends ConsumerWidget {
           ListTile(
             dense: true,
             title: Text(
-              message.text ?? '',
+              clipCharacters(message.text ?? '', kSnippetChars),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

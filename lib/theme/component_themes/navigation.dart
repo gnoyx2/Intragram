@@ -43,3 +43,19 @@ PageTransitionsTheme _pageTransitionsTheme() => PageTransitionsTheme(
     TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(),
   },
 );
+
+// macOS 앱 VoiceOver는 뒤로·닫기 버튼 tooltip을 이름으로 못 읽음 (lib/core/target_platform.dart macOSAppName):
+// 아이콘은 Flutter macOS 기본과 같고 같은 문구를 label로만 붙임. 다른 플랫폼은 Flutter 기본 그대로
+ActionIconThemeData? _actionIcons(TargetPlatform os) =>
+    kIsWeb || os != TargetPlatform.macOS
+    ? null
+    : ActionIconThemeData(
+        backButtonIconBuilder: (context) => Icon(
+          Icons.arrow_back_ios_new_rounded,
+          semanticLabel: MaterialLocalizations.of(context).backButtonTooltip,
+        ),
+        closeButtonIconBuilder: (context) => Icon(
+          Icons.close,
+          semanticLabel: MaterialLocalizations.of(context).closeButtonTooltip,
+        ),
+      );

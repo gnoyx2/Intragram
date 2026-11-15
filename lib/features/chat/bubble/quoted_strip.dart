@@ -40,7 +40,7 @@ class _QuotedStrip extends ConsumerWidget {
         _ when transfer.voice => s.t('transfer.voiceLabel'),
         _ => transfer.fileName,
       },
-      _ => parent.text ?? '',
+      _ => clipCharacters(parent.text ?? '', kSnippetChars),
     };
     final ink = chat.accentInk;
     final strip = Container(

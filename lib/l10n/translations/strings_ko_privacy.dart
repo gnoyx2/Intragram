@@ -1,5 +1,8 @@
 // 개인정보 처리 방침 (설정 › 앱 › 개인정보 처리 방침, PRIVACY.md와 같은 문구)
 const Map<String, String> kStringsKoPrivacy = {
+  'privacy.encryptedWebTitle': '암호화 웹 연결',
+  'privacy.encryptedWebBody':
+      '웹은 앱과 동일한 화면·메시지·PIN 보관소 코드를 사용해요. 최초 페이지와 프로그램 파일은 웹 호스팅에서 받아요. 앱·웹 사이 메시지와 파일은 외부 연결 서버·STUN·TURN 없이 WebRTC DTLS로 암호화하며 연결 코드를 직접 교환해요. 웹의 선택 보관소와 저장한 이름은 브라우저 IndexedDB에 남아요. PIN을 켜면 앱과 같은 PBKDF2·ChaCha20-Poly1305로 봉인하고, PIN 없이 보관소를 켜면 암호화되지 않아요. 받은 파일은 별도로 다운로드해야 하며 보관소의 전송 기록에는 파일 바이트를 담지 않아요. 브라우저는 OS 화면 캡처 차단·클립보드 동기화 제외·자동 mDNS 탐색을 강제할 수 없어요. 앱과 웹의 입력칸(메시지·연결 코드·PIN·검색)은 브라우저·OS 자동 완성에 참여하지 않아 입력한 내용이 입력 기록으로 제안되지 않아요. 브라우저가 입력한 PIN을 비밀번호로 저장할지 물으면 거절하세요. 이전 HTTP 게스트 포털은 별도의 평문 기능이에요.',
   'privacy.title': "개인정보 처리 방침",
   'privacy.noServerTitle': "서버도 계정도 없음",
   'privacy.noServerBody':
@@ -52,8 +55,8 @@ const Map<String, String> kStringsKoPrivacy = {
       "설명한 데이터를 받아요. QR 코드는 네트워크를 쓰지 않는 오픈소스 코드가 기기 안에서 읽어요.",
   'privacy.contactTitle': "문의",
   'privacy.contactBody':
-      "일반 문의는 프로젝트 GitHub 페이지에 이슈를 남겨 주세요. 보안 문제의 비공개 신고 절차와 사용 가능 여부는 "
-      "https://github.com/gnoyx2/Intragram/security/policy 페이지에서 확인해 주세요. "
-      "GitHub 비공개 신고 폼은 공개 저장소에서 활성화해야 사용할 수 있어요. 보조 이메일 jung@yonghun.pro는 "
-      "아직 수신할 수 없어 신고에 사용할 수 없어요. 취약점 세부 내용은 공개 이슈에 남기지 마세요.",
+      "일반 문의는 프로젝트 GitHub 페이지에 이슈를 남겨 주세요. 보안 문제는 "
+      "https://github.com/gnoyx2/Intragram/security/policy 페이지에 연결된 비공개 신고 폼"
+      "(Report a vulnerability)으로 알려 주세요. GitHub 계정이 필요해요. "
+      "취약점 세부 내용은 공개 이슈에 남기지 마세요.",
 };

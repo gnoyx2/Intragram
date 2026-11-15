@@ -52,6 +52,7 @@ const Map<String, String> kStringsEnCommon = {
   'common.backToHome': 'Back to chats',
   'homeActions.connecting': 'Connecting…',
   'qr.whiteBackgroundNote': 'White background helps scanners read this.',
+  'qr.unreadable': 'No QR code could be read from that image.',
 
   // 빈 상태 / 에러 상태
   'error.showDetail': 'Show details',

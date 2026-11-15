@@ -15,6 +15,9 @@ import 'package:intragram/network/file_streamer.dart'
     show TransferCleanupException;
 import 'package:intragram/network/registry/incoming_session_files.dart';
 
+// WebRTC 수신이 이번 실행 동안 같이 쓰는 저장 폴더 기억 (v7 링크처럼 한 번만 물음, 브리지 정리 때 비움)
+final webReceivePaths = IncomingPathResolver();
+
 // 받은 파일의 디스크 목적지: 폴더 고르기(이번 실행 동안 기억)와 이름 충돌 처리. 경로 탈출 방어는 core/path_safety.dart
 class IncomingPathResolver {
   IncomingPathResolver({this.chooseDirectory});

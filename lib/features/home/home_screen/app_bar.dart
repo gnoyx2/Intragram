@@ -37,36 +37,67 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
       actions: [
         if (!compact) ...[
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: Icon(
+              Icons.search,
+              semanticLabel: macOSAppName(
+                S.of(context).t('home.searchMessages'),
+              ),
+            ),
             tooltip: S.of(context).t('home.searchMessages'),
             onPressed: () => Navigator.of(context).push(SearchScreen.route()),
           ),
           IconButton(
-            icon: const Icon(Icons.add_link),
-            tooltip: S.of(context).t('home.connectByIp'),
-            onPressed: () => manualConnect(context, ref),
+            icon: Icon(
+              Icons.add_link,
+              semanticLabel: macOSAppName(
+                S.of(context).t(kIsWeb ? 'secureWeb.open' : 'home.connectByIp'),
+              ),
+            ),
+            tooltip: S
+                .of(context)
+                .t(kIsWeb ? 'secureWeb.open' : 'home.connectByIp'),
+            onPressed: () => kIsWeb
+                ? showWebConnectionDialog(context)
+                : manualConnect(context, ref),
           ),
           if (canScanQr)
             IconButton(
-              icon: const Icon(Icons.qr_code_scanner),
+              icon: Icon(
+                Icons.qr_code_scanner,
+                semanticLabel: macOSAppName(S.of(context).t('home.scanDevice')),
+              ),
               tooltip: S.of(context).t('home.scanDevice'),
               onPressed: () => scanConnect(context, ref),
             ),
-          IconButton(
-            icon: const Icon(Icons.qr_code_2),
-            tooltip: S.of(context).t('home.guestPortal'),
-            onPressed: () => PortalSheet.show(context),
-          ),
+          // 브라우저엔 게스트 포털이 없음: 연결은 바로 앞 버튼 하나로 엶
+          if (!kIsWeb)
+            IconButton(
+              icon: Icon(
+                Icons.qr_code_2,
+                semanticLabel: macOSAppName(
+                  S.of(context).t('home.guestPortal'),
+                ),
+              ),
+              tooltip: S.of(context).t('home.guestPortal'),
+              onPressed: () => PortalSheet.show(context),
+            ),
         ],
         PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert),
+          icon: Icon(
+            Icons.more_vert,
+            semanticLabel: macOSAppName(S.of(context).t('chat.more')),
+          ),
           tooltip: S.of(context).t('chat.more'),
           onSelected: (value) {
             switch (value) {
               case 'search':
                 Navigator.of(context).push(SearchScreen.route());
               case 'connect':
-                manualConnect(context, ref);
+                if (kIsWeb) {
+                  showWebConnectionDialog(context);
+                } else {
+                  manualConnect(context, ref);
+                }
               case 'scan':
                 scanConnect(context, ref);
               case 'portal':
@@ -85,17 +116,22 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
               ),
               PopupMenuItem(
                 value: 'connect',
-                child: Text(S.of(context).t('home.connectByIp')),
+                child: Text(
+                  S
+                      .of(context)
+                      .t(kIsWeb ? 'secureWeb.open' : 'home.connectByIp'),
+                ),
               ),
               if (canScanQr)
                 PopupMenuItem(
                   value: 'scan',
                   child: Text(S.of(context).t('home.scanDevice')),
                 ),
-              PopupMenuItem(
-                value: 'portal',
-                child: Text(S.of(context).t('home.guestPortal')),
-              ),
+              if (!kIsWeb)
+                PopupMenuItem(
+                  value: 'portal',
+                  child: Text(S.of(context).t('home.guestPortal')),
+                ),
             ],
             PopupMenuItem(
               value: 'settings',

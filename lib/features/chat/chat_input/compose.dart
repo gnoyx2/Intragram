@@ -49,16 +49,29 @@ mixin _ChatInputCompose on _ChatInputStateBase {
         event.logicalKey != LogicalKeyboardKey.numpadEnter) {
       return KeyEventResult.ignored;
     }
-    if (HardwareKeyboard.instance.isShiftPressed) {
-      return KeyEventResult.ignored; // 줄바꿈은 통과시킴
-    }
     final composing = _controller.value.composing;
     if (composing.isValid && !composing.isCollapsed) {
       // 한국어 등 조합형 입력기가 조합 중이면 이 Enter는 조합 확정용이라 IME에 넘김
       // (안 그러면 확정 전 텍스트가 그대로 전송됨)
       return KeyEventResult.ignored;
     }
+    if (HardwareKeyboard.instance.isShiftPressed) {
+      // 줄바꿈은 직접 넣음: 플랫폼에 넘기면 send 액션 입력창(웹·macOS)이 전송을 실행함
+      _insertNewline();
+      return KeyEventResult.handled;
+    }
     _send();
     return KeyEventResult.handled;
+  }
+
+  void _insertNewline() {
+    final value = _controller.value;
+    final at = value.selection.isValid
+        ? value.selection
+        : TextSelection.collapsed(offset: value.text.length);
+    _controller.value = TextEditingValue(
+      text: value.text.replaceRange(at.start, at.end, '\n'),
+      selection: TextSelection.collapsed(offset: at.start + 1),
+    );
   }
 }

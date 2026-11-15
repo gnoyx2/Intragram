@@ -100,7 +100,12 @@ extension _MessageListView on _MessageListState {
                       AppHaptics.lightImpact();
                       _toBottom();
                     },
-                    child: const Icon(Icons.keyboard_arrow_down),
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      semanticLabel: macOSAppName(
+                        S.of(context).t('a11y.jumpToLatest'),
+                      ),
+                    ),
                   ),
                 ),
               ),

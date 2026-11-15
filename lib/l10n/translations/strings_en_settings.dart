@@ -48,7 +48,7 @@ const Map<String, String> kStringsEnSettings = {
       'No size cap. A peer could push a very large message straight into '
       "this device's memory — only use on a network you trust.",
   'settings.large.fileDesc':
-      'A message over 64 KB is sent as a "Long message.txt" file you save '
+      'A message over 64 KB is sent as a "message.txt" file you save '
       'and open. Keeps memory small.',
   'settings.iosForegroundOnly':
       'On iPhone and iPad, chats stay connected only while Intragram is open. '

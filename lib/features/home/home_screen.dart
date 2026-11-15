@@ -1,6 +1,8 @@
+import 'package:intragram/core/target_platform.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +15,7 @@ import 'package:intragram/store/models.dart';
 import 'package:intragram/theme/motion.dart';
 import 'package:intragram/features/chat/open_chat.dart';
 import 'package:intragram/features/portal/portal_sheet.dart';
+import 'package:intragram/features/portal/web_connection_dialog.dart';
 import 'package:intragram/features/search/search_screen.dart';
 import 'package:intragram/features/settings/settings_screen.dart';
 import 'package:intragram/theme/tokens.dart';
@@ -21,6 +24,7 @@ import 'package:intragram/widgets/illustration.dart';
 import 'package:intragram/widgets/readable_list.dart';
 import 'home_actions.dart';
 import 'widgets/conversation_tile.dart';
+import 'widgets/web_connection_card.dart';
 import 'widgets/discovery_help.dart';
 import 'widgets/discovery_radar.dart';
 import 'widgets/discovery_refresh_row.dart';
@@ -200,33 +204,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               onMenu: ([at]) =>
                   conversationActions(context, ref, conversation, at: at),
             ),
-          SectionHeader(
-            S
-                .of(context)
-                .plural(
-                  peers.length,
-                  one: S.of(context).t('home.onThisNetworkFoundOne'),
-                  other: S.of(context).t('home.onThisNetworkFoundOther'),
-                ),
-            trailing: const DiscoveryRefreshRow(),
-          ),
-          if (peers.isEmpty)
-            DiscoveryRadar(
-              reason: emptyReason,
-              onRefresh: () {
-                ref.read(serverControllerProvider.notifier).start();
-                ref.read(discoveryControllerProvider.notifier).refresh();
-              },
-              onManualConnect: () => manualConnect(context, ref),
+          if (kIsWeb)
+            const WebConnectionCard()
+          else ...[
+            SectionHeader(
+              S
+                  .of(context)
+                  .plural(
+                    peers.length,
+                    one: S.of(context).t('home.onThisNetworkFoundOne'),
+                    other: S.of(context).t('home.onThisNetworkFoundOther'),
+                  ),
+              trailing: const DiscoveryRefreshRow(),
             ),
-          if (peers.isEmpty && emptyReason == DiscoveryEmptyReason.noDevices)
-            const DiscoveryHelp(),
-          for (final peer in peers)
-            PeerTile(
-              peer: peer,
-              onTap: () => connectAndOpenPeer(context, ref, peer),
-              onMenu: ([at]) => peerActions(context, ref, peer, at: at),
-            ),
+            if (peers.isEmpty)
+              DiscoveryRadar(
+                reason: emptyReason,
+                onRefresh: () {
+                  ref.read(serverControllerProvider.notifier).start();
+                  ref.read(discoveryControllerProvider.notifier).refresh();
+                },
+                onManualConnect: () => manualConnect(context, ref),
+              ),
+            if (peers.isEmpty && emptyReason == DiscoveryEmptyReason.noDevices)
+              const DiscoveryHelp(),
+            for (final peer in peers)
+              PeerTile(
+                peer: peer,
+                onTap: () => connectAndOpenPeer(context, ref, peer),
+                onMenu: ([at]) => peerActions(context, ref, peer, at: at),
+              ),
+          ],
         ],
       ),
     );

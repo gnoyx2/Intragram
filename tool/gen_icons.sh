@@ -82,6 +82,12 @@ for size in 48 64 128 256; do
     --out "linux/icons/hicolor/${size}x${size}/apps/intragram.png" >/dev/null
 done
 
+echo "== Web app icons =="
+mkdir -p web/icons
+cp android/app/src/main/res/mipmap-hdpi/ic_launcher.png web/favicon.png
+cp android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png web/icons/Icon-192.png
+cp linux/icons/hicolor/512x512/apps/intragram.png web/icons/Icon-512.png
+
 echo "== iOS·macOS Icon Composer layer =="
 # Xcode가 AppIcon.icon 하나로 모든 버전의 아이콘을 만듦: 26 이상은 기본·다크·모노(투명·틴트),
 # 그 전 버전과 App Store용은 같은 파일에서 만든 대체 이미지. 배경색과 다크 배경색은 각 icon.json에 있음

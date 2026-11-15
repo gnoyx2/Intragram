@@ -5,6 +5,7 @@ import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/network/org_auth.dart';
 import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/widgets/adaptive_dialog_action.dart';
+import 'package:intragram/widgets/named_selectable_text.dart';
 import 'org_credential_badge.dart' show orgStatusLabel;
 
 Future<void> showOrgCredentialDialog(
@@ -79,7 +80,7 @@ class _OrgCredentialDialogState extends State<_OrgCredentialDialog> {
     }
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.sm),
-      child: SelectableText(label),
+      child: NamedSelectableText(label),
     );
   }
 
@@ -102,7 +103,7 @@ class _OrgCredentialDialogState extends State<_OrgCredentialDialog> {
                 Text(s.t('org.demoNotice')),
                 const SizedBox(height: AppSpacing.md),
                 Text(s.t('org.localCredential')),
-                SelectableText(
+                NamedSelectableText(
                   own == null
                       ? s.t('org.notPresented')
                       : '${own.org} · ${own.dept} · ${own.role}\n'

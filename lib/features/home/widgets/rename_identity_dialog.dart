@@ -1,3 +1,4 @@
+import 'package:intragram/widgets/field_name.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -37,31 +38,37 @@ class _RenameIdentityDialogState extends State<RenameIdentityDialog> {
     final s = S.of(context);
     final cupertino = isCupertinoDialog(context);
 
-    final field = cupertino
-        ? CupertinoTextField(
-            enableIMEPersonalizedLearning: false,
-            controller: _controller,
-            autofocus: true,
-            maxLength: 32,
-            placeholder: s.t('identity.renameHint'),
-            padding: const EdgeInsets.all(AppSpacing.md),
-            decoration: BoxDecoration(
-              border: Border.all(color: CupertinoColors.separator),
-              borderRadius: BorderRadius.circular(AppRadius.xs),
+    final field = FieldName(
+      controller: _controller,
+      name: s.t('identity.renameHint'),
+      child: cupertino
+          ? CupertinoTextField(
+              enableIMEPersonalizedLearning: false,
+              autofillHints: null,
+              controller: _controller,
+              autofocus: true,
+              maxLength: 32,
+              placeholder: s.t('identity.renameHint'),
+              padding: const EdgeInsets.all(AppSpacing.md),
+              decoration: BoxDecoration(
+                border: Border.all(color: CupertinoColors.separator),
+                borderRadius: BorderRadius.circular(AppRadius.xs),
+              ),
+              onSubmitted: (_) => _submit(),
+            )
+          : TextField(
+              enableIMEPersonalizedLearning: false,
+              autofillHints: null,
+              controller: _controller,
+              autofocus: true,
+              maxLength: 32,
+              decoration: InputDecoration(
+                hintText: s.t('identity.renameHint'),
+                border: const OutlineInputBorder(),
+              ),
+              onSubmitted: (_) => _submit(),
             ),
-            onSubmitted: (_) => _submit(),
-          )
-        : TextField(
-            enableIMEPersonalizedLearning: false,
-            controller: _controller,
-            autofocus: true,
-            maxLength: 32,
-            decoration: InputDecoration(
-              hintText: s.t('identity.renameHint'),
-              border: const OutlineInputBorder(),
-            ),
-            onSubmitted: (_) => _submit(),
-          );
+    );
 
     final toggleRow = Row(
       children: [

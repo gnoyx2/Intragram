@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,6 +19,8 @@ import 'package:intragram/widgets/action_menu.dart';
 import 'package:intragram/widgets/adaptive_dialog_action.dart';
 import 'connect_failure.dart';
 import 'widgets/manual_connect_dialog.dart';
+import 'package:intragram/widgets/picker_feedback.dart';
+import 'package:intragram/features/portal/web_connection_dialog.dart';
 
 export 'package:intragram/features/chat/open_chat.dart' show openChat;
 export 'home_panic_action.dart';
@@ -53,6 +56,13 @@ bool get canScanQr => isMobileTarget;
 
 // 상대가 방을 열고 있으면 room_join이 방으로 들이고 아니면 1:1 (LAN 밖 코드는 ScanScreen이 이미 거름)
 Future<void> scanConnect(BuildContext context, WidgetRef ref) async {
+  if (kIsWeb) {
+    final raw = await pickQrImageOrExplain(context);
+    if (raw != null && context.mounted) {
+      await showWebConnectionDialog(context, invitation: raw);
+    }
+    return;
+  }
   final target = await Navigator.of(context).push<PeerCode>(
     MaterialPageRoute<PeerCode>(builder: (_) => const ScanScreen()),
   );

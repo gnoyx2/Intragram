@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:cryptography/dart.dart' show DartSha256;
-import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/foundation.dart' show visibleForTesting, kIsWeb;
 import 'os_privacy.dart';
 
 final Random _idRng = Random.secure();
@@ -182,6 +182,7 @@ final class AppIdentity {
   }
 
   static String _detectPlatform() {
+    if (kIsWeb) return 'Web';
     if (Platform.isIOS) return OsPrivacy.cachedIsPad == true ? 'iPadOS' : 'iOS';
     if (Platform.isAndroid) return 'Android';
     if (Platform.isMacOS) return 'macOS';

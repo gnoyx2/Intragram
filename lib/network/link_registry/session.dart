@@ -5,7 +5,8 @@ mixin _LinkRegistrySession
         _LinkRegistryState,
         _LinkRegistryRoom,
         _LinkRegistryFileWiring,
-        _LinkRegistryDuplicates {
+        _LinkRegistryDuplicates,
+        _LinkRegistryWebSignals {
   // slot은 acceptInbound가 잡은 미인증 슬롯: 링크가 _links에 오르는 순간 풀어서 두 번 안 셈 (무산되면 호출부가 풂)
   Future<void> _register({
     required String conversationId,
@@ -49,6 +50,7 @@ mixin _LinkRegistrySession
       requiredWebToken: requiredWebToken,
     );
     _wireFileCallbacks(link);
+    _wireWebSignals(link);
     link.onAutoAcceptOffer = (transferId) {
       unawaited(_transfers.incoming.accept(transferId));
     };
@@ -82,6 +84,7 @@ mixin _LinkRegistrySession
     // 같은 멤버의 열린 링크가 남았으면(재접속 직후 옛 링크가 늦게 닫힘) 나간 게 아님: 경로만 넘기고 멤버 정리는 건너뜀
     final survivor = _sameMemberLink(link);
     _handOverRoomFileRoutes(link, survivor);
+    _forgetWebSignals(link);
     if (identical(_links[link.conversationId], link)) {
       _links.remove(link.conversationId);
     }
@@ -147,6 +150,7 @@ mixin _LinkRegistrySession
 
   // 내가 호스트인 방이면 멤버 링크를 전부 닫고 방 자리도 비움 (링크를 두면 숨은 중계가 계속되고 지운 방 id로 메시지가 다시 쌓임)
   Future<void> disconnect(String conversationId) async {
+    if (_web.contains(conversationId)) return _web.closeRoom(conversationId);
     store.roomIntegrity.remove(conversationId);
     if (_isRoomHub(conversationId)) {
       if (conversationId == _appRoomId) {
@@ -168,7 +172,14 @@ mixin _LinkRegistrySession
     // 첫 await 전에 세움: 이후 시작하거나 await 중이던 _register는 전부 걸림
     _disposed = true;
     store.roomIntegrity.clear();
+    Object? transferError;
+    StackTrace? transferStack;
+    final webClosing = _web.dispose().catchError((Object e, StackTrace st) {
+      transferError = e;
+      transferStack = st;
+    });
     _roomFileRoutes.clear();
+    _cancelWebJoinTimers();
     _inboundAccepts.clear(); // 접속했던 기기 주소를 RAM에 남기지 않음
     _generation++;
     await _localBurnSub?.cancel();
@@ -178,20 +189,19 @@ mixin _LinkRegistrySession
     _roomLinks.clear();
     _webGuestRoomId = null;
     _appRoomId = null;
-    // 전송 정리가 실패해도(조각 파일 삭제 실패 등) 링크는 끝까지 닫고 실패는 마지막에 던짐
-    Object? transferError;
-    StackTrace? transferStack;
+    // WebRTC 종료나 전송 정리가 실패해도 네이티브 링크는 끝까지 닫음
     try {
       await _transfers.dispose();
     } on Object catch (e, st) {
-      transferError = e;
-      transferStack = st;
+      transferError ??= e;
+      transferStack ??= st;
     }
     for (final link in links) {
       await link.close();
     }
+    await webClosing;
     if (transferError != null) {
-      Error.throwWithStackTrace(transferError, transferStack!);
+      Error.throwWithStackTrace(transferError!, transferStack!);
     }
   }
 }

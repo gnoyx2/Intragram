@@ -30,6 +30,7 @@ part 'peer_link_authorization_file.dart';
 part 'peer_link_lifecycle.dart';
 part 'peer_link_org.dart';
 part 'peer_link_room_integrity.dart';
+part 'peer_link_web_signal.dart';
 
 // (전송 id, 시도 id, 인증된 발신자 id). 지금 attempt·수신자가 맞는지는 registry가 봄
 typedef FileControlCallback =
@@ -191,6 +192,10 @@ class PeerLink {
 
   // 멤버만: 호스트가 알린 방 앱 피어 id 목록 (room_join/room_state)
   void Function(List<String> peerIds)? onRoomRoster;
+
+  // 상대 앱이 이 링크로 실어 보낸 WebRTC 초대·응답 코드 (registry가 방 참가와 응답 대기를 맡음)
+  void Function(String id, String code)? onWebInvite;
+  void Function(String id, String? code)? onWebAnswer;
 
   // 정리가 완료되면 한 번 호출됨. 링크 자신을 넘겨 호출부가 현재 맵 값과 일치할 때만 삭제함 (늦게 닫힌 이전 링크가 새 링크를 덮어 지우는 동작을 방지함)
   void Function(PeerLink link)? onClosed;

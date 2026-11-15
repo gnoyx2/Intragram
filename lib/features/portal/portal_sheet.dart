@@ -1,4 +1,6 @@
+import 'package:intragram/core/target_platform.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intragram/theme/adaptive_layout.dart';
 
@@ -13,11 +15,13 @@ import 'package:intragram/widgets/illustration.dart';
 
 import 'portal_qr.dart';
 import 'portal_sheet_route.dart';
+import 'web_connection_dialog.dart';
 
 class PortalSheet extends ConsumerWidget {
   const PortalSheet({super.key});
 
   static Future<void> show(BuildContext context) {
+    if (kIsWeb) return showWebConnectionDialog(context);
     final navigator = Navigator.of(context);
     final localizations = MaterialLocalizations.of(context);
     return navigator.push(
@@ -54,13 +58,13 @@ class PortalSheet extends ConsumerWidget {
       ),
       const SizedBox(height: AppSpacing.xs),
       Text(
-        s.t('portal.body'),
+        s.t('secureWeb.portalBody'),
         style: Theme.of(context).textTheme.bodySmall,
         textAlign: TextAlign.center,
       ),
       const SizedBox(height: AppSpacing.lg),
     ];
-    final controls = <Widget>[
+    final legacy = <Widget>[
       if (url != null) ...[
         if (fold == null) PortalQr(url: url),
         const SizedBox(height: AppSpacing.xxs),
@@ -87,7 +91,10 @@ class PortalSheet extends ConsumerWidget {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.copy),
+              icon: Icon(
+                Icons.copy,
+                semanticLabel: macOSAppName(s.t('portal.copyUrl')),
+              ),
               tooltip: s.t('portal.copyUrl'),
               onPressed: () async {
                 await OsPrivacy.copySensitive(url);
@@ -138,6 +145,29 @@ class PortalSheet extends ConsumerWidget {
           onChanged: (value) => controller.setPortalEnabled(value),
         ),
       ],
+    ];
+    final controls = <Widget>[
+      FilledButton.icon(
+        key: const Key('secure-web-entry'),
+        icon: const Icon(Icons.phonelink_lock_outlined),
+        label: Text(s.t('secureWeb.open')),
+        onPressed: () async {
+          await controller.setPortalEnabled(false);
+          if (!context.mounted) return;
+          final navigator = Navigator.of(context);
+          navigator.pop();
+          if (navigator.mounted) {
+            await showWebConnectionDialog(navigator.context);
+          }
+        },
+      ),
+      const SizedBox(height: AppSpacing.lg),
+      ExpansionTile(
+        title: Text(s.t('secureWeb.legacyTitle')),
+        subtitle: Text(s.t('secureWeb.legacyBody')),
+        initiallyExpanded: false,
+        children: [Text(s.t('portal.body')), ...legacy],
+      ),
       if (canScanQr) ...[
         const Divider(height: 24),
         OutlinedButton.icon(
@@ -178,9 +208,7 @@ class PortalSheet extends ConsumerWidget {
             children: [
               SizedBox(
                 height: top,
-                child: url == null
-                    ? const SizedBox.shrink()
-                    : PortalQr(url: url),
+                child: const Center(child: BrandPigeonIcon(size: 64)),
               ),
               SizedBox(height: gap),
               Expanded(child: scroll([...heading, ...controls])),

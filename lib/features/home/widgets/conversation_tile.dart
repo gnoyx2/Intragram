@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intragram/l10n/strings.dart';
@@ -30,6 +31,17 @@ class ConversationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final chat = context.chat;
     final s = S.of(context);
+    final status = conversation.isRoom
+        ? s.t(
+            _membersVerified
+                ? 'convTile.roomVerified'
+                : 'convTile.roomUnverified',
+          )
+        : s.t(
+            conversation.verified
+                ? 'a11y.secureVerified'
+                : 'a11y.secureUnverified',
+          );
     // ListTile엔 우클릭 훅이 없어서 GestureDetector로 감쌈
     return CallbackShortcuts(
       bindings: menuKeyBindings(() => onMenu(menuAnchor(context))),
@@ -51,27 +63,23 @@ class ConversationTile extends StatelessWidget {
               if (conversation.isRoom) ...[
                 const SizedBox(width: AppSpacing.xs),
                 Tooltip(
-                  message: s.t(
-                    _membersVerified
-                        ? 'convTile.roomVerified'
-                        : 'convTile.roomUnverified',
-                  ),
+                  message: status,
                   child: Icon(
                     Icons.hub_outlined,
                     size: 15,
                     color: _membersVerified ? chat.online : chat.burn,
+                    semanticLabel: macOSAppName(status),
                   ),
                 ),
               ] else if (conversation.secure) ...[
                 const SizedBox(width: AppSpacing.xs),
                 Tooltip(
-                  message: conversation.verified
-                      ? s.t('a11y.secureVerified')
-                      : s.t('a11y.secureUnverified'),
+                  message: status,
                   child: Icon(
                     conversation.verified ? Icons.gpp_good : Icons.gpp_maybe,
                     size: 15,
                     color: conversation.verified ? chat.online : chat.burn,
+                    semanticLabel: macOSAppName(status),
                   ),
                 ),
               ],

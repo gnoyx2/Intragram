@@ -62,6 +62,7 @@ class EphemeralMessage {
 
   EphemeralMessage copyWith({
     String? senderAlias,
+    String? replyToId,
     String? text,
     Map<String, Set<String>>? reactions,
     int? ttlSeconds,
@@ -80,7 +81,7 @@ class EphemeralMessage {
       createdAt: createdAt,
       text: text ?? this.text,
       transferId: transferId,
-      replyToId: replyToId,
+      replyToId: replyToId ?? this.replyToId,
       reactions: reactions ?? this.reactions,
       ttlSeconds: ttlSeconds ?? this.ttlSeconds,
       burnAt: burnAt ?? this.burnAt,

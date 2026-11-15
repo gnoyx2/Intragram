@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'dart:async';
 import 'dart:io' show Process, ProcessException, ProcessSignal;
 import 'dart:math' as math;
@@ -5,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart' show PointerDeviceKind, kPrimaryButton;
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform;
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:record/record.dart';

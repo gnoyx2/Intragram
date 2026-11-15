@@ -14,16 +14,21 @@ mixin _ChatRoomScaffold
       toolbarHeight: AppType.toolbarHeight(context),
       titleSpacing: 0,
       title: _searching
-          ? TextField(
-              enableIMEPersonalizedLearning: false,
+          ? FieldName(
               controller: _searchCtrl,
-              autofocus: true,
-              textInputAction: TextInputAction.search,
-              decoration: InputDecoration(
-                hintText: S.of(context).t('search.inChat'),
-                border: InputBorder.none,
+              name: S.of(context).t('search.inChat'),
+              child: TextField(
+                enableIMEPersonalizedLearning: false,
+                autofillHints: null,
+                controller: _searchCtrl,
+                autofocus: true,
+                textInputAction: TextInputAction.search,
+                decoration: InputDecoration(
+                  hintText: S.of(context).t('search.inChat'),
+                  border: InputBorder.none,
+                ),
+                onChanged: _runSearch,
               ),
-              onChanged: _runSearch,
             )
           : ChatTitle(conversation: conversation),
       actions: _searching
@@ -40,17 +45,30 @@ mixin _ChatRoomScaffold
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.keyboard_arrow_up),
+                icon: Icon(
+                  Icons.keyboard_arrow_up,
+                  semanticLabel: macOSAppName(
+                    S.of(context).t('search.previousHit'),
+                  ),
+                ),
                 tooltip: S.of(context).t('search.previousHit'),
                 onPressed: _hits.length < 2 ? null : () => _moveHit(-1),
               ),
               IconButton(
-                icon: const Icon(Icons.keyboard_arrow_down),
+                icon: Icon(
+                  Icons.keyboard_arrow_down,
+                  semanticLabel: macOSAppName(
+                    S.of(context).t('search.nextHit'),
+                  ),
+                ),
                 tooltip: S.of(context).t('search.nextHit'),
                 onPressed: _hits.length < 2 ? null : () => _moveHit(1),
               ),
               IconButton(
-                icon: const Icon(Icons.close),
+                icon: Icon(
+                  Icons.close,
+                  semanticLabel: macOSAppName(S.of(context).t('search.close')),
+                ),
                 tooltip: S.of(context).t('search.close'),
                 onPressed: _closeSearch,
               ),
@@ -67,8 +85,16 @@ mixin _ChatRoomScaffold
               ChatOverflowMenu(
                 conversation: conversation,
                 registry: _registry,
-                onAddPeople: () =>
-                    showAddPeopleSheet(context, ref, widget.conversationId),
+                // 남이 연 WebRTC 방(참여자)은 사람을 넣을 수 없어서 메뉴를 감춤
+                onAddPeople:
+                    _registry.isWebConversation(widget.conversationId) &&
+                        !_registry.hostsWebRoom(widget.conversationId)
+                    ? null
+                    : () => showAddPeopleSheet(
+                        context,
+                        ref,
+                        widget.conversationId,
+                      ),
                 onEndConversation: _endConversation,
                 onSearch: _openSearch,
                 onToggleKeep: vaultOn && !conversation.isRoom

@@ -71,8 +71,11 @@ mixin _ChatRoomBody
               if (_replyingTo != null) setState(() => _replyingTo = null);
             },
             onAttach: _attach,
-            onAttachPaths: (paths) =>
-                _registry.offerFilesFromPaths(widget.conversationId, paths),
+            onAttachPaths: (paths) => _registry.offerFilesFromPaths(
+              widget.conversationId,
+              paths,
+              onTooLarge: fileTooLargeNotice(context),
+            ),
             onSendImage: (bytes) => _registry.offerInlineBytes(
               widget.conversationId,
               'pasted-image.png',

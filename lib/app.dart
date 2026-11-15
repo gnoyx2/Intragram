@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +9,8 @@ import 'app_commands.dart';
 import 'app_navigator.dart';
 import 'app_providers.dart';
 import 'core/constants.dart';
+import 'core/theme_mode_controller.dart';
+import 'features/portal/web_connection_dialog.dart';
 import 'core/display_regions.dart';
 import 'core/foreground_service.dart';
 import 'core/mobile_file_source.dart';
@@ -85,6 +88,10 @@ class _IntragramAppState extends ConsumerState<IntragramApp>
       // 이미 resumed라 전이 이벤트가 안 와서 점검 타이머를 직접 켬
       serverController.setForeground(true);
       unawaited(ref.read(notificationServiceProvider).consumeLaunchPayload());
+      if (kIsWeb && Uri.base.queryParameters['mode'] == 'portal') {
+        final context = navigatorKey.currentContext;
+        if (context != null) unawaited(showWebConnectionDialog(context));
+      }
     });
     _opener.gateCleared();
   }
@@ -200,7 +207,7 @@ class _IntragramAppState extends ConsumerState<IntragramApp>
         darkTheme: _theme(dark: true),
         highContrastTheme: _theme(dark: false, highContrast: true),
         highContrastDarkTheme: _theme(dark: true, highContrast: true),
-        themeMode: ThemeMode.system,
+        themeMode: ref.watch(themeModeProvider),
         // 뒤로·메뉴 툴팁, 텍스트 선택 도구 막대, 스크린리더 라벨 같은 프레임워크 문구도 앱 언어를 따름
         locale: Locale(lang.name),
         supportedLocales: const [Locale('en'), Locale('ko')],
@@ -213,8 +220,11 @@ class _IntragramAppState extends ConsumerState<IntragramApp>
               child: AppCommands(
                 navigatorKey: navigatorKey,
                 unlocked: access is VaultOpen,
-                onNewConnection: (context) =>
-                    unawaited(manualConnect(context, ref)),
+                onNewConnection: (context) => unawaited(
+                  kIsWeb
+                      ? showWebConnectionDialog(context)
+                      : manualConnect(context, ref),
+                ),
                 onTextSize: _stepTextSize,
                 child: Stack(
                   children: [

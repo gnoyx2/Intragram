@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -155,7 +156,11 @@ class _MemberRow extends StatelessWidget {
             : Text(orgLabel, maxLines: 2, overflow: TextOverflow.ellipsis),
         trailing: Tooltip(
           message: statusLabel,
-          child: ExcludeSemantics(child: Icon(icon, color: color)),
+          child: Icon(
+            icon,
+            color: color,
+            semanticLabel: macOSAppName(statusLabel),
+          ),
         ),
         onTap: onTap,
       ),

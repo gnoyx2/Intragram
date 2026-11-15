@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, visibleForTesting;
+    show TargetPlatform, defaultTargetPlatform, visibleForTesting, kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,10 +10,12 @@ const MethodChannel _privacy = MethodChannel('intragram/privacy');
 
 // 못 열면 호출부는 경로 문구만 보여 줌
 bool canOpenSettings(SettingsPane pane) =>
-    defaultTargetPlatform == TargetPlatform.android ||
-    settingsUriFor(defaultTargetPlatform, pane) != null;
+    !kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.android ||
+        settingsUriFor(defaultTargetPlatform, pane) != null);
 
 Future<bool> openSettings(SettingsPane pane) async {
+  if (kIsWeb) return false;
   try {
     if (defaultTargetPlatform == TargetPlatform.android) {
       // 앱 정보 화면(권한이 거기 있음)은 인텐트라 네이티브로 엶

@@ -34,6 +34,7 @@ const Map<String, String> kStringsKoChat = {
   'transfer.declineAll': '전부 거절',
   'transfer.waitingForPeer': '상대 기다리는 중…',
   'transfer.savedTo': '{path}에 저장됨',
+  'transfer.receivedInBrowser': '브라우저에서 수신됨 · 사본을 보관하려면 기기에 저장하세요',
   'transfer.saveToDevice': '기기에 저장',
   'transfer.saveFailed': '저장 실패',
   'transfer.disk': '디스크',

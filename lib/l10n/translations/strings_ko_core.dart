@@ -35,6 +35,7 @@ const Map<String, String> kStringsKoCore = {
   'common.backToHome': '대화 목록으로',
   'homeActions.connecting': '연결하는 중…',
   'qr.whiteBackgroundNote': '스캐너가 잘 읽도록 흰 배경을 썼어요.',
+  'qr.unreadable': '그 이미지에서 QR 코드를 읽지 못했어요.',
 
   'error.showDetail': '자세히 보기',
   'error.hideDetail': '자세히 숨기기',
@@ -168,6 +169,7 @@ const Map<String, String> kStringsKoCore = {
   'a11y.qrCodeSas': '보안 코드 QR 코드예요. 위에 선택 가능한 텍스트로도 있어요.',
   'a11y.reactWith': '{emoji} 반응 남기기',
   'a11y.addReaction': '다른 반응 추가',
+  'a11y.longMessage': '긴 메시지예요. 앞부분만 이어져요. 전체는 메시지를 복사해서 읽을 수 있어요.',
 
   'savedChats.title': '저장된 대화',
   'savedChats.emptyTitle': '저장된 대화 없음',

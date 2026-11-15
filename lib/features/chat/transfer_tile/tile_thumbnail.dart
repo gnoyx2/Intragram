@@ -10,6 +10,12 @@ final Expando<Future<bool>> _thumbChecks = Expando<Future<bool>>();
 // 64 KB짜리 PNG도 수만 px 캔버스면 디코드 순간 수 GB를 잡음 (cacheHeight는 디코드 뒤에 줄임)
 Future<bool> _thumbFits(Uint8List bytes) async {
   if (bytes.length > kMaxThumbBytes) return false;
+  if (kIsWeb) {
+    final dims = probeEncodedImageDimensions(bytes);
+    return dims != null &&
+        dims.width <= _kThumbMaxSide &&
+        dims.height <= _kThumbMaxSide;
+  }
   ui.ImmutableBuffer? buffer;
   ui.ImageDescriptor? descriptor;
   try {
@@ -102,7 +108,10 @@ class _CompletedImagePreview extends StatelessWidget {
     if (path == null) return const SizedBox.shrink();
     final kind = FileKind.of(transfer.fileName, mimeType: transfer.mimeType);
     if (kind != FileKind.image) return const SizedBox.shrink();
-    if (!File(path).existsSync()) return const SizedBox.shrink();
+    if (BrowserReceivedFiles.read(path) == null &&
+        (kIsWeb || !File(path).existsSync())) {
+      return const SizedBox.shrink();
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: ClipRRect(

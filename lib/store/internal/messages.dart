@@ -87,6 +87,23 @@ mixin _StoreMessages on _InMemoryStoreState, _StoreCore {
     if (m.hasTimer) _startBurn(messageId);
   }
 
+  // Data-only WebRTC metadata follows the authenticated text frame.
+  void applyWebMetadata(String id, {required int ttl, String? replyToId}) {
+    final message = _findMessage(id);
+    if (message == null || message.isMine || message.burned) return;
+    _replaceMessage(
+      message.conversationId,
+      message.copyWith(ttlSeconds: ttl, replyToId: replyToId),
+    );
+    if (ttl > 0) {
+      if (message.delivery == DeliveryState.read) {
+        _startBurn(id);
+      } else {
+        _armBurnCeiling(id, kUnreadBurnCeiling);
+      }
+    }
+  }
+
   // 내 메시지 상태는 sending -> sent -> delivered -> read 앞으로만 감 (enum 순서 기준)
   // failed는 재시도 표시라 안 덮고, 이미 읽은 사람이 있으면 read로 맞춤 (재전송 뒤 ack가 read를 내리지 않게)
   void advanceDelivery(String messageId, DeliveryState next) {

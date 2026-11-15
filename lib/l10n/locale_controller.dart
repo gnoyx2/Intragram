@@ -1,4 +1,4 @@
-import 'dart:ui' show PlatformDispatcher;
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,12 +11,13 @@ final localeControllerProvider = NotifierProvider<LocaleController, AppLang>(
 );
 
 class LocaleController extends Notifier<AppLang> {
+  String? _browserSeed = kIsWeb ? Uri.base.queryParameters['lang'] : null;
   @override
   AppLang build() {
     final override = ref.watch(
       vaultSettingsProvider.select((s) => s.langOverride),
     );
-    return resolve(override);
+    return resolve(override ?? _browserSeed);
   }
 
   static AppLang resolve(String? override) {
@@ -27,6 +28,9 @@ class LocaleController extends Notifier<AppLang> {
   }
 
   // vault가 켜져 있으면 파일에도 반영하고, 아니면 이번 세션 RAM에만 둠
-  Future<void> setOverride(String? code) =>
-      ref.read(vaultSettingsProvider.notifier).setLangOverride(code);
+  Future<void> setOverride(String? code) {
+    _browserSeed = null;
+    state = resolve(code);
+    return ref.read(vaultSettingsProvider.notifier).setLangOverride(code);
+  }
 }

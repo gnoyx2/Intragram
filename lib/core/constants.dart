@@ -123,6 +123,12 @@ const int kSpillThresholdBytes = 64 * 1024;
 // 긴 글 파일의 미리보기 길이 (file_offer에 실림)
 const int kSpillPreviewBytes = 2 * 1024;
 
+// 스크린 리더가 말풍선 하나에서 읽는 본문 글자 수. 넘으면 안내와 앞부분만 읽음 (전체는 복사로)
+const int kSpokenMessageChars = 4000;
+
+// 두 줄짜리 미리보기(답장 인용, 검색 결과)에 넘기는 글자 수. 어느 창 폭에서도 두 줄보다 김
+const int kSnippetChars = 1000;
+
 // 수락 전 썸네일 상한(base64 디코드 뒤 바이트). 보내는 쪽은 24 KB PNG까지만 만듦
 const int kMaxThumbBytes = 64 * 1024;
 

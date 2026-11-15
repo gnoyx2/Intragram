@@ -1,4 +1,4 @@
-part of '../windows_clipboard.dart';
+part of '../windows_clipboard_native.dart';
 
 // Win32: BOOL=Int32, HANDLE·HGLOBAL·HWND=IntPtr, SIZE_T=UintPtr, UINT=Uint32 (x64·ARM64)
 typedef _Bool0 = Int32 Function();

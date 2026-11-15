@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -62,6 +63,11 @@ class OrgCredentialButton extends ConsumerWidget {
           icon: Icon(
             verified ? Icons.domain_verification : Icons.business_outlined,
             color: verified ? Theme.of(context).colorScheme.tertiary : null,
+            semanticLabel: macOSAppName(
+              conversation.isRoom
+                  ? s.t('org.title')
+                  : orgStatusLabel(s, status),
+            ),
           ),
           onPressed: () => showOrgCredentialDialog(
             context,

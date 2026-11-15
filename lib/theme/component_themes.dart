@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart'
-    show CupertinoPageTransitionsBuilder, CupertinoThemeData;
-import 'package:flutter/foundation.dart' show defaultTargetPlatform;
+    show
+        CupertinoPageTransitionsBuilder,
+        CupertinoThemeData,
+        CupertinoTextThemeData;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'tokens.dart';
@@ -24,6 +27,8 @@ ThemeData buildComponentThemes(
     colorScheme: scheme,
     scaffoldBackgroundColor: scheme.surface,
     textTheme: AppType.scale.apply(
+      fontFamily: 'IntragramSans',
+      fontFamilyFallback: const ['IntragramEmoji', 'Roboto'],
       bodyColor: scheme.onSurface,
       displayColor: scheme.onSurface,
     ),
@@ -33,9 +38,16 @@ ThemeData buildComponentThemes(
       definedBorders: definedBorders,
     ),
     splashFactory: shape.ripple ? null : NoSplash.splashFactory,
+    actionIconTheme: _actionIcons(os),
     snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
     // iOS·macOS 적응형 대화상자 버튼 글씨: 반투명 회색 바탕 위에서 기본 파랑은 3.5:1이라 더 진하게
     cupertinoOverrideTheme: CupertinoThemeData(
+      textTheme: CupertinoTextThemeData(
+        textStyle: AppType.scale.bodyMedium!,
+        actionTextStyle: AppType.scale.labelLarge!,
+        navTitleTextStyle: AppType.scale.titleMedium!,
+        navLargeTitleTextStyle: AppType.scale.headlineSmall!,
+      ),
       primaryColor: scheme.brightness == Brightness.light
           ? scheme.onPrimaryContainer
           : scheme.primary,

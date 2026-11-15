@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform;
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:intragram/app_providers.dart';
 import 'package:intragram/core/constants.dart' show kAppName;
+import 'package:intragram/core/theme_mode_controller.dart';
 import 'package:intragram/features/home/widgets/home_sections.dart';
 import 'package:intragram/features/settings/pin_dialog.dart';
 import 'package:intragram/features/settings/privacy_screen.dart';

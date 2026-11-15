@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
-import 'package:flutter/foundation.dart' show ValueNotifier, visibleForTesting;
+import 'package:flutter/foundation.dart'
+    show ValueNotifier, visibleForTesting, kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' show AppLifecycleState;
 
@@ -11,7 +12,7 @@ class ForegroundService {
     MethodChannel? channel,
     @visibleForTesting bool? isAndroid,
   }) : _channel = channel ?? const MethodChannel('intragram/foreground'),
-       _isAndroid = isAndroid ?? Platform.isAndroid {
+       _isAndroid = isAndroid ?? (!kIsWeb && Platform.isAndroid) {
     _channel.setMethodCallHandler(_handleCall);
   }
 

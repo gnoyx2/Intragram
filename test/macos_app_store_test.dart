@@ -46,7 +46,7 @@ void main() {
     expect(manifest, contains('NSPrivacyAccessedAPICategoryDiskSpace'));
     expect(manifest, contains('<string>E174.1</string>'));
     expect(
-      File('lib/core/free_space.dart').readAsStringSync(),
+      File('lib/core/free_space_native.dart').readAsStringSync(),
       contains("'statvfs'"),
     );
   });

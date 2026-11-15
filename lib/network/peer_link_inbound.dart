@@ -127,6 +127,10 @@ extension _PeerLinkInbound on PeerLink {
         );
         return;
       }
+      if (inner['k'] == 'web_invite' || inner['k'] == 'web_answer') {
+        _receiveWebSignal(inner);
+        return;
+      }
       final authorized = _authorizeInner(inner);
       if (authorized != null && await _verifyRoomIntegrity(authorized)) {
         if (!_closed && store.conversation(conversationId) != null) {

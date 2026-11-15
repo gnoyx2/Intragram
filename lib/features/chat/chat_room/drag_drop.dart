@@ -27,20 +27,30 @@ mixin _ChatRoomDragDrop on _ChatRoomScreenStateBase {
   Future<void> _pickAndOffer({required FileType type}) async {
     final List<PlatformFile> files;
     try {
-      files = await FilePicker.pickFiles(
-        type: type,
-        dialogTitle: S.of(context).t('chat.sendFilesTitle'),
-      );
+      files = kIsWeb
+          ? await pickBrowserPlatformFiles(type: type)
+          : await FilePicker.pickFiles(
+              type: type,
+              dialogTitle: S.of(context).t('chat.sendFilesTitle'),
+            );
     } on Exception {
       if (mounted) showPickerUnavailable(context);
       return;
     }
     if (files.isEmpty || !mounted) return;
-    await _registry.offerFiles(widget.conversationId, files);
+    await _registry.offerFiles(
+      widget.conversationId,
+      files,
+      onTooLarge: fileTooLargeNotice(context),
+    );
   }
 
   // 모바일 첨부: file_picker 캐시 사본 대신 네이티브 스트림을 바로 씀 (디스크에 안 남김)
   Future<void> _pickMobileAndOffer({required bool imagesOnly}) async {
+    if (kIsWeb) {
+      await _pickAndOffer(type: imagesOnly ? FileType.image : FileType.any);
+      return;
+    }
     final List<MobileFileSource> sources;
     try {
       sources = await MobileFileSource.pick(imagesOnly: imagesOnly);
@@ -59,16 +69,68 @@ mixin _ChatRoomDragDrop on _ChatRoomScreenStateBase {
       await MobileFileSource.releaseEach(sources);
       return;
     }
-    await _registry.offerStreamSources(widget.conversationId, sources);
+    await _registry.offerStreamSources(
+      widget.conversationId,
+      sources,
+      onTooLarge: fileTooLargeNotice(context),
+    );
   }
 
   void _onDrop(List<DropItem> items) {
     setState(() => _dragging = false);
+    if (kIsWeb) {
+      final files = _browserDropFiles(
+        items,
+      ).map(_DroppedPlatformFile.new).toList();
+      unawaited(
+        _registry.offerFiles(
+          widget.conversationId,
+          files,
+          onTooLarge: fileTooLargeNotice(context),
+        ),
+      );
+      return;
+    }
     final paths = _flattenDrop(items);
     if (paths.isNotEmpty) {
-      _registry.offerFilesFromPaths(widget.conversationId, paths);
+      unawaited(
+        _registry.offerFilesFromPaths(
+          widget.conversationId,
+          paths,
+          onTooLarge: fileTooLargeNotice(context),
+        ),
+      );
     }
   }
+}
+
+Iterable<DropItem> _browserDropFiles(List<DropItem> items) sync* {
+  for (final item in items) {
+    if (item is DropItemDirectory) {
+      yield* _browserDropFiles(item.children);
+    } else {
+      yield item;
+    }
+  }
+}
+
+final class _DroppedPlatformFile extends PlatformFile {
+  _DroppedPlatformFile(this.item);
+  final DropItem item;
+  @override
+  String get name => item.name;
+  @override
+  Uri get uri => Uri.parse(item.path);
+  @override
+  DropItem get xFile => item;
+  @override
+  int? lengthSync() => null;
+  @override
+  Future<int> length() => item.length();
+  @override
+  Future<Uint8List> readAsBytes() => item.readAsBytes();
+  @override
+  Stream<Uint8List> readAsByteStream() => item.openRead();
 }
 
 // 드롭에 폴더가 섞일 수 있어서 안으로 들어가고, 읽을 시점에 아직 존재하는 경로만 남김

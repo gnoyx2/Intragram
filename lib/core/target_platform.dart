@@ -5,3 +5,9 @@ import 'package:flutter/foundation.dart';
 bool get isMobileTarget =>
     defaultTargetPlatform == TargetPlatform.android ||
     defaultTargetPlatform == TargetPlatform.iOS;
+
+// macOS 앱의 Flutter 접근성 브리지는 tooltip을 VoiceOver 이름으로 안 넘김: 아이콘 버튼·상태 아이콘은 macOS 앱에서만
+// 같은 문구를 label로도 붙임. 웹(맥 브라우저 포함)·Windows는 tooltip을 이름으로 읽어 붙이면 두 번 읽힘
+// (Flutter도 Android 뒤로 버튼엔 같은 이유로 플랫폼별 label을 붙임)
+bool get isMacOSApp => !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS;
+String? macOSAppName(String name) => isMacOSApp ? name : null;

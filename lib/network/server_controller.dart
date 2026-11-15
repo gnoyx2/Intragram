@@ -48,6 +48,7 @@ class ServerController extends Notifier<ServerState> {
 
   // 포그라운드로 오면 바로 한 번, 그 뒤 주기마다 인터페이스만 비교함 (외부 ping 없음). 백그라운드에선 멈춤
   void setForeground(bool foreground) {
+    if (kIsWeb) return;
     if (!foreground) {
       _networkCheckTimer?.cancel();
       _networkCheckTimer = null;
@@ -61,6 +62,7 @@ class ServerController extends Notifier<ServerState> {
   }
 
   Future<void> start() {
+    if (kIsWeb) return Future<void>.value();
     _desiredRunning = true;
     final existing = _startFuture;
     if (existing != null) return existing;

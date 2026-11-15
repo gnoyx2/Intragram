@@ -8,6 +8,12 @@ abstract class _LinkRegistryState {
     Future<String?> Function(String suggestedName)? chooseDirectory,
     Duration ackTimeout = kFileReceivedAckTimeout,
   }) {
+    _web = WebChatBridge(
+      store: store,
+      identity: identity,
+      chooseDirectory: chooseDirectory,
+      blockedPeers: _blockedPeers,
+    );
     // 증적(영수증·소각·정리)은 이 실행의 신원 키로 서명함 (키 없는 화면 테스트 신원이면 아무것도 안 남김)
     store.evidence.bindSigner(identity);
     _transfers = TransferCoordinator(
@@ -22,7 +28,12 @@ abstract class _LinkRegistryState {
     );
     // 여기 타이머가 메시지를 태우면 상대한테도 알림: 시계나 절전 상태가 어긋나도 양쪽이 같이 버림
     _localBurnSub = store.localBurns.listen((event) {
-      if (_isRoomHub(event.conversationId)) {
+      if (_web.contains(event.conversationId)) {
+        _web.sendControl(event.conversationId, {
+          'k': 'burn',
+          'id': event.messageId,
+        });
+      } else if (_isRoomHub(event.conversationId)) {
         unawaited(
           _broadcastToRoom(
             event.conversationId,
@@ -48,6 +59,7 @@ abstract class _LinkRegistryState {
     });
   }
 
+  late final WebChatBridge _web;
   final InMemoryStore store;
   final CryptoEngine crypto;
   final AppIdentity identity;
@@ -140,7 +152,10 @@ abstract class _LinkRegistryState {
     return _memberLinks(conversationId);
   }
 
-  Iterable<String> get activeConversationIds => _links.keys;
+  Iterable<String> get activeConversationIds => {
+    ..._links.keys,
+    ..._web.activeIds,
+  };
 
   // PeerLink가 되기 전에 거부한 채널을 닫음 (이미 닫힌 소켓이면 무시함)
   Future<void> _closeAbandonedChannel(StreamChannel<dynamic> channel) async {

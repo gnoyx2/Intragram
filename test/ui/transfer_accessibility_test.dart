@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:intragram/core/voice/voice_clip.dart';
 import 'package:intragram/features/chat/chat_room_screen.dart';
+import 'package:intragram/features/chat/message_bubble.dart';
 import 'package:intragram/features/chat/transfer_tile.dart';
 import 'package:intragram/features/chat/voice_recorder.dart';
 import 'package:intragram/store/models.dart';
@@ -14,6 +14,41 @@ import 'package:intragram/store/models.dart';
 import '_harness.dart';
 
 void main() {
+  testWidgets('file consent remains independently accessible', (tester) async {
+    final semantics = tester.ensureSemantics();
+    final h = Harness();
+    addTearDown(h.dispose);
+    h.store
+      ..upsertConversation(conv('c1'))
+      ..upsertTransfer(
+        const FileTransfer(
+          id: 'file-offer',
+          conversationId: 'c1',
+          direction: TransferDirection.incoming,
+          fileName: 'document.txt',
+          totalBytes: 36,
+        ),
+      );
+    await tester.pumpWidget(
+      h.wrap(
+        Scaffold(
+          body: MessageBubble(
+            message: msg(
+              id: 'file-message',
+              dir: MessageDirection.incoming,
+              kind: MessageKind.file,
+              transferId: 'file-offer',
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('Accept'), findsOneWidget);
+    expect(find.bySemanticsLabel('Decline'), findsOneWidget);
+    semantics.dispose();
+  });
+
   testWidgets('loading voice cannot be activated twice', (tester) async {
     final h = Harness();
     addTearDown(h.dispose);
@@ -209,7 +244,6 @@ void main() {
     await tester.pumpWidget(h.wrap(const ChatRoomScreen(conversationId: 'c1')));
     await tester.pump();
     await settleThumbCheck(tester);
-
     expect(find.text('no thanks'), findsOneWidget);
     expect(find.byType(Image), findsNothing);
   });

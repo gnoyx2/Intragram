@@ -28,6 +28,10 @@ void main() {
 
     expect(find.byType(PortalSheet), findsOneWidget);
     expect(find.text('Guest portal'), findsOneWidget);
+    expect(find.text('Encrypted app–web connection'), findsOneWidget);
+    expect(find.text('Local web server'), findsNothing);
+    await tester.tap(find.byType(ExpansionTile));
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('Local web server'), findsOneWidget);
   });
 
@@ -65,6 +69,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
+    await tester.tap(find.byType(ExpansionTile));
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.textContaining('192.168.1.9:7890'), findsWidgets);
     expect(find.byIcon(Icons.copy), findsOneWidget);
   });
@@ -94,6 +100,8 @@ void main() {
       );
       await tester.tap(find.text('open'));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.tap(find.byType(ExpansionTile));
       await tester.pump(const Duration(milliseconds: 400));
       // 실제 글꼴(모노스페이스 14)에선 42pt라 iOS 44pt에 모자랐음: 칸 높이를 48로 고정
       final address = find.byWidgetPredicate(

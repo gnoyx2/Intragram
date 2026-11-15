@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:intragram/core/platform_files.dart';
 import 'dart:isolate';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
-import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/foundation.dart' show visibleForTesting, kIsWeb;
 import 'package:flutter/services.dart' show MissingPluginException;
 import 'package:path/path.dart' as p;
 

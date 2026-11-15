@@ -13,7 +13,11 @@ class _ViewerTopBar extends StatelessWidget {
     return Row(
       children: [
         IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
+          icon: Icon(
+            Icons.close,
+            color: Colors.white,
+            semanticLabel: macOSAppName(s.t('viewer.close')),
+          ),
           tooltip: s.t('viewer.close'),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -21,7 +25,11 @@ class _ViewerTopBar extends StatelessWidget {
         if (canShare)
           Builder(
             builder: (buttonContext) => IconButton(
-              icon: const Icon(Icons.share_outlined, color: Colors.white),
+              icon: Icon(
+                Icons.share_outlined,
+                color: Colors.white,
+                semanticLabel: macOSAppName(s.t('viewer.share')),
+              ),
               tooltip: s.t('viewer.share'),
               onPressed: () => SharePlus.instance.share(
                 ShareParams(

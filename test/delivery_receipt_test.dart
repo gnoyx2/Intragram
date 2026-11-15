@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -7,6 +8,7 @@ import 'package:stream_channel/stream_channel.dart';
 import 'package:intragram/audit/content_commitment.dart';
 import 'package:intragram/audit/evidence_store.dart';
 import 'package:intragram/network/crypto_engine.dart';
+import 'package:intragram/network/file_streamer.dart';
 import 'package:intragram/network/link_registry.dart';
 import 'package:intragram/network/local_server.dart';
 import 'package:intragram/network/peer_link.dart';
@@ -200,14 +202,33 @@ void main() {
     );
     await _until(() => sender.conversation(conversation)!.secure);
 
+    // Slow commits can exceed the old five-second poll; receipts must follow them.
+    final openPartial = FileStreamer.debugOpenPartial;
+    FileStreamer.debugOpenPartial = (file) async {
+      await Future<void>.delayed(const Duration(seconds: 6));
+      expect(receiver.evidence.entries, isEmpty);
+      expect(sender.evidence.entries, isEmpty);
+      return openPartial(file);
+    };
+    addTearDown(() => FileStreamer.debugOpenPartial = openPartial);
     final bytes = Uint8List.fromList(
       List<int>.generate(3 * 1024 * 1024 + 7, (i) => (i * 7) % 251),
     );
     await senderRegistry.offerInlineBytes(conversation, 'data.bin', bytes);
     final id = sender.transfers.single.id;
     await _until(() => receiver.transfer(id) != null);
+    final receiptArrived = Completer<void>();
+    void observed() {
+      if (sender.evidence.forTransfer(id).isNotEmpty &&
+          !receiptArrived.isCompleted) {
+        receiptArrived.complete();
+      }
+    }
+
+    sender.evidence.addListener(observed);
+    addTearDown(() => sender.evidence.removeListener(observed));
     await receiverRegistry.acceptTransfer(id);
-    await _until(() => sender.evidence.forTransfer(id).isNotEmpty);
+    await receiptArrived.future;
 
     final issued = receiver.evidence.forTransfer(id).single;
     final confirmed = sender.evidence.forTransfer(id).single;

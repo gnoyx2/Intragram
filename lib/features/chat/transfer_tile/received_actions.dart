@@ -4,6 +4,32 @@ part of '../transfer_tile.dart';
 
 enum _ExecChoice { open, reveal }
 
+class _BrowserSaveReceived extends StatelessWidget {
+  const _BrowserSaveReceived({required this.path, required this.color});
+  final String path;
+  final Color color;
+  @override
+  Widget build(BuildContext context) => TextButton.icon(
+    onPressed: BrowserReceivedFiles.contains(path)
+        ? () => BrowserReceivedFiles.save(path)
+        : null,
+    icon: const Icon(Icons.download_outlined, size: 14),
+    label: Text(
+      S
+          .of(context)
+          .t(
+            BrowserReceivedFiles.contains(path)
+                ? 'transfer.saveToDevice'
+                : 'transfer.fileGone',
+          ),
+    ),
+    style: TextButton.styleFrom(
+      foregroundColor: color,
+      minimumSize: const Size(0, 44),
+    ),
+  );
+}
+
 class _ReceivedActions extends StatelessWidget {
   const _ReceivedActions({required this.path, required this.color});
 

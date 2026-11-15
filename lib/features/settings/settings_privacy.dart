@@ -21,7 +21,12 @@ class _PrivacySection extends StatelessWidget {
           children: [
             SwitchListTile.adaptive(
               title: Text(s.t('settings.keepChats')),
-              subtitle: Text(s.t('settings.keepChatsSub')),
+              // 웹은 앱 폴더 대신 브라우저 사이트 저장소와 다운로드를 씀
+              subtitle: Text(
+                s.t(
+                  kIsWeb ? 'secureWeb.keepChatsSub' : 'settings.keepChatsSub',
+                ),
+              ),
               value: settings.enabled,
               onChanged: notifier.setEnabled,
             ),
@@ -33,7 +38,13 @@ class _PrivacySection extends StatelessWidget {
             ),
             SwitchListTile.adaptive(
               title: Text(s.t('settings.fileHistory')),
-              subtitle: Text(s.t('settings.fileHistorySub')),
+              subtitle: Text(
+                s.t(
+                  kIsWeb
+                      ? 'secureWeb.fileHistorySub'
+                      : 'settings.fileHistorySub',
+                ),
+              ),
               value: settings.keepTransfers,
               onChanged: settings.enabled ? notifier.setKeepTransfers : null,
             ),
@@ -46,7 +57,11 @@ class _PrivacySection extends StatelessWidget {
               subtitle: Text(
                 settings.pinProtected
                     ? s.t('settings.pinProtectOnSub')
-                    : s.t('settings.pinProtectOffSub'),
+                    : s.t(
+                        kIsWeb
+                            ? 'secureWeb.pinProtectOffSub'
+                            : 'settings.pinProtectOffSub',
+                      ),
               ),
               trailing: settings.pinProtected
                   ? const Icon(Icons.chevron_right)

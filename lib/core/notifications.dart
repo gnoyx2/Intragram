@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'browser_notifications.dart';
 
 // 로컬 알림만 있음: 서버가 없어서 앱이 살아 있고 소켓이 붙어 있을 때 온 메시지만 알림. 미지원 플랫폼·테스트에선 no-op
 class NotificationService {
@@ -19,6 +20,10 @@ class NotificationService {
   Future<void> init() => _initFuture ??= _init();
 
   Future<void> _init() async {
+    if (kIsWeb) {
+      _ready = BrowserNotifications.supported;
+      return;
+    }
     // Windows는 디스크 알림 기록 대신 네이티브 작업 표시줄 점멸만 사용함.
     const supported = <TargetPlatform>{
       TargetPlatform.android,
@@ -69,6 +74,9 @@ class NotificationService {
     _askedThisRun = true;
     await init();
     if (!_ready) return;
+    if (kIsWeb) {
+      return;
+    }
     try {
       switch (defaultTargetPlatform) {
         case TargetPlatform.android:
@@ -97,6 +105,12 @@ class NotificationService {
     }
   }
 
+  Future<void> requestBrowserPermission() async {
+    if (!kIsWeb) return;
+    await init();
+    await BrowserNotifications.request();
+  }
+
   // 꺼진 앱을 알림으로 켰으면 그 대화로 감
   Future<void> consumeLaunchPayload() async {
     await init();
@@ -119,6 +133,15 @@ class NotificationService {
     required String channelName,
     required String channelDescription,
   }) async {
+    if (kIsWeb) {
+      BrowserNotifications.show(
+        title,
+        body,
+        conversationId,
+        () => onOpenConversation?.call(conversationId),
+      );
+      return;
+    }
     if (defaultTargetPlatform == TargetPlatform.windows) {
       try {
         await const MethodChannel(
@@ -174,6 +197,10 @@ class NotificationService {
 
   // 패닉용. 지원하면 배지도 같이 내려감
   Future<void> cancelAll() async {
+    if (kIsWeb) {
+      BrowserNotifications.clear();
+      return;
+    }
     if (!_ready) return;
     try {
       await _plugin.cancelAll();

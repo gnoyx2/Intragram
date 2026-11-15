@@ -52,6 +52,8 @@ class _VoicePlayerState extends State<_VoicePlayer> {
     final messenger = ScaffoldMessenger.of(context);
     final s = S.of(context);
     final name = 'voice-${DateTime.now().millisecondsSinceEpoch}.wav';
+    // 브라우저엔 폴더 선택·디스크 쓰기가 없음 (dart:io 경로는 예외만 냄): 다운로드로 내보냄
+    if (kIsWeb) return BrowserReceivedFiles.download(name, widget.bytes);
     final String? dir;
     try {
       dir = await IncomingPathResolver.defaultChooseDirectory(name);
@@ -227,7 +229,13 @@ class _VoicePlayerState extends State<_VoicePlayer> {
                 color: muted,
                 tooltip: S.of(context).t('transfer.saveToDevice'),
                 onPressed: _save,
-                icon: const Icon(Icons.download_outlined, size: 20),
+                icon: Icon(
+                  Icons.download_outlined,
+                  size: 20,
+                  semanticLabel: macOSAppName(
+                    S.of(context).t('transfer.saveToDevice'),
+                  ),
+                ),
               ),
             ],
           );

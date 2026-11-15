@@ -15,6 +15,7 @@ class _AppSection extends StatelessWidget {
         BoxedList(
           children: [
             _LanguageTile(current: settings.langOverride),
+            const _ThemeTile(),
             // 폰·태블릿은 OS 글자 크기를 그대로 따름. 데스크톱은 macOS처럼 OS 값이 안 들어오거나
             // 창 단위로 키울 길이 없어서 앱 배율을 둠
             if (_isDesktop(context)) _TextSizeTile(current: settings.textScale),
@@ -52,6 +53,34 @@ class _AppSection extends StatelessWidget {
         TargetPlatform.linux => true,
         _ => false,
       };
+}
+
+class _ThemeTile extends ConsumerWidget {
+  const _ThemeTile();
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => ListTile(
+    leading: const Icon(Icons.brightness_6_outlined),
+    title: Text(S.of(context).t('secureWeb.theme')),
+    trailing: DropdownButton<ThemeMode>(
+      value: ref.watch(themeModeProvider),
+      onChanged: (value) {
+        if (value != null) ref.read(themeModeProvider.notifier).setMode(value);
+      },
+      items: [
+        for (final mode in ThemeMode.values)
+          DropdownMenuItem(
+            value: mode,
+            child: Text(
+              S.of(context).t(switch (mode) {
+                ThemeMode.system => 'secureWeb.theme.system',
+                ThemeMode.light => 'secureWeb.theme.light',
+                ThemeMode.dark => 'secureWeb.theme.dark',
+              }),
+            ),
+          ),
+      ],
+    ),
+  );
 }
 
 class _TextSizeTile extends ConsumerWidget {

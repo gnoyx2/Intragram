@@ -117,6 +117,7 @@ class _PinGateScreenState extends ConsumerState<PinGateScreen> {
                           const SizedBox(height: AppSpacing.xl),
                           TextField(
                             enableIMEPersonalizedLearning: false,
+                            autofillHints: null,
                             controller: _controller,
                             focusNode: _focus,
                             // 틀린 PIN 뒤 대기(pinRetryDelay) 중엔 입력도 막음

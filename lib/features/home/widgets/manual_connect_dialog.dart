@@ -134,28 +134,36 @@ Widget _adaptiveField(
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: Theme.of(context).textTheme.labelSmall),
+        // 칸이 label을 이름으로 가짐 (예시 placeholder는 글을 쓰면 사라져서): 보이는 글은 한 번만 읽힘
+        ExcludeSemantics(
+          child: Text(label, style: Theme.of(context).textTheme.labelSmall),
+        ),
         const SizedBox(height: AppSpacing.xs),
-        CupertinoTextField(
-          enableIMEPersonalizedLearning: false,
-          controller: controller,
-          autofocus: autofocus,
-          keyboardType: keyboardType,
-          autocorrect: autocorrect,
-          textCapitalization: TextCapitalization.none,
-          placeholder: placeholder,
-          padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            border: Border.all(color: CupertinoColors.separator),
-            borderRadius: BorderRadius.circular(AppRadius.xs),
+        Semantics(
+          label: label,
+          child: CupertinoTextField(
+            enableIMEPersonalizedLearning: false,
+            autofillHints: null,
+            controller: controller,
+            autofocus: autofocus,
+            keyboardType: keyboardType,
+            autocorrect: autocorrect,
+            textCapitalization: TextCapitalization.none,
+            placeholder: placeholder,
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              border: Border.all(color: CupertinoColors.separator),
+              borderRadius: BorderRadius.circular(AppRadius.xs),
+            ),
+            onSubmitted: onSubmitted,
           ),
-          onSubmitted: onSubmitted,
         ),
       ],
     );
   }
   return TextField(
     enableIMEPersonalizedLearning: false,
+    autofillHints: null,
     controller: controller,
     autofocus: autofocus,
     keyboardType: keyboardType,

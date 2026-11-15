@@ -37,6 +37,7 @@ class SasButton extends StatelessWidget {
                 ? Icons.pending
                 : Icons.gpp_maybe,
             color: allVerified ? chat.online : chat.burn,
+            semanticLabel: macOSAppName(tooltip),
           ),
           onPressed: onTap,
         ),

@@ -1,7 +1,8 @@
+import 'package:intragram/core/target_platform.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart' show defaultTargetPlatform;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart' show SpringDescription, SpringSimulation;
@@ -15,6 +16,7 @@ import 'package:intragram/core/constants.dart';
 import 'package:intragram/core/native_open.dart';
 import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/core/punycode.dart';
+import 'package:intragram/core/text_clip.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/network/link_registry.dart';
 import 'package:intragram/store/models.dart';

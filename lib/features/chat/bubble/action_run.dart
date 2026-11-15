@@ -82,30 +82,34 @@ extension _MessageBubbleActionRun on MessageBubble {
     WidgetRef ref,
     Widget body, {
     VoidCallback? onRetry,
-  }) => Actions(
-    actions: <Type, Action<Intent>>{
-      ActivateIntent: CallbackAction<ActivateIntent>(
-        onInvoke: (_) => _promptActions(context, ref, menuAnchor(context)),
-      ),
-    },
-    child: CallbackShortcuts(
-      bindings: menuKeyBindings(
-        () => _promptActions(context, ref, menuAnchor(context)),
-      ),
-      child: MergeSemantics(
-        child: Semantics(
-          customSemanticsActions: _semanticActions(context, ref),
-          child: Focus(
-            child: _PressScale(
-              onTap: onRetry,
-              onLongPress: () => _promptActions(context, ref),
-              onSecondaryTapUp: (details) =>
-                  _promptActions(context, ref, details.globalPosition),
-              child: body,
-            ),
-          ),
+  }) {
+    final interactive = Semantics(
+      customSemanticsActions: _semanticActions(context, ref),
+      child: Focus(
+        child: _PressScale(
+          onTap: onRetry,
+          onLongPress: () => _promptActions(context, ref),
+          onSecondaryTapUp: (details) =>
+              _promptActions(context, ref, details.globalPosition),
+          child: body,
         ),
       ),
-    ),
-  );
+    );
+    return Actions(
+      actions: <Type, Action<Intent>>{
+        ActivateIntent: CallbackAction<ActivateIntent>(
+          onInvoke: (_) => _promptActions(context, ref, menuAnchor(context)),
+        ),
+      },
+      child: CallbackShortcuts(
+        bindings: menuKeyBindings(
+          () => _promptActions(context, ref, menuAnchor(context)),
+        ),
+        // File consent, download and playback buttons need independent targets.
+        child: message.kind == MessageKind.file
+            ? interactive
+            : MergeSemantics(child: interactive),
+      ),
+    );
+  }
 }

@@ -105,7 +105,9 @@ extension _TransferTileBody on TransferTile {
                 const SizedBox(width: AppSpacing.xs),
                 Flexible(
                   child: Text(
-                    incoming
+                    incoming && kIsWeb
+                        ? S.of(context).t('transfer.receivedInBrowser')
+                        : incoming
                         ? S.of(context).t('transfer.savedTo', {
                             'path':
                                 savedPath ?? S.of(context).t('transfer.disk'),
@@ -120,7 +122,9 @@ extension _TransferTileBody on TransferTile {
                 ),
               ],
             ),
-            if (incoming && savedPath != null && NativeOpen.isSupported)
+            if (incoming && savedPath != null && kIsWeb)
+              _BrowserSaveReceived(path: savedPath, color: onBubble)
+            else if (incoming && savedPath != null && NativeOpen.isSupported)
               _ReceivedActions(path: savedPath, color: onBubble)
             else if (incoming && savedPath != null && isMobileTarget)
               _ShareReceived(path: savedPath, color: onBubble),

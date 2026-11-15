@@ -54,7 +54,7 @@ Widget _openPortal() => Builder(
 );
 
 void main() {
-  testWidgets('tabletop portal keeps QR above crease and controls below', (
+  testWidgets('tabletop portal keeps encrypted entry below crease', (
     tester,
   ) async {
     _size(tester, const Size(700, 840));
@@ -69,17 +69,13 @@ void main() {
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
-    expect(find.byType(QrImageView), findsOneWidget);
-    expect(
-      tester.getRect(find.byType(QrImageView)).bottom,
-      lessThanOrEqualTo(400),
-    );
+    expect(find.byType(QrImageView), findsNothing);
     expect(
       tester.getRect(find.text('Guest portal')).top,
       greaterThanOrEqualTo(420),
     );
     await tester.scrollUntilVisible(
-      find.text('Local web server'),
+      find.byKey(const Key('secure-web-entry')),
       150,
       scrollable: find.byType(Scrollable).last,
     );

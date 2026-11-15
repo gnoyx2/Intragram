@@ -3,11 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:intragram/store/models.dart';
 import 'translations/strings_en_core.dart';
 import 'translations/strings_en_chat.dart';
+import 'translations/strings_en_secure_web.dart';
 import 'translations/strings_en_audit.dart';
 import 'translations/strings_en_integrity.dart';
 import 'translations/strings_en_org.dart';
 import 'translations/strings_ko_core.dart';
 import 'translations/strings_ko_chat.dart';
+import 'translations/strings_ko_secure_web.dart';
 import 'translations/strings_ko_connect.dart';
 import 'translations/strings_ko_privacy.dart';
 import 'translations/strings_ko_settings.dart';
@@ -94,6 +96,7 @@ class S {
   static const Map<String, String> _en = {
     ...kStringsEnCore,
     ...kStringsEnChat,
+    ...kStringsEnSecureWeb,
     ...kStringsEnAudit,
     ...kStringsEnIntegrity,
     ...kStringsEnOrg,
@@ -102,6 +105,7 @@ class S {
   static const Map<String, String> _ko = {
     ...kStringsKoCore,
     ...kStringsKoChat,
+    ...kStringsKoSecureWeb,
     ...kStringsKoConnect,
     ...kStringsKoPrivacy,
     ...kStringsKoSettings,

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,6 +23,25 @@ class _Settings extends VaultSettingsNotifier {
 }
 
 void main() {
+  testWidgets('Cupertino PIN fields expose their own labels', (tester) async {
+    final semantics = tester.ensureSemantics();
+    final settings = _Settings();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [vaultSettingsProvider.overrideWith(() => settings)],
+        child: MaterialApp(
+          theme: ThemeData(platform: TargetPlatform.iOS),
+          home: const Scaffold(body: PinDialog(alreadySet: false)),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final fields = find.byType(CupertinoTextField);
+    expect(tester.getSemantics(fields.at(0)).label, 'PIN');
+    expect(tester.getSemantics(fields.at(1)).label, 'Confirm PIN');
+    semantics.dispose();
+  });
+
   testWidgets('repeated PIN submits start only one save and allow retry', (
     tester,
   ) async {

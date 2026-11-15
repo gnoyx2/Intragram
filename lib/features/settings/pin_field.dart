@@ -20,6 +20,7 @@ Widget pinField(
   if (!cupertino) {
     return TextField(
       enableIMEPersonalizedLearning: false,
+      autofillHints: null,
       controller: controller,
       autofocus: autofocus,
       obscureText: true,
@@ -34,18 +35,22 @@ Widget pinField(
     children: [
       Text(label, style: Theme.of(context).textTheme.labelSmall),
       const SizedBox(height: AppSpacing.xs),
-      CupertinoTextField(
-        enableIMEPersonalizedLearning: false,
-        controller: controller,
-        autofocus: autofocus,
-        obscureText: true,
-        keyboardType: TextInputType.visiblePassword,
-        inputFormatters: kPinInputFormatters,
-        onSubmitted: onSubmitted,
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          border: Border.all(color: CupertinoColors.separator),
-          borderRadius: BorderRadius.circular(AppRadius.xs),
+      Semantics(
+        label: label,
+        child: CupertinoTextField(
+          enableIMEPersonalizedLearning: false,
+          autofillHints: null,
+          controller: controller,
+          autofocus: autofocus,
+          obscureText: true,
+          keyboardType: TextInputType.visiblePassword,
+          inputFormatters: kPinInputFormatters,
+          onSubmitted: onSubmitted,
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            border: Border.all(color: CupertinoColors.separator),
+            borderRadius: BorderRadius.circular(AppRadius.xs),
+          ),
         ),
       ),
     ],

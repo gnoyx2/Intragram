@@ -4,6 +4,7 @@ import 'package:intragram/core/app_settings.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/network/server_controller.dart';
 import 'package:intragram/theme/tokens.dart';
+import 'package:intragram/widgets/named_selectable_text.dart';
 
 // 서버를 못 띄운 이유(server.problem)를 번역해서 (제목, 본문)으로 돌려줌. 포털 시트도 같은 문구를 씀
 (String, String) serverProblemText(S s, ServerState server) =>
@@ -112,7 +113,7 @@ class _RawErrorState extends State<_RawError> {
           child: Text(s.t(_open ? 'error.hideDetail' : 'error.showDetail')),
         ),
         if (_open)
-          SelectableText(
+          NamedSelectableText(
             widget.text,
             style: Theme.of(
               context,

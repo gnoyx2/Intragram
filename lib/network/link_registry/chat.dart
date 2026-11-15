@@ -6,6 +6,9 @@ mixin _LinkRegistryChat on _LinkRegistryState {
     String text, {
     String? replyToId,
   }) async {
+    if (_web.contains(conversationId)) {
+      return _web.sendText(conversationId, text, replyToId: replyToId);
+    }
     final conversation = store.conversation(conversationId);
     if (conversation == null || text.isEmpty) return;
 
@@ -95,7 +98,14 @@ mixin _LinkRegistryChat on _LinkRegistryState {
     final mine = store.messageById(messageId)?.reactions[identity.peerId];
     final on = !(mine?.contains(emoji) ?? false);
     store.applyReaction(messageId, identity.peerId, emoji, on: on);
-    if (_isRoomHub(conversationId)) {
+    if (_web.contains(conversationId)) {
+      _web.sendControl(conversationId, {
+        'k': 'react',
+        'id': messageId,
+        'emoji': emoji,
+        'on': on,
+      });
+    } else if (_isRoomHub(conversationId)) {
       unawaited(
         _broadcastToRoom(conversationId, <String, dynamic>{
           ...InnerFrame.react(id: messageId, emoji: emoji, on: on),
@@ -115,6 +125,10 @@ mixin _LinkRegistryChat on _LinkRegistryState {
   }
 
   Future<void> sendTyping(String conversationId, {required bool active}) async {
+    if (_web.contains(conversationId)) {
+      _web.sendControl(conversationId, {'k': 'typing', 'on': active});
+      return;
+    }
     if (_isRoomHub(conversationId)) {
       await _broadcastToRoom(conversationId, <String, dynamic>{
         ...InnerFrame.typing(active: active),
@@ -146,6 +160,7 @@ mixin _LinkRegistryChat on _LinkRegistryState {
 
   // 읽음 처리하고 알림: 양쪽 소각 타이머가 같이 시작함
   Future<void> markRoomRead(String conversationId) async {
+    if (_web.contains(conversationId)) return _web.markRead(conversationId);
     final ids = store.markIncomingRead(conversationId);
     store.clearUnread(conversationId);
     if (ids.isEmpty) return;

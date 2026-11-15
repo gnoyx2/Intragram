@@ -8,6 +8,7 @@ import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/audit/merkle.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/tokens.dart';
+import 'package:intragram/widgets/named_selectable_text.dart';
 
 class AuditEntryTile extends StatefulWidget {
   const AuditEntryTile({
@@ -87,7 +88,7 @@ class _AuditEntryTileState extends State<AuditEntryTile> {
       children: [
         if (_expanded && batch != null) ...[
           Text(s.t('audit.proofMaterial')),
-          SelectableText(
+          NamedSelectableText(
             jsonEncode({
               'salt': base64.encode(entry.leafSalt),
               'path': [
@@ -118,7 +119,7 @@ class _AuditEntryTileState extends State<AuditEntryTile> {
         ],
         if (_valid != null)
           Text(s.t(_valid! ? 'audit.valid' : 'audit.invalid')),
-        SelectableText(
+        NamedSelectableText(
           const JsonEncoder.withIndent('  ').convert(receipt.toWire()),
         ),
       ],

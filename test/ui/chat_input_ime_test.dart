@@ -82,6 +82,15 @@ void main() {
     await tester.pump();
 
     expect(h.store.messages('c1'), isEmpty);
+    // The composer inserts the newline itself: a send-action field on web and
+    // macOS would otherwise run the send action for the forwarded Enter.
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.controller!.text, 'line1\n');
+
+    await tester.enterText(find.byType(TextField), 'line1\nline2');
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump();
+    expect(h.store.messages('c1').single.text, 'line1\nline2');
   });
 
   testWidgets(

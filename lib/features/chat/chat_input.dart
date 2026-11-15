@@ -1,3 +1,5 @@
+import 'package:intragram/widgets/field_name.dart';
+import 'package:intragram/core/target_platform.dart';
 import 'dart:async';
 import 'dart:io' show Platform;
 
@@ -7,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:pasteboard/pasteboard.dart';
 
 import 'package:intragram/core/haptics.dart';
+import 'package:intragram/core/browser_clipboard.dart';
 import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/core/windows_clipboard.dart';
 import 'package:intragram/l10n/strings.dart';

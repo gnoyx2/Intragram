@@ -134,7 +134,12 @@ extension _MessageBubbleActions on MessageBubble {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close),
+                        icon: Icon(
+                          Icons.close,
+                          semanticLabel: macOSAppName(
+                            S.of(sheetContext).t('viewer.close'),
+                          ),
+                        ),
                         tooltip: S.of(sheetContext).t('viewer.close'),
                         onPressed: () => Navigator.of(sheetContext).pop(),
                       ),

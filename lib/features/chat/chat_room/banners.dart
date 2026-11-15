@@ -22,7 +22,10 @@ class _ChatBanners extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            if (conversation.isRoom) const RoomRelayBanner(),
+            if (conversation.isRoom)
+              RoomRelayBanner(
+                encryptedLinks: registry.isWebConversation(conversation.id),
+              ),
             if (conversation.isRoom &&
                 conversation.transport == PeerTransport.app)
               RoomIntegrityBanner(
@@ -38,8 +41,13 @@ class _ChatBanners extends StatelessWidget {
                   ? OfflineBanner(
                       blocked: conversation.blocked,
                       onUnblock: () => registry.unblockPeer(conversation.id),
-                      onReconnect:
-                          conversation.isRoom && conversation.hostAlias == null
+                      onReconnect: registry.isWebConversation(conversation.id)
+                          ? () => showWebConnectionDialog(
+                              context,
+                              conversationId: conversation.id,
+                            )
+                          : conversation.isRoom &&
+                                conversation.hostAlias == null
                           ? null
                           : () => registry.reconnect(conversation.id),
                     )

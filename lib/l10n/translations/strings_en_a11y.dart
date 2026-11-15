@@ -31,4 +31,7 @@ const Map<String, String> kStringsEnA11y = {
       'selectable text.',
   'a11y.reactWith': 'React with {emoji}',
   'a11y.addReaction': 'More reactions',
+  'a11y.longMessage':
+      'Long message. Only the first part follows; copy the message to read '
+      'all of it.',
 };

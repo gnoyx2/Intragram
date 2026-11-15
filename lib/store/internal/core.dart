@@ -47,20 +47,31 @@ mixin _StoreCore on _InMemoryStoreState {
           )
           .toList();
 
-  Stream<List<Conversation>> watchConversations() async* {
-    yield conversations;
-    yield* _conversationEvents.stream;
-  }
+  Stream<List<Conversation>> watchConversations() =>
+      _watchSnapshot(() => conversations, _conversationEvents.stream);
 
-  Stream<List<EphemeralMessage>> watchRoom(String conversationId) async* {
-    yield messages(conversationId);
-    yield* _roomController(conversationId).stream;
-  }
+  Stream<List<EphemeralMessage>> watchRoom(String conversationId) =>
+      _watchSnapshot(
+        () => messages(conversationId),
+        _roomController(conversationId).stream,
+      );
 
-  Stream<List<FileTransfer>> watchTransfers() async* {
-    yield transfers;
-    yield* _transferEvents.stream;
-  }
+  Stream<List<FileTransfer>> watchTransfers() =>
+      _watchSnapshot(() => transfers, _transferEvents.stream);
+
+  // Subscribe before publishing the snapshot so fast transfers cannot lose completion.
+  Stream<T> _watchSnapshot<T>(T Function() snapshot, Stream<T> changes) =>
+      Stream<T>.multi((controller) {
+        final subscription = changes.listen(
+          controller.add,
+          onError: controller.addError,
+          onDone: controller.close,
+        );
+        controller.add(snapshot());
+        controller.onPause = subscription.pause;
+        controller.onResume = subscription.resume;
+        controller.onCancel = subscription.cancel;
+      });
 
   // 안 읽혀도 after 뒤엔 소각함 (읽으면 _startBurn이 넘겨받음)
   void _armBurnCeiling(String messageId, Duration after) {

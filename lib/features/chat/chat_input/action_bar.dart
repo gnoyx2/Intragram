@@ -44,7 +44,11 @@ mixin _ChatInputActionBar
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.close, size: 18),
+            icon: Icon(
+              Icons.close,
+              size: 18,
+              semanticLabel: macOSAppName(s.t('a11y.cancelReply')),
+            ),
             tooltip: s.t('a11y.cancelReply'),
             onPressed: widget.onCancelReply,
           ),
@@ -65,22 +69,40 @@ mixin _ChatInputActionBar
       // 위쪽이 짧아 처져 보임
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (!foldClipboardIntoAttach && _hasClipboardFiles)
+        if (kIsWeb && hasClipboardQuickAction && !foldClipboardIntoAttach)
+          IconButton(
+            onPressed: widget.enabled ? _openFoldedAttachMenu : null,
+            icon: Icon(
+              Icons.content_paste,
+              semanticLabel: macOSAppName(s.t('input.sendClipText')),
+            ),
+            tooltip: s.t('input.sendClipText'),
+          )
+        else if (!foldClipboardIntoAttach && _hasClipboardFiles)
           IconButton(
             onPressed: widget.enabled ? _pasteFiles : null,
-            icon: const Icon(Icons.file_present_outlined),
+            icon: Icon(
+              Icons.file_present_outlined,
+              semanticLabel: macOSAppName(s.t('input.sendClipFiles')),
+            ),
             tooltip: s.t('input.sendClipFiles'),
           )
         else if (!foldClipboardIntoAttach && _hasClipboardImage)
           IconButton(
             onPressed: widget.enabled ? _pasteImage : null,
-            icon: const Icon(Icons.image_outlined),
+            icon: Icon(
+              Icons.image_outlined,
+              semanticLabel: macOSAppName(s.t('input.sendClipImage')),
+            ),
             tooltip: s.t('input.sendClipImage'),
           )
         else if (!foldClipboardIntoAttach && _hasClipboardText)
           IconButton(
             onPressed: widget.enabled ? _pasteAndSend : null,
-            icon: const Icon(Icons.content_paste),
+            icon: Icon(
+              Icons.content_paste,
+              semanticLabel: macOSAppName(s.t('input.sendClipText')),
+            ),
             tooltip: s.t('input.sendClipText'),
           ),
         // 좁은 폰에선 글을 쓰는 동안 첨부 버튼을 숨겨 입력 폭을 48dp 넓힘 (비우면 다시 나옴).
@@ -96,7 +118,10 @@ mixin _ChatInputActionBar
                       ? _openFoldedAttachMenu
                       : widget.onAttach)
                 : null,
-            icon: const Icon(Icons.attach_file),
+            icon: Icon(
+              Icons.attach_file,
+              semanticLabel: macOSAppName(s.t('input.sendFile')),
+            ),
             tooltip: s.t('input.sendFile'),
           ),
         ),
@@ -114,38 +139,45 @@ mixin _ChatInputActionBar
             canRequestFocus: false,
             skipTraversal: true,
             onKeyEvent: _onKey,
-            child: TextField(
-              enableIMEPersonalizedLearning: false,
+            child: FieldName(
               controller: _controller,
-              focusNode: _focusNode,
-              enabled: widget.enabled,
-              minLines: 1,
-              maxLines: 5,
-              textInputAction: TextInputAction.send,
-              keyboardType: TextInputType.multiline,
-              // 안 정하면 TextField가 힌트/입력 텍스트를 박스 안에서 아래로 치우치게 그림
-              // (Material의 알려진 동작, isDense일수록 눈에 띔)
-              textAlignVertical: TextAlignVertical.center,
-              onChanged: _onChanged,
-              onSubmitted: (_) => _send(),
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: widget.enabled
-                    ? s.t('input.hint')
-                    : s.t('input.hintOffline'),
-                filled: true,
-                fillColor: scheme.surfaceContainerHighest.withValues(
-                  alpha: 0.5,
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg,
-                  vertical: AppSpacing.md,
-                ),
-                // isDense라 47로 나와서 Android 48dp 하한에 1 모자랐음
-                constraints: const BoxConstraints(minHeight: 48),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.lg),
-                  borderSide: BorderSide.none,
+              name: widget.enabled
+                  ? s.t('input.hint')
+                  : s.t('input.hintOffline'),
+              child: TextField(
+                enableIMEPersonalizedLearning: false,
+                autofillHints: null,
+                controller: _controller,
+                focusNode: _focusNode,
+                enabled: widget.enabled,
+                minLines: 1,
+                maxLines: 5,
+                textInputAction: TextInputAction.send,
+                keyboardType: TextInputType.multiline,
+                // 안 정하면 TextField가 힌트/입력 텍스트를 박스 안에서 아래로 치우치게 그림
+                // (Material의 알려진 동작, isDense일수록 눈에 띔)
+                textAlignVertical: TextAlignVertical.center,
+                onChanged: _onChanged,
+                onSubmitted: (_) => _send(),
+                decoration: InputDecoration(
+                  isDense: true,
+                  hintText: widget.enabled
+                      ? s.t('input.hint')
+                      : s.t('input.hintOffline'),
+                  filled: true,
+                  fillColor: scheme.surfaceContainerHighest.withValues(
+                    alpha: 0.5,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.md,
+                  ),
+                  // isDense라 47로 나와서 Android 48dp 하한에 1 모자랐음
+                  constraints: const BoxConstraints(minHeight: 48),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
@@ -158,7 +190,11 @@ mixin _ChatInputActionBar
           enabled: widget.enabled,
           child: IconButton.filled(
             onPressed: widget.enabled ? _send : null,
-            icon: const Icon(Icons.send_rounded, size: 20),
+            icon: Icon(
+              Icons.send_rounded,
+              size: 20,
+              semanticLabel: macOSAppName(s.t('input.send')),
+            ),
             tooltip: s.t('input.send'),
           ),
         ),

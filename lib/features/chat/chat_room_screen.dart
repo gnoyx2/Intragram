@@ -1,12 +1,16 @@
+import 'package:intragram/widgets/field_name.dart';
+import 'package:intragram/core/target_platform.dart';
 import 'dart:async';
 import 'dart:io' show File;
+import 'dart:typed_data';
 
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform;
+    show TargetPlatform, defaultTargetPlatform, kIsWeb, listEquals;
 import 'package:flutter/material.dart';
 import 'package:intragram/widgets/keyboard_access.dart';
+import 'package:intragram/features/portal/web_connection_dialog.dart';
 import 'package:flutter/semantics.dart' show SemanticsService;
 import 'package:flutter/services.dart'
     show LogicalKeyboardKey, PlatformException;
@@ -15,6 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intragram/app_navigator.dart';
 import 'package:intragram/app_providers.dart';
 import 'package:intragram/app_providers/conversation_actions.dart';
+import 'package:intragram/core/browser_file_picker.dart';
 import 'package:intragram/core/mobile_file_source.dart';
 import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/l10n/strings.dart';
@@ -73,7 +78,10 @@ abstract class _ChatRoomScreenStateBase extends ConsumerState<ChatRoomScreen> {
   List<String> _hits = const <String>[];
   int _hitIndex = 0;
 
+  // 앱이 앞에 있을 때만 읽음 처리함: 뒤 탭·다른 창·백그라운드에선 읽음 영수증과 읽음 소각을 미룸
   void _markRead() {
+    final state = WidgetsBinding.instance.lifecycleState;
+    if (state != null && state != AppLifecycleState.resumed) return;
     _registry.markRoomRead(widget.conversationId);
   }
 }
@@ -85,10 +93,17 @@ class _ChatRoomScreenState extends _ChatRoomScreenStateBase
         _ChatRoomDragDrop,
         _ChatRoomScaffold,
         _ChatRoomBody,
-        _ChatRoomAnnounce {
+        _ChatRoomAnnounce,
+        WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _markRead();
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _unreadOnOpen =
         ref
             .read(inMemoryStoreProvider)
@@ -103,6 +118,7 @@ class _ChatRoomScreenState extends _ChatRoomScreenStateBase
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _stopAnnouncing();
     if (foregroundConversationId == widget.conversationId) {
       foregroundConversationId = null;
@@ -123,6 +139,7 @@ class _ChatRoomScreenState extends _ChatRoomScreenStateBase
 
     ref.listen(roomMessagesProvider(widget.conversationId), (_, _) {
       _markRead();
+      _refreshSearch();
     });
 
     if (!exists) {

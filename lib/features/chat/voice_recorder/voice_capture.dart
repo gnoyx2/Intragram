@@ -41,7 +41,8 @@ class RecordVoiceCapture implements VoiceCapture {
 
   // 테스트(FLUTTER_TEST)는 호스트 OS와 상관없이 android로 보여서 Linux CI에서도 실제 도구를 안 띄움
   bool get _linux =>
-      linuxStart != null || defaultTargetPlatform == TargetPlatform.linux;
+      linuxStart != null ||
+      (!kIsWeb && defaultTargetPlatform == TargetPlatform.linux);
 
   @override
   Future<bool> hasPermission() => _recorder.hasPermission();

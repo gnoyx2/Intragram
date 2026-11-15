@@ -44,13 +44,18 @@ class _PlayButton extends StatelessWidget {
           padding: EdgeInsets.zero,
           tapTargetSize: MaterialTapTargetSize.padded,
         ),
-        icon: AnimatedSwitcher(
-          duration: motionDuration(context, AppMotion.settle),
-          switchInCurve: Curves.easeOutBack,
-          switchOutCurve: Curves.easeIn,
-          transitionBuilder: (child, animation) =>
-              ScaleTransition(scale: animation, child: child),
-          child: glyph,
+        icon: Semantics(
+          label: macOSAppName(
+            S.of(context).t(playing ? 'transfer.pause' : 'transfer.play'),
+          ),
+          child: AnimatedSwitcher(
+            duration: motionDuration(context, AppMotion.settle),
+            switchInCurve: Curves.easeOutBack,
+            switchOutCurve: Curves.easeIn,
+            transitionBuilder: (child, animation) =>
+                ScaleTransition(scale: animation, child: child),
+            child: glyph,
+          ),
         ),
       ),
     );

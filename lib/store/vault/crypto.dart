@@ -185,7 +185,7 @@ Future<SecretKeyData> _deriveVaultKey(
   List<int> salt, {
   int iterations = kVaultPbkdf2Iterations,
 }) async {
-  final bytes = await Isolate.run(() async {
+  Future<Uint8List> derive() async {
     final key = await CryptoEngine.deriveKeyFromPin(
       pin,
       salt,
@@ -196,6 +196,8 @@ Future<SecretKeyData> _deriveVaultKey(
     } finally {
       key.destroy();
     }
-  });
+  }
+
+  final bytes = kIsWeb ? await derive() : await Isolate.run(derive);
   return ownedSecretKeyFrom(bytes);
 }

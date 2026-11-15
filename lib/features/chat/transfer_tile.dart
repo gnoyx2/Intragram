@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data' show Endian;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
@@ -14,8 +14,10 @@ import 'package:intragram/core/haptics.dart';
 import 'package:intragram/app_providers.dart';
 import 'package:intragram/core/constants.dart' show kMaxThumbBytes;
 import 'package:intragram/core/file_kind.dart';
+import 'package:intragram/core/image_header.dart';
 import 'package:intragram/core/native_open.dart';
 import 'package:intragram/core/os_privacy.dart';
+import 'package:intragram/core/browser_received_files.dart';
 import 'package:intragram/core/target_platform.dart';
 import 'package:intragram/core/voice/voice_clip.dart';
 import 'package:intragram/core/voice/voice_wav.dart';
@@ -46,6 +48,21 @@ part 'transfer_tile/voice_button.dart';
 part 'transfer_tile/voice_player.dart';
 part 'transfer_tile/voice_waveform.dart';
 part 'transfer_tile/tile_voice_control.dart';
+
+// Encrypted WebRTC conversations share the app's memory-only audio player.
+class MemoryVoicePlayer extends StatelessWidget {
+  const MemoryVoicePlayer({
+    required this.bytes,
+    required this.color,
+    super.key,
+  });
+  final Uint8List bytes;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) =>
+      _VoicePlayer(bytes: bytes, color: color, encrypted: true);
+}
 
 // 파일 카드 폭. 말풍선이 이보다 좁으면 말풍선 폭을 따름 (카드마다 폭이 들쭉날쭉하지 않게)
 const double _kCardWidth = 280;

@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -79,7 +80,12 @@ class _DiscoveryRefreshRowState extends ConsumerState<DiscoveryRefreshRow>
           },
         ),
         IconButton(
-          icon: Icon(Icons.refresh, size: 18, color: color),
+          icon: Icon(
+            Icons.refresh,
+            size: 18,
+            color: color,
+            semanticLabel: macOSAppName(s.t('home.refreshDevices')),
+          ),
           tooltip: s.t('home.refreshDevices'),
           onPressed: _manualRefresh,
         ),

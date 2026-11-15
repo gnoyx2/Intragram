@@ -41,7 +41,9 @@ class _LinkableTextState extends State<_LinkableText> {
     r'(?<=[\uAC00-\uD7A3])(?=[\uAC00-\uD7A3\w])|(?<=\w)(?=[\uAC00-\uD7A3])',
   );
 
-  static String _keepWords(String s) => s.replaceAll(_hangulJoin, '\u2060');
+  static const _wordJoiner = kIsWeb ? '\uFEFF' : '\u2060';
+
+  static String _keepWords(String s) => s.replaceAll(_hangulJoin, _wordJoiner);
 
   // 바뀐 글일 때만 낭독용 원문을 붙임 (한글 없는 메시지는 위젯 구조가 그대로)
   static String? _spoken(String plain, String shown) =>
@@ -70,7 +72,11 @@ class _LinkableTextState extends State<_LinkableText> {
   void _copySelection() {
     final selected = _selected;
     if (selected == null) return;
-    unawaited(OsPrivacy.copySensitive(selected.replaceAll('\u2060', '')));
+    unawaited(
+      OsPrivacy.copySensitive(
+        selected.replaceAll(RegExp(r'[\u2060\uFEFF]'), ''),
+      ),
+    );
   }
 
   Widget _selectable(Widget text) => Actions(
@@ -122,6 +128,12 @@ class _LinkableTextState extends State<_LinkableText> {
     _recognizers = <TapGestureRecognizer>[];
 
     final text = widget.text;
+    // 긴 글은 안내와 앞부분만 낭독함: 통째로 이름이 되면 스크린 리더가 쓸 수 없음 (전체는 복사로, 화면 글은 그대로).
+    // 한계: 상한을 넘는 글 속 링크는 낭독 노드로 따로 안 나감. 필요해지면 스팬별로 나눠 자름
+    final head = clipCharacters(text, kSpokenMessageChars);
+    final long = head.length == text.length
+        ? null
+        : '${S.of(context).t('a11y.longMessage')}\n$head';
     final matches = _urlRe
         .allMatches(text)
         .where(
@@ -134,7 +146,7 @@ class _LinkableTextState extends State<_LinkableText> {
       final shown = _keepWords(text);
       final plain = Text(
         shown,
-        semanticsLabel: _spoken(text, shown),
+        semanticsLabel: long ?? _spoken(text, shown),
         style: widget.style,
       );
       return widget.selectable ? _selectable(plain) : plain;
@@ -170,7 +182,10 @@ class _LinkableTextState extends State<_LinkableText> {
       final shown = _keepWords(plain);
       spans.add(TextSpan(text: shown, semanticsLabel: _spoken(plain, shown)));
     }
-    final rich = Text.rich(TextSpan(style: widget.style, children: spans));
+    final rich = Text.rich(
+      TextSpan(style: widget.style, children: spans),
+      semanticsLabel: long,
+    );
     return widget.selectable ? _selectable(rich) : rich;
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// 전서구 캐릭터(P1)의 두 색(#C3C3C9·#4C586E)만으로 그린 투명 배경 컷아웃 일러스트
+// 전서구 캐릭터의 두 색(#C3C3C9·#4C586E)만으로 그린 투명 배경 컷아웃 일러스트
 // 바깥 둘레에 은은한 톤 단차가 있어 별도 배경 타일 없이 라이트(#FFFFFF)·다크(#0D0F14) 바탕에 바로 올림
 enum IllustrationName {
   brandPigeon('brand-pigeon.png'),

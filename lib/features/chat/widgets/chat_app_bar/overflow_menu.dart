@@ -30,6 +30,10 @@ class ChatOverflowMenu extends StatelessWidget {
     final s = S.of(context);
     return PopupMenuButton<String>(
       tooltip: s.t('chat.more'),
+      icon: Icon(
+        Icons.adaptive.more,
+        semanticLabel: macOSAppName(s.t('chat.more')),
+      ),
       onSelected: (value) {
         if (value == 'audit') {
           unawaited(

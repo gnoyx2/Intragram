@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/core/app_identity.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/tokens.dart';
+import 'package:intragram/widgets/named_selectable_text.dart';
 
 // 오프라인 앵커 교환: 요청 기기가 번들을 내보내고, 다른 기기가 그 루트에 증인 서명하고, 요청 기기는 따로 확인한
 // 증인 peerId와 함께 그 영수증을 들여옴 (네트워크로 안 보냄)
@@ -124,16 +126,21 @@ class _AuditBundleExchangeState extends State<AuditBundleExchange> {
                     IconButton(
                       tooltip: s.t('common.close'),
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
+                      icon: Icon(
+                        Icons.close,
+                        semanticLabel: macOSAppName(s.t('common.close')),
+                      ),
                     ),
                   ],
                 ),
                 Text(s.t('audit.offlineFlow')),
-                SelectableText(
+                NamedSelectableText(
                   s.t('audit.localPeer', {'id': widget.identity.peerId}),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 TextField(
+                  enableIMEPersonalizedLearning: false,
+                  autofillHints: null,
                   controller: _witness,
                   enabled: !_busy,
                   onChanged: (_) => setState(() => _result = null),
@@ -143,6 +150,8 @@ class _AuditBundleExchangeState extends State<AuditBundleExchange> {
                   maxLength: 32,
                 ),
                 TextField(
+                  enableIMEPersonalizedLearning: false,
+                  autofillHints: null,
                   controller: _json,
                   enabled: !_busy,
                   onChanged: (_) => setState(() => _result = null),

@@ -57,6 +57,35 @@ void main() {
     expect(find.text(en.t('convTile.webGuestRoom')), findsOneWidget);
   });
 
+  // v7 방 파일은 LAN 평문이지만 WebRTC 방은 링크마다 DTLS라 같은 문구를 쓰면 안 됨
+  testWidgets('a WebRTC room banner keeps the host warning only', (
+    tester,
+  ) async {
+    final h = Harness();
+    addTearDown(h.dispose);
+    await tester.pumpWidget(
+      h.wrap(
+        const Scaffold(
+          body: Column(
+            children: [
+              RoomRelayBanner(),
+              RoomRelayBanner(encryptedLinks: true),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(find.text(en.t('chat.relayBanner')), findsOneWidget);
+    expect(find.text(en.t('secureWeb.relayBanner')), findsOneWidget);
+    for (final lang in AppLang.values) {
+      final s = S(lang);
+      final hostWarning = s.t('chat.relayBanner').split(':').first;
+      final plaintext = lang == AppLang.ko ? '암호화되지 않' : 'not encrypted';
+      expect(s.t('secureWeb.relayBanner'), contains(hostWarning));
+      expect(s.t('secureWeb.relayBanner'), isNot(contains(plaintext)));
+    }
+  });
+
   test('the portal sheet warns before guests are let in', () {
     for (final lang in AppLang.values) {
       final s = S(lang);

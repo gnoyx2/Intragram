@@ -1,3 +1,4 @@
+import 'package:intragram/core/target_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -127,7 +128,10 @@ class _SavedChatsScreenState extends ConsumerState<SavedChatsScreen> {
                       subtitle: Text(_stamp(c.startedAt)),
                       onTap: () => openChat(context, c.id),
                       trailing: IconButton(
-                        icon: const Icon(Icons.delete_outline),
+                        icon: Icon(
+                          Icons.delete_outline,
+                          semanticLabel: macOSAppName(s.t('savedChats.delete')),
+                        ),
                         tooltip: s.t('savedChats.delete'),
                         onPressed: () => _delete(c),
                       ),
