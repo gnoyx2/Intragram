@@ -1,6 +1,7 @@
 // Shared Flutter web limits in a real browser: a file over the 64 GiB limit is refused with a
-// notice and nothing is offered, a file exactly at the limit is offered, and a voice recording
-// stops by itself at two minutes and is sent. The big files are sparse: they use no disk space.
+// notice and nothing is offered, a file exactly at the limit is offered, a voice recording stops
+// by itself at two minutes and is sent, and in Unlimited mode a text over 64 MiB is refused while
+// a near-64 MiB text arrives intact. The big files are sparse: they use no disk space.
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { mkdir, mkdtemp, open as openFile, readFile, rm, stat, writeFile } from 'node:fs/promises';
@@ -114,7 +115,71 @@ try {
   await tile(b, 'at-limit.bin').getByRole('button', { name: 'Accept', exact: true }).waitFor({ state: 'detached' });
   log('a file of exactly 64 GiB is offered and can be cancelled');
 
-  // 3. A hands-free recording stops by itself at two minutes and is sent. The security code is
+  // 3. Unlimited mode 64 MiB text ceiling: > 64 MiB is refused locally; near-64 MiB arrives intact.
+  const setLargeMode = async (page, mode) => {
+    await page.bringToFront();
+    await button(page, 'More').first().click();
+    await page.getByRole('menuitem', { name: 'Settings', exact: true }).click();
+    await page.getByText(mode, { exact: true }).click();
+    await button(page, 'Back').click();
+    await page.getByText('Large messages', { exact: true }).waitFor({ state: 'detached' });
+  };
+  const sendClip = async page => {
+    await page.bringToFront();
+    await button(page, 'Send clipboard text').first().click();
+    await button(page, 'Scrim').waitFor();
+    await button(page, 'Send clipboard text').last().click();
+    await button(page, 'Scrim').waitFor({ state: 'detached' });
+  };
+  await setLargeMode(a, 'Unlimited');
+  await setLargeMode(b, 'Unlimited');
+
+  const overBytes = 64 * 1024 * 1024 + 64;
+  await a.bringToFront();
+  await a.evaluate(n => {
+    const head = 'OVER64M_HEAD_';
+    return navigator.clipboard.writeText(head + 'X'.repeat(n - head.length));
+  }, overBytes);
+  await sendClip(a);
+  const failedBubble = a.getByRole('button', { name: /^From you\s+Long message\.[\s\S]*OVER64M_HEAD_[\s\S]*failed to send/ });
+  await failedBubble.waitFor({ timeout: 60000 });
+  await dump(a, 'over-64mib-text-refused');
+  await b.bringToFront();
+  assert.equal(await b.getByLabel(/OVER64M_HEAD_/).count(), 0, 'text over 64 MiB is never delivered to the peer');
+  log(`Unlimited mode refused a ${overBytes} B (> 64 MiB) text locally and sent nothing to the peer`);
+
+  const nearBytes = 64 * 1024 * 1024 - 64;
+  const heapBeforeA = await a.evaluate(() => performance.memory?.usedJSHeapSize || 0);
+  const heapBeforeB = await b.evaluate(() => performance.memory?.usedJSHeapSize || 0);
+  await a.bringToFront();
+  await a.evaluate(n => {
+    const head = 'NEAR64M_HEAD_', tail = '_NEAR64M_TAIL';
+    return navigator.clipboard.writeText(head + 'U'.repeat(n - head.length - tail.length) + tail);
+  }, nearBytes);
+  const textStarted = Date.now();
+  await sendClip(a);
+  await b.bringToFront();
+  const nearBubble = b.getByLabel(/NEAR64M_HEAD_/).first();
+  await nearBubble.waitFor({ timeout: 120000 });
+  const textSeconds = (Date.now() - textStarted) / 1000;
+  const box = await nearBubble.boundingBox();
+  await b.mouse.click(box.x + box.width / 2, Math.max(180, Math.min(700, box.y + 40)), { button: 'right' });
+  await b.getByRole('menuitem', { name: 'Copy text' }).or(b.getByRole('button', { name: 'Copy text' })).first().click();
+  const copiedMeta = await b.evaluate(async () => {
+    const t = await navigator.clipboard.readText();
+    return { len: t.length, head: t.slice(0, 13), tail: t.slice(-13) };
+  });
+  assert.deepEqual(copiedMeta, { len: nearBytes, head: 'NEAR64M_HEAD_', tail: '_NEAR64M_TAIL' });
+  const heapAfterA = await a.evaluate(() => performance.memory?.usedJSHeapSize || 0);
+  const heapAfterB = await b.evaluate(() => performance.memory?.usedJSHeapSize || 0);
+  await dump(b, 'near-64mib-text-received');
+  log(
+    `Unlimited mode sent and received ${nearBytes} B (~64 MiB) text in ${textSeconds.toFixed(2)} s ` +
+    `(JS heap A: ${(heapBeforeA / 1048576).toFixed(1)} -> ${(heapAfterA / 1048576).toFixed(1)} MiB, ` +
+    `B: ${(heapBeforeB / 1048576).toFixed(1)} -> ${(heapAfterB / 1048576).toFixed(1)} MiB)`
+  );
+
+  // 4. A hands-free recording stops by itself at two minutes and is sent. The security code is
   //    confirmed first, as in the other voice checks (after the file steps, so nothing auto-accepts them).
   for (const p of [a, b]) {
     await p.bringToFront();

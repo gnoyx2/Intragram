@@ -1,9 +1,10 @@
 // Shared Flutter web gap QA: flows that only had unit tests before, driven through the real UI in
 // isolated Chromium contexts. A reply keeps no copy of a burned original, global search follows
-// new and deleted messages while it is open, an organization credential is withdrawn, a second
-// device witnesses an audit bundle (wrong witness and tampered bundle are refused), a dropped
-// folder (with a nested folder) is offered file by file, and the Saved chats screen lists and
-// deletes a saved conversation.
+// new and deleted messages while it is open, an organization credential is verified, expires when
+// the clock passes its validity window, and is withdrawn, a second device witnesses an audit bundle
+// (wrong witness and tampered bundle are refused), a dropped folder (with a nested folder) is
+// offered file by file, two files with the same name are received and saved without overwriting each
+// other, and the Saved chats screen lists and deletes a saved conversation.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
@@ -168,7 +169,8 @@ try {
   await composer(a).waitFor();
   log('global search showed a message that arrived while it was open and dropped it when the sender deleted it for everyone');
 
-  // 3. Organization credential: presented, verified by the peer, then withdrawn.
+  // 3. Organization credential: presented, verified by the peer, expired when the clock passes its
+  //    validity window, then withdrawn.
   await a.bringToFront();
   await button(a, 'Organization credential not presented').click();
   await button(a, 'Issue and activate demo credential').click();
@@ -178,16 +180,36 @@ try {
   await b.bringToFront();
   const presented = b.getByRole('button', { name: /Demo issuer · Demo Research Institute/ });
   await presented.waitFor();
+  await b.evaluate(() => {
+    window.__realDateNow = Date.now.bind(Date);
+    Date.now = () => window.__realDateNow() + 13 * 3600 * 1000;
+  });
+  await presented.click();
+  await button(b, 'Close').waitFor();
+  assert.match(await b.locator('body').ariaSnapshot(), /Organization credential rejected: Organization credential expired/, 'peer credential is shown as expired');
+  await dump(b, 'org-expired-dialog');
+  await button(b, 'Close').click();
+  await a.bringToFront();
+  await button(a, 'Organization credential not presented').click();
+  await button(a, 'Issue and activate demo credential').click();
+  await button(a, 'Close').click();
+  await b.bringToFront();
+  const expiredBadge = b.getByRole('button', { name: /Organization credential rejected: Organization credential expired/ });
+  await expiredBadge.waitFor();
+  await dump(b, 'org-expired-badge');
+  await b.evaluate(() => {
+    if (window.__realDateNow) Date.now = window.__realDateNow;
+  });
   await a.bringToFront();
   await button(a, 'Organization credential not presented').click();
   await button(a, 'Stop presenting').click();
   await button(a, 'Issue and activate demo credential').waitFor();
   await button(a, 'Close').click();
   await b.bringToFront();
-  await presented.waitFor({ state: 'detached' });
+  await expiredBadge.waitFor({ state: 'detached' });
   await button(b, 'Organization credential not presented').waitFor();
   await dump(b, 'org-withdrawn');
-  log('demo organization credential verified by the peer, then withdrawn: the peer shows "not presented" again');
+  log('demo organization credential verified by the peer, shown as expired past its 12 h window, then withdrawn');
 
   // 4. Audit: B witnesses A's Merkle batch; a wrong witness ID and a tampered bundle are refused.
   const payload = Buffer.from('evidence file 증적 파일\n');
@@ -290,6 +312,27 @@ try {
   assert.deepEqual(await saved(b, 'drop-one.txt'), one);
   assert.equal(sha(await saved(b, 'drop-two.bin')), sha(two));
   log('a dropped folder with a nested folder was offered as two files; both saved byte-exact');
+
+  // 5b. Two files with the same name: receiving and saving the second does not overwrite the first.
+  const sameFirst = Buffer.from('same-name first file 첫 번째 동명 파일\n');
+  const sameSecond = Buffer.from('same-name second file 두 번째 동명 파일\n');
+  await attach(a, { name: 'same-name.txt', mimeType: 'text/plain', buffer: sameFirst });
+  await attach(a, { name: 'same-name.txt', mimeType: 'text/plain', buffer: sameSecond });
+  await b.bringToFront();
+  const sameTiles = tile(b, 'same-name.txt');
+  await sameTiles.nth(1).waitFor();
+  await sameTiles.nth(0).getByRole('button', { name: 'Accept', exact: true }).click();
+  await sameTiles.nth(1).getByRole('button', { name: 'Accept', exact: true }).click();
+  const saveNth = async index => {
+    const dl = b.waitForEvent('download');
+    await sameTiles.nth(index).getByRole('button', { name: 'Save to device', exact: true }).click();
+    return readFile(await (await dl).path());
+  };
+  assert.deepEqual(await saveNth(0), sameFirst);
+  assert.deepEqual(await saveNth(1), sameSecond);
+  assert.deepEqual(await saveNth(0), sameFirst, 'saving the second same-name file did not overwrite the first');
+  await dump(b, 'same-name-files-saved');
+  log('two files named same-name.txt received and saved without overwriting each other');
 
   // 6. Saved chats: with saving on, the conversation is listed in Settings and can be deleted from there.
   await a.bringToFront();
