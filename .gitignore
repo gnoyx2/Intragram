@@ -27,6 +27,10 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+/docs/web/app/
+/docs/web/.app-stage.*/
+# 로컬 QA 기록과 격리 앱 사본 (커밋 대상 아님)
+/work/
 
 # 심볼 파일
 app.*.symbols

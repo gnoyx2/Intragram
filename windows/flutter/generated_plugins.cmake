@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bonsoir_windows
   desktop_drop
+  flutter_webrtc
   pasteboard
   record_windows
   share_plus

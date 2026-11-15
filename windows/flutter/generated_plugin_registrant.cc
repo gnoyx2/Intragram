@@ -8,6 +8,7 @@
 
 #include <bonsoir_windows/bonsoir_windows_plugin_c_api.h>
 #include <desktop_drop/desktop_drop_plugin.h>
+#include <flutter_webrtc/flutter_web_r_t_c_plugin.h>
 #include <pasteboard/pasteboard_plugin.h>
 #include <record_windows/record_windows_plugin_c_api.h>
 #include <share_plus/share_plus_windows_plugin_c_api.h>
@@ -18,6 +19,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("BonsoirWindowsPluginCApi"));
   DesktopDropPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DesktopDropPlugin"));
+  FlutterWebRTCPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FlutterWebRTCPlugin"));
   PasteboardPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("PasteboardPlugin"));
   RecordWindowsPluginCApiRegisterWithRegistrar(
