@@ -325,9 +325,9 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | N3, F5, U15, 5a F8 | 브라우저 게스트 | — | 호스트 내장 웹(`7dc9a53fe02d`) | — | 2026-10-26 | NOT RUN | iOS QA 번들 게스트 접속 시 발견된 호스트 멈춤(`0x8BADF00D`)은 `7dc9a53`에서 수정 완료; Safari·Chrome·Firefox·Edge·iOS Safari·Android Chrome 실기기 수동 검증은 미실시 (헤드리스 자동 점검·CSP 응답만 확인) |
 
 
-### 2026-11-15 공개 전 최종 로컬 자동 검증
+### 2026-11-15·16 공개 전후 로컬 자동 검증
 
-같은 Mac 한 대(macOS 27.0.1, Apple Silicon)에서 공개 직전 소스(버전 `1.0.0+10`)로 다시 빌드해 실행한 결과다. 한 컴퓨터 안의 자동 검사이며 아래 NOT RUN 항목을 대체하지 않는다. 2026-11-14 기록에서 바뀐 것만 따로 적고, 나머지 항목도 같은 소스로 모두 다시 통과했다.
+같은 Mac 한 대(macOS 27.0.1, Apple Silicon)에서 공개 직전 소스(버전 `1.0.0+10`)로 다시 빌드해 실행한 결과다. 한 컴퓨터 안의 자동 검사이며 아래 NOT RUN 항목을 대체하지 않는다. 2026-11-14 기록에서 바뀐 것만 따로 적고, 나머지 항목도 같은 소스로 모두 다시 통과했다. Safari 행은 공개 뒤인 2026-11-16에 같은 소스의 로컬 미리보기와 배포된 공개 주소에서 돌린 결과다.
 
 | 대상 | 범위 | 결과 |
 | :-- | :-- | :-- |
@@ -338,11 +338,14 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | 긴 말풍선 접근성 이름·문단 조판 상한 | 2천 자, 2만 자, 11만 자, 110만 자, 65,536자 초과 | 4천 자를 넘으면 "긴 메시지" 안내와 앞 4천 자만 이름이 되고, 65,536자를 넘으면 화면 문단은 앞 65,536자만 조판하며 텍스트 복사는 원문 전체를 유지 |
 | 다른 사이트의 프레임 | 주 앱 패키지와 보조 HTML을 다른 출처의 iframe에 넣음 | 앱 코드를 읽지 않고 새 탭 링크만 표시 |
 | Firefox 160 ↔ Chromium | 양쪽 초대 방향, 확인 번호, 텍스트, 파일 양방향 바이트 일치, Firefox 그룹 멤버 | PASS |
-| WebKit(Playwright 빌드, Safari 아님) | 같은 흐름 | 화면은 뜨지만 이 빌드는 빈 페이지에서도 ICE 후보를 하나도 모으지 않아 연결 단계로 못 감. Safari 결과가 아니므로 Safari는 NOT RUN으로 둠 |
+| WebKit(Playwright 빌드, Safari 아님) | 같은 흐름 | 화면은 뜨지만 이 빌드는 빈 페이지에서도 ICE 후보를 하나도 모으지 않아 연결 단계로 못 감. Safari 결과가 아니므로 Safari는 아래 `safaridriver` 행에 따로 적음 |
 | 일반 macOS 앱(`lib/main.dart`, 분리 QA 번들) | 시나리오 A~G(G 자동 초대 12단계, E 1 GiB 양방향 포함), QA 전용 harness의 DTLS 검사, 다시 빌드한 앱으로 A·D 재확인 | PASS |
 | 패키지 | `/web/` → `/web/app/`, `/Intragram/web/app/` | PASS |
 | 공개 주소 https://gnoyx2.github.io/Intragram/ (배포 직후, Chromium 151 두 컨텍스트, `tool/live_web_smoke_test.mjs`) | 랜딩 → `/web/` → `/web/app/`, 초대·응답 코드, 확인 번호, 텍스트 양방향, 파일 양방향 SHA-256 일치, 새로고침, github.io 밖 요청 0, 콘솔 오류 0, 4xx·5xx 0. 배포된 `main.dart.js`는 로컬 빌드와 바이트 동일 | PASS |
-| Safari(Safari 설정의 원격 자동화 비활성으로 `safaridriver` 세션 생성 불가 확인), Edge(미설치), iPhone·iPad·Android·Windows·Linux 실기기, 서로 다른 두 기기 Wi-Fi, 실제 스크린 리더 | — | NOT RUN |
+| macOS Safari 27.0.1(`safaridriver` WebDriver) ↔ Chromium 151, 2026-11-16 (`tool/safari_webdriver_smoke_test.mjs`) | 로컬 미리보기와 공개 주소(https://gnoyx2.github.io/Intragram/web/app/) 각각에서 Safari 초대·Chromium 응답과 그 반대, 양쪽 같은 확인 번호, 한글·이모지 텍스트 양방향, 파일 양방향(수락·기기에 저장) SHA-256 일치(Safari 쪽 저장은 다운로드 창 대신 저장 버튼이 넘긴 Blob으로 확인), 페이지 출처 밖 요청 0, ICE 서버 0, mDNS host 후보만 수집, 콘솔 오류 0 | PASS (Safari 27.0.1 macOS, safaridriver WebDriver ↔ Chromium 151, 로컬 및 공개 주소). iOS Safari 실기기 결과가 아님 |
+| iOS Safari·Android Chrome(휴대폰 브라우저), Edge(미설치), iPhone·iPad·Android·Windows·Linux 실기기, 서로 다른 두 기기 Wi-Fi, 실제 스크린 리더 | — | NOT RUN |
+
+Safari 자동 검사에서 본 점: 접근성 트리(semantics)를 켠 Safari에서 입력칸에 포커스가 남은 채 WebDriver로 처음 누른 버튼은 포커스만 옮기고 동작하지 않았다(두 번째 클릭과 click 이벤트만 보내는 활성화는 동작). 테스트는 버튼을 누르기 전에 입력칸 포커스를 푼다. 실제 마우스와 VoiceOver에서도 그런지는 6절 접근성 실기기 점검에서 함께 본다.
 
 ### 2026-11-14 공통 Flutter 웹·일반 앱 로컬 자동 검증
 

@@ -14,9 +14,10 @@ the installed app. This is a Flutter build, not the separate HTML client.
 | Host app's HTTP guest URL / `IGA1.` | Legacy plaintext portal | Old guest behavior; never a fallback for the encrypted app |
 
 The public address is **https://gnoyx2.github.io/Intragram/web/**. It is a
-**preview (beta)**: the checks so far are automated runs in Chromium 151 and
-Firefox 160 on one Mac. Safari, Edge, phone browsers, two devices on a real
-Wi-Fi and screen readers are **NOT RUN** (see *Browser support* below and
+**preview (beta)**: the checks so far are automated runs in Chromium 151,
+Firefox 160 and Safari 27 on one Mac. Edge, phone browsers (iOS Safari
+included), two devices on a real Wi-Fi and screen readers are **NOT RUN** (see
+*Browser support* below and
 [DEVICE_QA.md](../DEVICE_QA.md)).
 
 Local source changes do not publish the website. `docs/web/app/` is generated
@@ -193,7 +194,8 @@ before: blocking does not remove that device from a v7 room you both are in.
 - **Browser support.** Folder drag and drop, clipboard images, media codecs,
   OPFS, microphone and notification permissions depend on the browser. Chromium
   151 and Firefox 160 pass the automated runs listed under *Reproducible
-  verification* on macOS 27. Safari, Edge and phone browsers are NOT RUN.
+  verification* on macOS 27, and Safari 27 passes the Safari WebDriver smoke
+  test there. Edge and phone browsers are NOT RUN.
   Results are recorded in [DEVICE_QA.md](../DEVICE_QA.md); sharing a widget does
   not prove every platform integration.
 
@@ -315,6 +317,12 @@ local Playwright module and Chromium:
 - `tool/shared_flutter_firefox_test.mjs` runs the same UI in the installed
   Firefox (WebDriver BiDi, `FIREFOX_PATH`) against Chromium: both invitation
   directions, security code, text and files both ways, a Firefox room member.
+- `tool/safari_webdriver_smoke_test.mjs` runs the same UI in Safari through
+  `safaridriver` (Safari Settings > Developer > Allow remote automation)
+  against Chromium: both invitation directions, the same security code, text
+  both ways and a file each way byte-exact, nothing loaded outside the page
+  origin and no ICE server. Set `WEB_APP_URL` to the app page, local or
+  deployed, and keep the Safari automation window in front during the run.
 - `tool/browser_platform_test.mjs` uses a separate `tool/browser_platform_qa.dart`
   build (`--output build/browser-qa`) for vault/download/voice adapters; it does
   not establish production UI parity.
