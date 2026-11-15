@@ -9,7 +9,22 @@ different protocol versions refuse to talk to each other.
 Protocol 7. Not a supported release yet: device QA is pending on every
 platform (see `DEVICE_QA.md`).
 
-Added after `v1.0.0-rc.1` (app `1.0.0+9`; the v7 wire protocol is unchanged):
+Added after `v1.0.0-rc.1` (app `1.0.0+10`; the v7 wire protocol is unchanged):
+
+- WebRTC third-party notices: bundled the 39 third-party component license texts
+  shipped in the native WebRTC M150 (`branch-heads/7871`) prebuilt binaries into
+  `assets/licenses/WEBRTC_NOTICES.md`, registered each component in the in-app
+  open-source license page (`LicenseRegistry`), and attached `WEBRTC_NOTICES.md`
+  to GitHub Releases alongside `THIRD_PARTY_NOTICES.md`.
+- Fixed: closing an automatically joined WebRTC room before the link opens no
+  longer starts the 60-second automatic-invitation cooldown on that v7 peer link.
+- Fixed: frames deferred before WebRTC peer identity proof are now bounded by an
+  8 MiB byte cap (`webChatMaxPendingIdentityBytes`) in addition to the 32-frame
+  count cap, and unreserved `MobileFileSource` handles in a multi-file batch are
+  released if an oversized file is skipped or a mid-batch reservation fails.
+- Fixed: message bubbles cap their laid-out paragraph text at 65,536 characters
+  while keeping the full message text for **Copy text**, so near-64 MiB messages
+  in **Unlimited** mode render without stalling the browser paragraph shaper.
 
 - Web app (preview, beta): the same Flutter app runs in a browser
   (`lib/main_web.dart`) at https://gnoyx2.github.io/Intragram/web/, deployed by
