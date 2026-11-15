@@ -41,6 +41,14 @@ jobs:
       # (러너에 Node가 이미 있어서 setup 액션은 필요 없음)
       - run: node tool/browser_guard_test.js
       - run: node tool/web_design_test.js
+      - run: node tool/landing_web_test.js
+      - run: node tool/web_peer_test.mjs
+      - run: node tool/web_portal_test.mjs
+      - run: node tool/web_experience_test.mjs
+      - run: node tool/web_file_queue_test.mjs
+      - run: node tool/web_chat_replay_test.mjs
+      - run: node tool/web_identity_reflection_test.mjs
+      - run: node tool/web_entry_test.mjs
       - name: Whitespace errors in this change
         run: |
           if git rev-parse -q --verify HEAD~1 >/dev/null; then
