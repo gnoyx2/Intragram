@@ -341,6 +341,7 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | WebKit(Playwright 빌드, Safari 아님) | 같은 흐름 | 화면은 뜨지만 이 빌드는 빈 페이지에서도 ICE 후보를 하나도 모으지 않아 연결 단계로 못 감. Safari 결과가 아니므로 Safari는 NOT RUN으로 둠 |
 | 일반 macOS 앱(`lib/main.dart`, 분리 QA 번들) | 시나리오 A~G(G 자동 초대 12단계, E 1 GiB 양방향 포함), QA 전용 harness의 DTLS 검사, 다시 빌드한 앱으로 A·D 재확인 | PASS |
 | 패키지 | `/web/` → `/web/app/`, `/Intragram/web/app/` | PASS |
+| 공개 주소 https://gnoyx2.github.io/Intragram/ (배포 직후, Chromium 151 두 컨텍스트, `tool/live_web_smoke_test.mjs`) | 랜딩 → `/web/` → `/web/app/`, 초대·응답 코드, 확인 번호, 텍스트 양방향, 파일 양방향 SHA-256 일치, 새로고침, github.io 밖 요청 0, 콘솔 오류 0, 4xx·5xx 0. 배포된 `main.dart.js`는 로컬 빌드와 바이트 동일 | PASS |
 | Safari, Edge, iPhone·iPad·Android·Windows·Linux 실기기, 서로 다른 두 기기 Wi-Fi, 실제 스크린 리더 | — | NOT RUN |
 
 ### 2026-11-14 공통 Flutter 웹·일반 앱 로컬 자동 검증
