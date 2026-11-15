@@ -1916,6 +1916,32 @@ footer.closing {
 }
 
 /* --- Reduced Motion & High Contrast / Forced Colors --- */
+.web-entry-grid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-6);
+}
+.web-entry-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+.web-entry-card h3 { font-size: var(--t-h3); }
+.web-entry-card ol { margin: 0; padding-left: var(--s-5); line-height: 1.8; }
+.web-entry-card > p:not(.web-entry-label) { color: var(--text-secondary); font-size: var(--t-body); }
+.web-entry-card .btn { align-self: flex-start; margin-top: auto; }
+.web-entry-label { color: var(--text-accent); font-size: var(--t-label); font-weight: 600; }
+@media (max-width: 39.99rem) {
+  #web { height: auto; min-height: 100svh; }
+  .web-entry-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  .web-entry-card { padding: var(--s-5); gap: var(--s-3); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

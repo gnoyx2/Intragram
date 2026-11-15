@@ -42,10 +42,21 @@
 
   /* --- 1. Bilingual Switcher (KO / EN) --- */
   const langButtons = document.querySelectorAll('[data-set-lang]');
+  function updateWebLinks() {
+    document.querySelectorAll('[data-web-link]').forEach((link) => {
+      const url = new URL(link.href);
+      url.searchParams.set('lang', document.documentElement.lang);
+      const theme = document.documentElement.getAttribute('data-theme');
+      if (theme) url.searchParams.set('theme', theme);
+      else url.searchParams.delete('theme');
+      link.href = url.href;
+    });
+  }
   function applyLang(lang, announceChange) {
     const normalized = lang === 'en' ? 'en' : 'ko';
     document.documentElement.lang = normalized;
     document.title = TITLES[normalized];
+    updateWebLinks();
 
     langButtons.forEach((btn) => {
       const active = btn.getAttribute('data-set-lang') === normalized;
@@ -91,6 +102,7 @@
       const active = btn.getAttribute('data-set-theme') === mode;
       btn.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
+    updateWebLinks();
     if (announceChange) {
       const labels = {
         system: ['시스템 테마를 따릅니다.', 'Following system theme.'],

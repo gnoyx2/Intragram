@@ -1,0 +1,7 @@
+html { color-scheme: light dark; }
+body { margin: 0; min-height: 100dvh; display: grid; place-items: center; font: 16px/1.6 system-ui, sans-serif; background: #f6f8fa; color: #20252e; }
+main { width: min(30rem, calc(100% - 3rem)); text-align: center; }
+h1 { font-size: 1.5rem; margin: .75rem 0; }
+a { display: block; margin: 1rem 0; color: #2366b5; }
+a:focus-visible { outline: 3px solid #518fee; outline-offset: 4px; }
+@media (prefers-color-scheme: dark) { body { background: #08090b; color: #eceff4; } a { color: #b8d8ff; } }
