@@ -150,7 +150,10 @@ mixin _LinkRegistrySession
 
   // 내가 호스트인 방이면 멤버 링크를 전부 닫고 방 자리도 비움 (링크를 두면 숨은 중계가 계속되고 지운 방 id로 메시지가 다시 쌓임)
   Future<void> disconnect(String conversationId) async {
-    if (_web.contains(conversationId)) return _web.closeRoom(conversationId);
+    if (_web.contains(conversationId)) {
+      _forgetJoinedWebRoom(conversationId);
+      return _web.closeRoom(conversationId);
+    }
     store.roomIntegrity.remove(conversationId);
     if (_isRoomHub(conversationId)) {
       if (conversationId == _appRoomId) {

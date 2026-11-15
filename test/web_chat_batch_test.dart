@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intragram/core/mobile_file_source.dart';
 import 'package:intragram/network/web_chat_bridge.dart';
 import 'package:intragram/network/web_peer.dart';
 import 'package:intragram/store/models.dart';
+import 'support/fake_file_source_channel.dart';
+import 'support/mobile_source_rig.dart';
 import 'support/web_chat_rig.dart';
 import 'web_peer_fake.dart';
 
@@ -138,4 +142,69 @@ void main() {
       containsAll(['1 / 2', '2 / 2']),
     );
   });
+
+  // 모바일 스트림 배치에서 상한을 넘는 MobileFileSource는 즉시 해제되고 정상 소스만 제안됨
+  test(
+    'an oversized MobileFileSource in a batch is released while valid ones are offered',
+    () async {
+      final fake = FakeFileSourceChannel()
+        ..install()
+        ..pickCount = 3
+        ..pickSizes = [webPeerMaxStreamFileBytes + 1, 8, 8];
+      final picked = await MobileFileSource.pick();
+      final noticed = <int>[];
+
+      await host.bridge.offerSources(
+        host.room!,
+        picked,
+        onTooLarge: () => noticed.add(host.store.transfers.length),
+      );
+      await settle();
+
+      expect(noticed, [0]);
+      expect(fake.log, contains('release:s1'));
+      expect(fake.log, isNot(contains('release:s2')));
+      expect(fake.log, isNot(contains('release:s3')));
+      await webPeerUntil(() => offered(guest).length == 2);
+    },
+  );
+
+  // 배치 도중 송신 원본 예산(100개) 초과로 예약이 실패하면 실패한 소스와 뒤따르는 미예약 MobileFileSource가 모두 해제됨
+  test(
+    'unreserved MobileFileSource items are released when mid-batch reservation fails',
+    () async {
+      for (final count in [25, 25, 25, 24]) {
+        if (count < 25 || host.store.transfers.isNotEmpty) {
+          host.room = null;
+          final extra = await WebChatRig.create('CC', directory: inbox.path);
+          addTearDown(extra.dispose);
+          await host.connect(extra);
+        }
+        for (var i = 0; i < count; i++) {
+          await host.bridge.offerBytes(
+            host.room!,
+            'fill-$i.bin',
+            Uint8List.fromList([i]),
+          );
+        }
+      }
+      final fake = FakeFileSourceChannel()
+        ..install()
+        ..pickCount = 3;
+      final picked = await MobileFileSource.pick();
+
+      await expectLater(
+        host.bridge.offerSources(host.room!, picked),
+        throwsA(
+          isA<WebPeerProblem>().having((p) => p.code, 'code', 'send-budget'),
+        ),
+      );
+      await settle();
+
+      // s1은 100번째 슬롯에 예약됐고, 101번째에서 실패한 s2와 아직 손대지 못한 s3는 모두 즉시 해제됨
+      expect(fake.log, isNot(contains('release:s1')));
+      expect(fake.log, contains('release:s2'));
+      expect(fake.log, contains('release:s3'));
+    },
+  );
 }

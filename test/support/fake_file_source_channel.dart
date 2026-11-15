@@ -32,6 +32,7 @@ class FakeFileSourceChannel {
   final Set<String> failRelease = <String>{};
 
   int pickCount = 1;
+  List<int>? pickSizes;
 
   int _sources = 0;
   int _readers = 0;
@@ -59,7 +60,13 @@ class FakeFileSourceChannel {
         await pickGate?.future;
         return [
           for (var i = 0; i < pickCount; i++)
-            {'id': 's${++_sources}', 'name': 'f$i.bin', 'size': fileSize},
+            {
+              'id': 's${++_sources}',
+              'name': 'f$i.bin',
+              'size': pickSizes != null && i < pickSizes!.length
+                  ? pickSizes![i]
+                  : fileSize,
+            },
         ];
       case 'open':
         final id = args!['sourceId']! as String;

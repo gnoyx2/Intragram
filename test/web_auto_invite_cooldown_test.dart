@@ -101,6 +101,26 @@ void main() {
     expect(await invite(r.link, second.code), isNotNull);
   });
 
+  test(
+    'a room closed by the user before it opens does not start the wait',
+    () async {
+      webInviteCooldown = wait;
+      final r = await rig();
+
+      final first = await r.other.bridge.createInvitation();
+      expect(await invite(r.link, first.code), isNotNull);
+      final roomId = r.victim.webRooms.single.id;
+      // 방이 아직 열리기 전에 사용자가 직접 대화를 닫음
+      await r.victim.registry.disconnect(roomId);
+      r.victim.store.wipeConversation(roomId);
+
+      final attempts = r.victim.connections.length;
+      final second = await r.other.bridge.createInvitation();
+      expect(await invite(r.link, second.code), isNotNull);
+      expect(r.victim.connections.length, attempts + 1);
+    },
+  );
+
   test('a room that opened and then ended does not start the wait', () async {
     final host = await InviteSide.create('192.168.1.10', 'AA');
     final app = await InviteSide.create('192.168.1.20', 'BB');

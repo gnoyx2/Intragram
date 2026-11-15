@@ -20,8 +20,10 @@ import 'package:intragram/app_navigator.dart';
 import 'package:intragram/app_providers.dart';
 import 'package:intragram/app_providers/conversation_actions.dart';
 import 'package:intragram/core/browser_file_picker.dart';
+import 'package:intragram/core/constants.dart' show kSnippetChars;
 import 'package:intragram/core/mobile_file_source.dart';
 import 'package:intragram/core/os_privacy.dart';
+import 'package:intragram/core/text_clip.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/network/link_registry.dart';
 import 'package:intragram/store/models.dart';
@@ -172,7 +174,10 @@ class _ChatRoomScreenState extends _ChatRoomScreenStateBase
         ? S.of(context).t('common.message')
         : replyParent.kind == MessageKind.file
         ? S.of(context).t('common.file')
-        : (replyParent.text ?? S.of(context).t('common.message'));
+        : clipCharacters(
+            replyParent.text ?? S.of(context).t('common.message'),
+            kSnippetChars,
+          );
 
     final body = _body(replyPreview);
 

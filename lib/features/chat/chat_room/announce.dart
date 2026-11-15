@@ -17,14 +17,15 @@ mixin _ChatRoomAnnounce on _ChatRoomScreenStateBase {
   void _announce(EphemeralMessage message) {
     if (!mounted || !MediaQuery.accessibleNavigationOf(context)) return;
     final s = S.of(context);
+    final raw = message.text ?? '';
+    final short = clipCharacters(raw, 120);
     final what = message.kind == MessageKind.file
         ? s.t('a11y.newFile')
-        : (message.text ?? '');
+        : (short.length == raw.length ? raw : '$short…');
     unawaited(
       SemanticsService.sendAnnouncement(
         View.of(context),
-        '${s.t('a11y.fromPeer', {'name': message.senderAlias})}: '
-        '${what.length > 120 ? '${what.substring(0, 120)}…' : what}',
+        '${s.t('a11y.fromPeer', {'name': message.senderAlias})}: $what',
         Directionality.of(context),
       ),
     );

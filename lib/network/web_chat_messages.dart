@@ -148,9 +148,10 @@ extension _WebChatInboundMessages on _WebRoom {
     bool integrityChecked = false,
   }) {
     if (closing || bridge._disposed || store.conversation(id) == null) return;
+    final textBytes = utf8.encode(frame['text'] as String).length;
     // Like native v7, inline/spill receivers drop text above 1 MiB.
     if (store.largeMessageMode != LargeMessageMode.unlimited &&
-        utf8.encode(frame['text'] as String).length > kMaxInlineMessageBytes) {
+        textBytes > kMaxInlineMessageBytes) {
       return;
     }
     void again() => receiveText(
@@ -161,7 +162,10 @@ extension _WebChatInboundMessages on _WebRoom {
       relay: relay,
       integrityChecked: integrityChecked,
     );
-    if (holdUnbound(peer, again) || deferUntilIdentity(peer, again)) return;
+    if (holdUnbound(peer, again, textBytes) ||
+        deferUntilIdentity(peer, again, textBytes)) {
+      return;
+    }
     final messageId = frame['id'] as String;
     if (origins.containsKey(messageId) ||
         store.messageById(messageId) != null ||

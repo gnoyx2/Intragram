@@ -108,6 +108,7 @@ class _WebChatPeer {
   String? organizationPeerId;
   final pendingNative = <Map<String, dynamic>>[];
   final pendingIdentity = <void Function()>[];
+  int pendingIdentityBytes = 0;
   Future<void> nativeQueue = Future<void>.value();
   // 이 상대에게 보낼 파일 제안 줄 (상대마다 따로라 답 없는 멤버가 다른 멤버를 막지 않음)
   Future<void> fileQueue = Future<void>.value();
@@ -123,5 +124,11 @@ class _WebChatPeer {
   void settle(bool entered) {
     final waiting = joined;
     if (waiting != null && !waiting.isCompleted) waiting.complete(entered);
+  }
+
+  void clearPendingIdentity() {
+    pendingNative.clear();
+    pendingIdentity.clear();
+    pendingIdentityBytes = 0;
   }
 }

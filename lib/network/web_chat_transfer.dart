@@ -3,11 +3,11 @@ part of 'web_chat_bridge.dart';
 extension _WebChatTransferEvents on _WebRoom {
   void transferChanged(_WebChatPeer peer, WebPeerTransfer transfer) {
     if (closing || bridge._disposed || store.conversation(id) == null) return;
-    if (holdUnbound(peer, () => transferChanged(peer, transfer))) return;
-    if (deferUntilIdentity(peer, () => transferChanged(peer, transfer))) return;
+    void again() => transferChanged(peer, transfer);
+    if (deferUntilIdentity(peer, again, transfer.bytes?.length ?? 0)) return;
     final existing = store.transfer(transfer.id),
-        owner = fileOwners[transfer.id];
-    final incoming = transfer.direction == 'receive';
+        owner = fileOwners[transfer.id],
+        incoming = transfer.direction == 'receive';
     final origin = incoming
         ? hosting
               ? peer.id

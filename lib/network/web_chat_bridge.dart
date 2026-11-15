@@ -116,8 +116,10 @@ class WebChatBridge {
   Future<({String conversationId, String code})> joinInvitation(
     String code, {
     String? expectedPeerId,
+    void Function(String conversationId)? onRoomCreated,
   }) async {
     final room = _room(null, false);
+    onRoomCreated?.call(room.id);
     // The peer is created after code validation by its session implementation.
     final target = room.addPeer(false)..expectedPeerId = expectedPeerId;
     try {
@@ -143,8 +145,7 @@ class WebChatBridge {
       peer.settle(false);
       room.forgetOrganization(peer);
       peer.proof.clear();
-      peer.pendingNative.clear();
-      peer.pendingIdentity.clear();
+      peer.clearPendingIdentity();
     }
     for (final transferId in room.fileOwners.keys) {
       final transfer = store.transfer(transferId);

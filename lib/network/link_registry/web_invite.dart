@@ -69,6 +69,11 @@ mixin _LinkRegistryWebSignals on _LinkRegistryState {
     }
   }
 
+  // 사용자가 직접 닫은 자동 초대 방은 연결 실패로 세지 않음
+  void _forgetJoinedWebRoom(String roomId) {
+    _webJoined.removeWhere((_, joinedId) => joinedId == roomId);
+  }
+
   Future<void> _joinWebRoomVia(PeerLink link, String id, String code) async {
     var live = _webJoined[link];
     final inviter = link.remotePeerId;
@@ -98,37 +103,35 @@ mixin _LinkRegistryWebSignals on _LinkRegistryState {
       (conversationId: roomId, code: answer) = await _web.joinInvitation(
         code,
         expectedPeerId: inviter,
+        onRoomCreated: (createdId) => _webJoined[link] = createdId,
       );
     } on Object {
-      if (_webJoined[link] == '') _webJoined.remove(link);
-      _noteWebFailure(link);
+      final stillJoined = _webJoined.remove(link) != null;
+      if (stillJoined && !_disposed) _noteWebFailure(link);
       await link.sendWebAnswer(id);
       return;
     }
+    _webJoined[link] = roomId;
     final sent =
         !_disposed && !link.isClosed && await link.sendWebAnswer(id, answer);
-    // 응답을 보내는 사이 전체 정리(disposeAll)가 지나갔으면 방·타이머를 다시 만들지 않음
-    if (!sent || _disposed) {
-      _webJoined.remove(link);
-      if (!_disposed) _noteWebFailure(link);
+    // 응답을 보내는 사이 전체 정리(disposeAll)나 사용자 종료(disconnect)가 지나갔으면 방·타이머를 다시 만들지 않음
+    if (!sent || _disposed || _webJoined[link] != roomId) {
+      final stillJoined = _webJoined[link] == roomId;
+      if (stillJoined) _webJoined.remove(link);
+      if (!sent && !_disposed && stillJoined) _noteWebFailure(link);
       await _dropWebRoom(roomId);
       return;
     }
     // 응답을 보내는 사이 링크가 닫혔으면 정리(_forgetWebSignals)가 이미 지나갔으니 닫힌 링크를 다시 적지 않음
-    if (link.isClosed) {
-      _webJoined.remove(link);
-    } else {
-      _webJoined[link] = roomId;
-    }
+    if (link.isClosed) _webJoined.remove(link);
     late final Timer timer;
     timer = Timer(webJoinDeadline, () {
       _webJoinTimers.remove(timer);
       if (_disposed || _web.everOpened(roomId)) return;
-      // 이 방이 아직 그 링크의 시도일 때만 실패로 적음 (이미 치운 시도를 두 번 세지 않음)
-      if (_webJoined[link] == roomId) {
-        _webJoined.remove(link);
-        _noteWebFailure(link);
-      }
+      // 이 방이 아직 그 링크의 시도일 때만 실패로 적고 치움 (이미 치운 시도나 사용자가 닫은 방을 다시 건드리지 않음)
+      if (_webJoined[link] != roomId) return;
+      _webJoined.remove(link);
+      _noteWebFailure(link);
       unawaited(_dropWebRoom(roomId));
     });
     _webJoinTimers.add(timer);

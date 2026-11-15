@@ -1,5 +1,9 @@
 part of 'web_chat_bridge.dart';
 
+// 신원 증명 전에 보류 클로저(최대 32개)가 붙잡을 수 있는 프레임 총 바이트 상한 (기본 인라인 상한 1 MiB × 8 = 8 MiB:
+// 무제한 모드에서 64 MiB 프레임을 연속으로 보내 최대 2 GiB까지 메모리를 묶어 두는 경로를 막음)
+const webChatMaxPendingIdentityBytes = 8 * 1024 * 1024;
+
 const _relayedControls = {
   'meta',
   'read',
@@ -18,12 +22,17 @@ extension _WebChatInboundControl on _WebRoom {
       unawaited(peer.proof.receive(control).catchError((Object _) {}));
       return;
     }
-    if (holdUnbound(peer, () => receiveControl(peer, control))) return;
+    final bytes = !peer.bound || peer.proof.peerIdentity == null
+        ? utf8.encode(jsonEncode(control)).length
+        : 0;
+    if (holdUnbound(peer, () => receiveControl(peer, control), bytes)) return;
     if (kind == 'native-room') {
       unawaited(receiveNative(peer, control).catchError((Object _) {}));
       return;
     }
-    if (deferUntilIdentity(peer, () => receiveControl(peer, control))) return;
+    if (deferUntilIdentity(peer, () => receiveControl(peer, control), bytes)) {
+      return;
+    }
     if (kind == 'verify') {
       if (control['sas'] == peer.session.verificationCode) {
         if (store.conversation(id)?.isRoom == true) {
@@ -111,22 +120,36 @@ extension _WebChatInboundControl on _WebRoom {
   }
 
   // 자동 초대 링크가 기대한 신원을 아직 증명하지 않았으면 프레임을 미룸. 다른 신원이면 버림 (곧 끊김)
-  bool holdUnbound(_WebChatPeer peer, void Function() receive) {
+  bool holdUnbound(
+    _WebChatPeer peer,
+    void Function() receive, [
+    int bytes = 0,
+  ]) {
     if (peer.bound) return false;
-    if (peer.proof.peerIdentity == null) deferUntilIdentity(peer, receive);
+    if (peer.proof.peerIdentity == null) {
+      deferUntilIdentity(peer, receive, bytes);
+    }
     return true;
   }
 
-  bool deferUntilIdentity(_WebChatPeer peer, void Function() receive) {
+  bool deferUntilIdentity(
+    _WebChatPeer peer,
+    void Function() receive, [
+    int bytes = 0,
+  ]) {
+    if (!peer.bound && peer.proof.peerIdentity != null) return true;
     if (peer.proof.peerIdentity != null ||
         peer.expectedPeerId == null &&
             bridge.blockedPeers.isEmpty &&
             store.roomIntegrity.scope(id) == null) {
       return false;
     }
-    if (peer.pendingIdentity.length < 32) {
+    if (peer.pendingIdentity.length < 32 &&
+        peer.pendingIdentityBytes + bytes <= webChatMaxPendingIdentityBytes) {
       peer.pendingIdentity.add(receive);
+      peer.pendingIdentityBytes += bytes;
     } else {
+      peer.clearPendingIdentity();
       unawaited(peer.session.close());
     }
     return true;
@@ -137,12 +160,12 @@ extension _WebChatInboundControl on _WebRoom {
     if (remote == null) return true;
     if (!peer.bound) {
       // 자동 초대한 그 앱이 아닌 기기가 응답함: 방에 들이지 않고 끊음
-      peer.pendingIdentity.clear();
+      peer.clearPendingIdentity();
       unawaited(peer.session.close());
       return false;
     }
     if (bridge.blockedPeers.contains(remote.peerId)) {
-      peer.pendingIdentity.clear();
+      peer.clearPendingIdentity();
       if (store.conversation(id)?.isRoom != true) {
         store.updateConversation(
           id,
@@ -155,6 +178,7 @@ extension _WebChatInboundControl on _WebRoom {
     if (!peer.opened && peer.session.state == 'connected') admit(peer);
     final pending = peer.pendingIdentity.toList();
     peer.pendingIdentity.clear();
+    peer.pendingIdentityBytes = 0;
     for (final receive in pending) {
       receive();
     }

@@ -23,7 +23,7 @@ extension _WebRoomConnections on _WebRoom {
         }
       } else if (value == 'closed') {
         peer.settle(false);
-        peer.pendingIdentity.clear();
+        peer.clearPendingIdentity();
         forgetOrganization(peer);
         peer.proof.clear();
         store.setRoomMemberOffline(id, peer.id);

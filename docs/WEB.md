@@ -131,12 +131,12 @@ already authenticated app link carries the invitation and response codes.
 - One app link keeps one live automatically joined room. A room that never
   connects is removed after 30 seconds, and the host is told the invite failed.
 - After an automatic invite that failed (the code could not be joined, the room
-  never connected, or its link closed before it opened), the app refuses new
+  never connected, or its link failed before it opened), the app refuses new
   automatic invites on that app link for 60 seconds, and the host gets the usual
   refusal. Repeated failed invites therefore cannot keep opening WebRTC
-  connections. A room that opened and ended later starts no wait, and an invite
-  refused because a room is still live does not either. The wait belongs to the
-  app link and ends when that link closes.
+  connections. A room that opened and ended later, a room closed by the user
+  before it opened, or an invite refused because a room is still live starts no
+  wait. The wait belongs to the app link and ends when that link closes.
 - The earlier v7 chat and its history stay where they are. Apps that predate
   this feature ignore the invite; connect them with a code instead.
 

@@ -127,12 +127,13 @@ before the device counts as a room member or receives any room frame; a
 different device answering in its place is dropped. The new link's security code
 starts unconfirmed and is not inherited from the v7 chat. After an automatic
 invitation that failed (it could not be joined, never connected within 30
-seconds, or closed before it opened) the app refuses new automatic invitations
-on that v7 link for 60 seconds, so a peer cannot keep making it open WebRTC
-connections by repeating failed invitations. The wait belongs to that v7 link
-and ends with it. A room that opened is not a failure: a peer can open and
-close rooms one after another, each costing a full WebRTC handshake, and only
-one automatically joined room per link is live at a time. Blocking is per device
+seconds, or its link failed before the room opened) the app refuses new
+automatic invitations on that v7 link for 60 seconds, so a peer cannot keep
+making it open WebRTC connections by repeating failed invitations. The wait
+belongs to that v7 link and ends with it. A room that opened or was closed by
+the user is not a failure: a peer can open and close rooms one after another,
+each costing a full WebRTC handshake, and only one automatically joined room per
+link is live at a time. Blocking is per device
 identity: it closes the v7 chat, any separate WebRTC chat and that device's link
 in every WebRTC room. A v7 room stays managed by its host: blocking does not
 remove that device from a v7 room you share. A peer's notice that it queued an

@@ -35,6 +35,8 @@ class _LinkableTextState extends State<_LinkableText> {
   // 이보다 긴 주소도 링크로 안 만듦: 확인 창의 퓨니코드 계산이 길이 제곱이라 1 MiB 메시지 속 주소 한 번
   // 탭에 UI가 몇 분 멈출 수 있음. 브라우저도 이 길이를 넘는 주소는 대개 거부함
   static const _maxLinkLength = 2048;
+  // 문단 하나에 수십 MiB를 통째로 넘기면 SkParagraph 조판이 멈춤 (메시지 복사는 원문 전체)
+  static const _maxShownChars = 65536;
   // Flutter 기본 줄바꿈은 한글을 음절마다 끊음('보낼/게요'): 한글과 그 옆 글자·숫자 사이에 단어 결합 문자
   // (U+2060)를 넣어 어절에서만 끊기게 함(CSS keep-all). 화면 글에만 넣고 낭독·복사는 원문
   static final _hangulJoin = RegExp(
@@ -134,8 +136,10 @@ class _LinkableTextState extends State<_LinkableText> {
     final long = head.length == text.length
         ? null
         : '${S.of(context).t('a11y.longMessage')}\n$head';
+    final clipped = clipCharacters(text, _maxShownChars);
+    final body = clipped.length == text.length ? text : '$clipped…';
     final matches = _urlRe
-        .allMatches(text)
+        .allMatches(clipped)
         .where(
           (m) =>
               m.group(0)!.length <= _maxLinkLength &&
@@ -143,10 +147,10 @@ class _LinkableTextState extends State<_LinkableText> {
         )
         .toList();
     if (matches.isEmpty) {
-      final shown = _keepWords(text);
+      final shown = _keepWords(body);
       final plain = Text(
         shown,
-        semanticsLabel: long ?? _spoken(text, shown),
+        semanticsLabel: long ?? _spoken(body, shown),
         style: widget.style,
       );
       return widget.selectable ? _selectable(plain) : plain;
@@ -156,7 +160,7 @@ class _LinkableTextState extends State<_LinkableText> {
     var last = 0;
     for (final m in matches) {
       if (m.start > last) {
-        final plain = text.substring(last, m.start);
+        final plain = body.substring(last, m.start);
         final shown = _keepWords(plain);
         spans.add(TextSpan(text: shown, semanticsLabel: _spoken(plain, shown)));
       }
@@ -177,8 +181,8 @@ class _LinkableTextState extends State<_LinkableText> {
       );
       last = m.end;
     }
-    if (last < text.length) {
-      final plain = text.substring(last);
+    if (last < body.length) {
+      final plain = body.substring(last);
       final shown = _keepWords(plain);
       spans.add(TextSpan(text: shown, semanticsLabel: _spoken(plain, shown)));
     }

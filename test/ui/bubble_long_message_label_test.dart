@@ -146,4 +146,18 @@ void main() {
     expect(spoken.length, lessThan(1300));
     handle.dispose();
   });
+
+  testWidgets('a huge message caps its rendered paragraph at 65536 chars', (
+    tester,
+  ) async {
+    final text = 'HEAD ${'ab cd ' * 14000}TAIL';
+    expect(text.length, greaterThan(65536));
+
+    await pump(tester, text);
+
+    final widget = tester.widget<Text>(find.textContaining('HEAD'));
+    expect(widget.data!.length, 65537);
+    expect(widget.data!.endsWith('…'), isTrue);
+    expect(widget.data, isNot(contains('TAIL')));
+  });
 }

@@ -110,7 +110,15 @@ extension _WebChatRoomIntegrity on _WebRoom {
     }
     final remote = peer.proof.peerIdentity;
     if (remote == null) {
-      if (peer.pendingNative.length < 16) peer.pendingNative.add(control);
+      final bytes = utf8.encode(jsonEncode(control)).length;
+      if (peer.pendingNative.length < 16 &&
+          peer.pendingIdentityBytes + bytes <= webChatMaxPendingIdentityBytes) {
+        peer.pendingNative.add(control);
+        peer.pendingIdentityBytes += bytes;
+      } else {
+        peer.clearPendingIdentity();
+        unawaited(peer.session.close());
+      }
       return;
     }
     final host = authenticatedHost;
