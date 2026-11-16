@@ -33,6 +33,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+html[lang="ko"] body {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+html[lang="ko"] code,
+html[lang="ko"] pre,
+html[lang="ko"] .peer-sub,
+html[lang="ko"] .demo-lan-tag {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
 /* --- Bilingual Toggle --- */
 html[lang="ko"] [data-lang="en"] {
   display: none !important;
@@ -564,6 +577,11 @@ header.nav {
     color: var(--text-primary);
     background-size: 100% 1px;
   }
+  .web-entry-card:hover,
+  .dl-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--hairline-strong);
+  }
 }
 
 /* --- Screen 1: Hero --- */
@@ -680,18 +698,6 @@ header.nav {
   border-bottom: 1px solid var(--frag-border);
 }
 
-.window-dots {
-  display: inline-flex;
-  gap: 6px;
-}
-
-.window-dots span {
-  width: 9px;
-  height: 9px;
-  border-radius: var(--r-pill);
-  background-color: var(--border-subtle);
-}
-
 .demo-lan-tag {
   display: inline-flex;
   align-items: center;
@@ -705,7 +711,7 @@ header.nav {
   padding: var(--s-4);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--s-3);
   flex: 1;
 }
@@ -756,6 +762,8 @@ header.nav {
   font-family: var(--font-mono);
   font-size: var(--t-label);
   font-weight: var(--w-medium);
+  white-space: nowrap;
+  flex-shrink: 0;
   background-color: var(--status-ok-bg);
   color: var(--status-ok-fg);
   border: 1px solid var(--status-ok-border);
@@ -764,7 +772,9 @@ header.nav {
 .chat-stream {
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  justify-content: center;
+  flex: 1;
+  gap: var(--s-3);
 }
 
 .msg-bubble {
@@ -814,13 +824,6 @@ header.nav {
   color: var(--status-burn-fg);
   border: 1px solid var(--status-burn-border);
   font-weight: var(--w-medium);
-}
-
-.demo-status-foot {
-  padding-top: var(--s-2);
-  border-top: 1px solid var(--frag-border);
-  font-size: var(--t-label);
-  color: var(--frag-muted);
 }
 
 /* --- Screen 2: Overview Split --- */
@@ -974,14 +977,6 @@ header.nav {
 }
 
 /* --- Screen 5: Connection Steps --- */
-.dg-frame {
-  position: relative;
-  background-color: var(--card-bg);
-  border: 1px solid var(--hairline);
-  border-radius: var(--r-lg);
-  padding: var(--s-6);
-}
-
 .dg-lanes {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -992,9 +987,9 @@ header.nav {
 
 .dg-node {
   position: relative;
-  padding: var(--s-4);
-  border-radius: var(--r-md);
-  background-color: var(--bg-surface);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background-color: var(--card-bg);
   border: 1px solid var(--hairline);
   display: flex;
   flex-direction: column;
@@ -1012,27 +1007,44 @@ header.nav {
 }
 
 .dg-node p {
-  font-size: var(--t-small);
+  font-size: var(--t-body);
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
-.rules-row {
+.modes-row {
   align-items: stretch;
+  margin-top: var(--s-2);
 }
 
-.rules-row .rule-col {
+.modes-row .mode-col {
   padding-top: var(--s-4);
   border-top: 1px solid var(--hairline);
   display: flex;
   flex-direction: column;
-  gap: var(--s-1);
+  gap: var(--s-2);
   height: 100%;
 }
 
-.rule-col p {
+.mode-col p {
   font-size: var(--t-body);
   color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+@media (min-width: 80rem) {
+  #how-it-works > .wrap {
+    gap: var(--s-8);
+  }
+  .dg-node {
+    padding: var(--s-6);
+  }
+  .modes-row {
+    margin-top: var(--s-4);
+  }
+  .modes-row .mode-col {
+    padding-top: var(--s-5);
+  }
 }
 
 /* --- Screen 6: Security Split --- */
@@ -1126,6 +1138,10 @@ header.nav {
   font-weight: var(--w-medium);
 }
 
+.cmp-tool {
+  display: none;
+}
+
 /* --- Screen 8: Web Entry Cards --- */
 .web-entry-grid {
   display: grid;
@@ -1142,6 +1158,9 @@ header.nav {
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
+  transition:
+    border-color var(--m-in) var(--m-ease),
+    transform var(--m-in) var(--m-ease);
 }
 
 .web-entry-card ol {
@@ -1183,6 +1202,9 @@ header.nav {
   justify-content: space-between;
   gap: var(--s-3);
   height: 100%;
+  transition:
+    border-color var(--m-in) var(--m-ease),
+    transform var(--m-in) var(--m-ease);
 }
 
 .dl-card[data-detected="true"] {
@@ -1401,11 +1423,14 @@ footer.closing > .wrap {
   }
 
   .dl-grid > .span-4,
-  .rules-row > .span-4,
+  .modes-row > .span-4,
   .faq-open-grid > .span-6,
-  .footer-dir > .span-6,
-  .footer-dir > .span-3 {
+  .footer-dir > .span-6 {
     grid-column: 1 / -1;
+  }
+
+  .footer-dir > .span-3 {
+    grid-column: span 6;
   }
 
   main > section.hero {
@@ -1456,6 +1481,24 @@ footer.closing > .wrap {
     padding: 6px var(--s-3);
   }
 
+  .demo-lan-tag {
+    font-size: 0.75rem;
+  }
+
+  .demo-lan-mode {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .peer-ident > div {
+    min-width: 0;
+  }
+
+  .peer-name {
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+
   .demo-panel {
     min-height: 0;
     padding: var(--s-3);
@@ -1487,7 +1530,7 @@ footer.closing > .wrap {
 
   .card {
     padding: var(--s-4);
-    gap: var(--s-3);
+    gap: var(--s-5);
   }
 
   .card-copy p {
@@ -1513,12 +1556,8 @@ footer.closing > .wrap {
   }
 
   .panel-mascot {
-    width: 3.5rem;
-    height: 3.5rem;
-  }
-
-  .dg-frame {
-    padding: var(--s-4);
+    width: 3rem;
+    height: 3rem;
   }
 
   .dg-lanes {
@@ -1527,15 +1566,26 @@ footer.closing > .wrap {
   }
 
   .dg-node {
-    padding: var(--s-3);
+    padding: var(--s-3) var(--s-4);
     gap: 4px;
   }
 
-  .rules-row .rule-col {
-    padding-top: var(--s-2);
+  .dg-node p {
+    font-size: var(--t-small);
+    line-height: 1.45;
   }
 
-  .rule-col p {
+  .modes-row {
+    margin-top: 0;
+    row-gap: var(--s-3);
+  }
+
+  .modes-row .mode-col {
+    padding-top: var(--s-3);
+    gap: var(--s-1);
+  }
+
+  .mode-col p {
     font-size: 0.9375rem;
     line-height: 1.45;
   }
@@ -1554,10 +1604,85 @@ footer.closing > .wrap {
     line-height: 1.45;
   }
 
-  .compare-table th,
-  .compare-table td {
+  .table-wrap {
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .compare-table,
+  .compare-table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .compare-table thead {
+    display: none;
+  }
+
+  .compare-table tbody tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-2);
+    background-color: var(--card-bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-md);
+    padding: var(--s-3);
+    margin-bottom: var(--s-2);
+  }
+
+  .compare-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .compare-table tbody th[scope="row"] {
+    grid-column: 1 / -1;
+    padding: 0 0 var(--s-2) 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: var(--t-small);
+    font-weight: var(--w-display);
+  }
+
+  .compare-table tbody td {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
     padding: var(--s-2);
+    border-bottom: 0;
+    border-radius: var(--r-sm);
+    background-color: var(--bg-surface);
     font-size: var(--t-label);
+    line-height: 1.35;
+  }
+
+  .compare-table tbody td.col-intragram {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    background-color: var(--panel-sky);
+    color: var(--text-primary);
+  }
+
+  .cmp-tool {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: var(--w-medium);
+    color: var(--text-secondary);
+  }
+
+  .compare-table td.col-intragram .cmp-tool {
+    color: var(--text-primary);
+    flex-shrink: 0;
+  }
+
+  .compare-table td.col-intragram .cmp-val {
+    text-align: right;
+  }
+
+  .sas-badge {
+    padding: 3px 8px;
   }
 
   .web-entry-grid {
@@ -1605,9 +1730,44 @@ footer.closing > .wrap {
     font-size: 0.9375rem;
     line-height: 1.5;
   }
+
+  footer.closing {
+    min-height: 100svh;
+    padding-block: var(--s-6) var(--s-5);
+  }
+
+  footer.closing > .wrap {
+    gap: var(--s-5);
+  }
+
+  .footer-bottom {
+    gap: var(--s-4);
+  }
+
+  .footer-dir {
+    padding-block: var(--s-2);
+    row-gap: var(--s-4);
+  }
+
+  .footer-links a {
+    font-size: var(--t-small);
+  }
+
+  .footer-legal {
+    padding-top: var(--s-3);
+    gap: var(--s-2);
+  }
 }
 
 @media (min-width: 64rem) and (max-width: 79.99rem) {
+  .nav__links {
+    gap: var(--s-3);
+  }
+
+  .nav__link {
+    font-size: var(--t-small);
+  }
+
   main > section {
     padding-top: 5.5rem;
     padding-bottom: 2rem;

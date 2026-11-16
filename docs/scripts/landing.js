@@ -147,7 +147,14 @@
   const detectedOs = detectClientOs();
   if (detectedOs) {
     const card = document.querySelector(`.dl-card[data-os="${detectedOs}"]`);
-    if (card) card.setAttribute('data-detected', 'true');
+    if (card) {
+      card.setAttribute('data-detected', 'true');
+      const cta = card.querySelector('.btn');
+      if (cta) {
+        cta.classList.remove('btn--secondary');
+        cta.classList.add('btn--primary');
+      }
+    }
   }
 
   /* --- 5. Active-Section Nav Indicator --- */
