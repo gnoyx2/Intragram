@@ -18,6 +18,17 @@
 
   /* --- 1. Bilingual Switcher (KO / EN) --- */
   const langButtons = document.querySelectorAll('[data-set-lang]');
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileSheet = document.getElementById('mobile-sheet');
+  function syncToggleLabel(isOpen) {
+    if (!menuToggle) return;
+    const isKo = document.documentElement.lang !== 'en';
+    const label = isOpen
+      ? menuToggle.getAttribute(isKo ? 'data-aria-close-ko' : 'data-aria-close-en')
+      : menuToggle.getAttribute(isKo ? 'data-aria-ko' : 'data-aria-en');
+    if (label) menuToggle.setAttribute('aria-label', label);
+  }
+
   function updateWebLinks() {
     document.querySelectorAll('[data-web-link]').forEach((link) => {
       const url = new URL(link.href);
@@ -48,6 +59,8 @@
           : el.getAttribute('data-aria-en')
       );
     });
+
+    syncToggleLabel(Boolean(mobileSheet && !mobileSheet.hidden));
 
     if (announceChange) {
       try {
@@ -98,20 +111,27 @@
   });
 
   /* --- 3. Mobile Menu Sheet --- */
-  const menuToggle = document.getElementById('menu-toggle');
-  const mobileSheet = document.getElementById('mobile-sheet');
   function closeSheet(returnFocus) {
     if (!menuToggle || !mobileSheet || mobileSheet.hidden) return;
     mobileSheet.hidden = true;
+    document.documentElement.classList.remove('sheet-open');
     menuToggle.setAttribute('aria-expanded', 'false');
+    syncToggleLabel(false);
     if (returnFocus) menuToggle.focus();
+  }
+
+  function openSheet() {
+    if (!menuToggle || !mobileSheet || !mobileSheet.hidden) return;
+    mobileSheet.hidden = false;
+    document.documentElement.classList.add('sheet-open');
+    menuToggle.setAttribute('aria-expanded', 'true');
+    syncToggleLabel(true);
   }
 
   if (menuToggle && mobileSheet) {
     menuToggle.addEventListener('click', () => {
-      const willOpen = mobileSheet.hidden;
-      mobileSheet.hidden = !willOpen;
-      menuToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      if (mobileSheet.hidden) openSheet();
+      else closeSheet(false);
     });
 
     mobileSheet.querySelectorAll('a').forEach((link) => {
@@ -122,6 +142,11 @@
       if (e.key === 'Escape' && !mobileSheet.hidden) {
         closeSheet(true);
       }
+    });
+
+    const desktopMedia = window.matchMedia('(min-width: 64rem)');
+    desktopMedia.addEventListener('change', (e) => {
+      if (e.matches && !mobileSheet.hidden) closeSheet(false);
     });
   }
 
@@ -157,27 +182,34 @@
     }
   }
 
-  /* --- 5. Active-Section Nav Indicator --- */
-  const navLinks = Array.from(document.querySelectorAll('.nav__links .nav__link'));
-  if ('IntersectionObserver' in window && navLinks.length) {
+  /* --- 5. Active-Section Nav Indicator (Desktop Bar + Mobile Sheet) --- */
+  const allSectionLinks = Array.from(
+    document.querySelectorAll('.nav__links .nav__link, .sheet-links a')
+  );
+  if ('IntersectionObserver' in window && allSectionLinks.length) {
     const map = new Map();
-    navLinks.forEach((a) => {
+    allSectionLinks.forEach((a) => {
       const id = (a.getAttribute('href') || '').replace(/^#/, '');
       const sec = id ? document.getElementById(id) : null;
-      if (sec) map.set(sec, a);
+      if (!sec) return;
+      if (!map.has(sec)) map.set(sec, []);
+      map.get(sec).push(a);
     });
+    const topSection = document.getElementById('top');
     const navObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            navLinks.forEach((a) => a.removeAttribute('aria-current'));
-            const match = map.get(entry.target);
-            if (match) match.setAttribute('aria-current', 'page');
+          if (!entry.isIntersecting) return;
+          allSectionLinks.forEach((a) => a.removeAttribute('aria-current'));
+          const matches = map.get(entry.target);
+          if (matches) {
+            matches.forEach((a) => a.setAttribute('aria-current', 'page'));
           }
         });
       },
       { rootMargin: '-35% 0px -55% 0px' }
     );
+    if (topSection && !map.has(topSection)) navObserver.observe(topSection);
     map.forEach((_, sec) => navObserver.observe(sec));
   }
 

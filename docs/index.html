@@ -110,13 +110,20 @@
         </div>
 
         <a class="btn btn--secondary nav-cta" href="./web/" data-web-link>
-          <span data-lang="ko">웹에서 시작</span>
-          <span data-lang="en">Open web app</span>
+          <span data-lang="ko">
+            <span class="nav-cta-desktop">웹에서 시작</span>
+            <span class="nav-cta-mobile">웹 시작</span>
+          </span>
+          <span data-lang="en">
+            <span class="nav-cta-desktop">Open web app</span>
+            <span class="nav-cta-mobile">Web app</span>
+          </span>
           <svg class="m-arrow" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
 
-        <button id="menu-toggle" class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-sheet" data-aria-ko="메뉴 열기" data-aria-en="Open menu" aria-label="메뉴 열기">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <button id="menu-toggle" class="nav__toggle" type="button" aria-expanded="false" aria-controls="mobile-sheet" data-aria-ko="메뉴 열기" data-aria-en="Open menu" data-aria-close-ko="메뉴 닫기" data-aria-close-en="Close menu" aria-label="메뉴 열기">
+          <svg class="menu-icon-open" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg class="menu-icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6l-12 12"/></svg>
         </button>
       </div>
     </div>
