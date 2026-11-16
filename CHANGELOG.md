@@ -11,6 +11,22 @@ platform (see `DEVICE_QA.md`).
 
 Added after `v1.0.0-rc.1` (app `1.0.0+10`; the v7 wire protocol is unchanged):
 
+- Phone browsers: the web app now covers what the phone apps get from the OS.
+  The scan icon on Home and **Scan their code** in the security code dialog use
+  the camera (`getUserMedia`, frames read in memory with the app's QR decoder,
+  **Read a QR image** kept as the fallback); received files and photos are kept
+  through the system share sheet (**Share or save**, download where sharing a
+  file is unsupported); Android browsers vibrate where the app does; with chats
+  open, the back gesture on Home asks before leaving the page; the browser bar
+  follows the app bar color; Settings drops page notifications that phone
+  browsers cannot show and states the background limit instead.
+- Fixed: Korean text in Cupertino dialogs (iPhone and Mac browsers) showed as
+  empty boxes because the web bundle had no `CupertinoSystemText` font; the
+  bundled font is now registered under that name on the web.
+- Fixed: Android browsers read the back and close buttons twice ("Back Back").
+- `tool/shared_flutter_mobile_test.mjs`: iPhone- and Android-emulated Chromium
+  against a desktop peer, including a fake camera that plays the desktop's
+  invitation QR.
 - WebRTC third-party notices: bundled the 39 third-party component license texts
   shipped in the native WebRTC M150 (`branch-heads/7871`) prebuilt binaries into
   `assets/licenses/WEBRTC_NOTICES.md`, registered each component in the in-app

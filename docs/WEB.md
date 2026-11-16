@@ -15,10 +15,11 @@ the installed app. This is a Flutter build, not the separate HTML client.
 
 The public address is **https://gnoyx2.github.io/Intragram/web/**. It is a
 **preview (beta)**: the checks so far are automated runs in Chromium 151,
-Firefox 160 and Safari 27 on one Mac. Edge, phone browsers (iOS Safari
-included), two devices on a real Wi-Fi and screen readers are **NOT RUN** (see
-*Browser support* below and
-[DEVICE_QA.md](../DEVICE_QA.md)).
+Firefox 160 and Safari 27 on one Mac, and phone runs in iPhone- and
+Android-emulated Chromium and in Safari on the iOS 27 Simulator. Edge, real
+phones (iOS Safari and Android Chrome on a device), two devices on a real Wi-Fi
+and screen readers are **NOT RUN** (see *Phone browsers* and *Browser support*
+below and [DEVICE_QA.md](../DEVICE_QA.md)).
 
 Local source changes do not publish the website. `docs/web/app/` is generated
 and ignored by git: GitHub Pages must use the **GitHub Actions** source
@@ -146,6 +147,37 @@ chat, a separate WebRTC chat with the same device and their link in any WebRTC
 room, and unblocking clears all of them. A v7 room stays managed by its host as
 before: blocking does not remove that device from a v7 room you both are in.
 
+## Phone browsers
+
+Flutter takes the platform from the browser, so an iPhone browser shows the iOS
+app's screens, page transitions and dialogs and an Android browser the Android
+app's, with the same gestures (a long press on a message opens reactions and
+actions). What the installed phone apps get from the OS has a browser
+counterpart:
+
+- **Camera scanning.** The scan icon on Home opens the camera and reads an
+  invitation QR straight into **Join with a code**; **Scan their code** in the
+  security code dialog reads the other screen's code QR, as in the app. Frames
+  are read in memory and dropped, and the camera is released when the page is
+  hidden or the screen closes. Without a camera, or when the browser blocks it,
+  **Read a QR image** stays available (the image icon on the scan screen).
+- **Share sheet.** A received file or photo is kept with **Share or save**,
+  which hands it to the system share sheet (Save Image, Files, other apps).
+  Where the browser cannot share that file, the same button downloads it.
+- **Vibration.** Android browsers vibrate where the app does (a message arriving
+  in the open app, a scan). iOS Safari has no vibration API.
+- **Leaving the page.** The app keeps its chats when you go back from Home; a
+  page loses them. With chats open, Android back, the iOS edge swipe or the
+  browser back button on Home asks before leaving.
+- **Browser bar.** The address bar color follows the app bar in light and dark
+  themes.
+- **Notifications and background.** Phone browsers cannot show this page's
+  notifications (Android Chrome needs a service worker, an iOS Safari tab has no
+  notification API), so Settings does not offer them there and instead says
+  that the browser pauses the page soon after you switch apps or tabs.
+- **Fonts.** iPhone and Mac browsers draw Cupertino dialogs with the bundled
+  font, so Korean dialog text no longer turns into empty boxes.
+
 ## Differences that remain
 
 - **Discovery.** Browsers cannot open raw TCP sockets or browse mDNS, so there is
@@ -167,9 +199,9 @@ before: blocking does not remove that device from a v7 room you both are in.
 - **OS integrations.** Pages cannot enforce screenshot or screen-recording
   exclusion, clipboard history or cloud-clipboard exclusion, the Android
   foreground service, native folder opening, or physical RAM zeroization.
-  Browser equivalents are content-free notifications while the page is open,
-  user-triggered Clipboard API reads, explicit downloads, QR image import and
-  code exchange.
+  Browser equivalents are content-free notifications in desktop browsers while
+  the page is open, user-triggered Clipboard API reads, explicit downloads or
+  the phone share sheet, camera scanning or QR image import, and code exchange.
 - **Hidden tabs.** A browser stops painting a page the moment its tab is hidden,
   so the privacy cover the installed apps draw over the app-switcher snapshot
   cannot be drawn there: a tab preview or thumbnail can keep showing the last
@@ -192,10 +224,13 @@ before: blocking does not remove that device from a v7 room you both are in.
   characters; copy the message to read all of it. A reply quote and a search
   result carry the first 1,000 characters. The screen shows the whole text.
 - **Browser support.** Folder drag and drop, clipboard images, media codecs,
-  OPFS, microphone and notification permissions depend on the browser. Chromium
-  151 and Firefox 160 pass the automated runs listed under *Reproducible
-  verification* on macOS 27, and Safari 27 passes the Safari WebDriver smoke
-  test there. Edge and phone browsers are NOT RUN.
+  OPFS, camera, microphone and notification permissions depend on the browser.
+  Chromium 151 and Firefox 160 pass the automated runs listed under
+  *Reproducible verification* on macOS 27, and Safari 27 passes the Safari
+  WebDriver smoke test there. The phone behavior above passes in iPhone- and
+  Android-emulated Chromium and was checked in Safari on the iOS 27 Simulator
+  (no real camera, touch or on-screen keyboard there). Edge and real phones are
+  NOT RUN.
   Results are recorded in [DEVICE_QA.md](../DEVICE_QA.md); sharing a widget does
   not prove every platform integration.
 
@@ -323,6 +358,14 @@ local Playwright module and Chromium:
   both ways and a file each way byte-exact, nothing loaded outside the page
   origin and no ICE server. Set `WEB_APP_URL` to the app page, local or
   deployed, and keep the Safari automation window in front during the run.
+- `tool/shared_flutter_mobile_test.mjs` runs the app in iPhone- and
+  Android-emulated Chromium against a desktop Chromium peer. The desktop shows
+  its invitation QR, a fake camera plays that QR to the phone, and the phone
+  scans it, connects, chats both ways, opens message actions with a long press,
+  hands a received photo byte-exact to a recording share sheet, vibrates on
+  Android only, asks before the back gesture leaves Home, hides page
+  notifications in Settings and colors the browser bar like the app bar. Set
+  `WEB_APP_URL` to the app page, local or deployed.
 - `tool/browser_platform_test.mjs` uses a separate `tool/browser_platform_qa.dart`
   build (`--output build/browser-qa`) for vault/download/voice adapters; it does
   not establish production UI parity.
