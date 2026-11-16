@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-type="software" data-radius="soft" data-buttons="solid" data-motion>
+<html lang="ko" data-type="software" data-radius="soft" data-buttons="solid">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -8,28 +8,25 @@
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#F5F6F8" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#090B0F" media="(prefers-color-scheme: dark)" />
-  <title>Intragram: 서버도 계정도 없는 로컬 네트워크 P2P 메신저</title>
-  <meta name="description" content="같은 Wi-Fi와 LAN 기기끼리 mDNS로 직접 연결해 대화하는 오픈소스 P2P 메신저. 외부 서버 없음, 계정 없음, 기본 메모리 전용(Zero-Disk), X25519 + ChaCha20-Poly1305 종단 간 암호화, 6개 플랫폼 및 앱·웹 암호화 연결 지원." />
+  <title>Intragram: 서버도 계정도 없는 로컬 네트워크 메신저</title>
+  <meta name="description" content="같은 Wi-Fi나 핫스팟에 연결된 기기끼리 직접 대화하는 오픈소스 로컬 메신저. 외부 서버 없음, 계정 없음, 기본 메모리 전용 동작, 1:1 종단 간 암호화, 6개 운영체제 및 브라우저 연결 지원." />
 
-  <!-- Open Graph & Social Card -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Intragram" />
-  <meta property="og:title" content="Intragram: Local-Network P2P Messenger Without Servers" />
-  <meta property="og:description" content="Peer-to-peer messenger for devices on the same network. No server, no sign-up, zero-disk RAM default, and 2 MiB chunked file streaming." />
+  <meta property="og:title" content="Intragram: Local-Network Messenger Without Servers" />
+  <meta property="og:description" content="Direct local-network messaging for devices on the same Wi-Fi. No server, no account, memory-only default, and encrypted file transfers." />
   <meta property="og:url" content="https://gnoyx2.github.io/Intragram/" />
   <link rel="canonical" href="https://gnoyx2.github.io/Intragram/" />
   <meta property="og:image" content="https://gnoyx2.github.io/Intragram/og-card.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Intragram: Local-Network P2P Messenger Without Servers" />
-  <meta name="twitter:description" content="Direct local-network messaging across iOS, Android, macOS, Windows, Linux, and QR browser guests." />
+  <meta name="twitter:title" content="Intragram: Local-Network Messenger Without Servers" />
+  <meta name="twitter:description" content="Direct local-network messaging across iOS, Android, macOS, Windows, Linux, and browsers." />
   <meta name="twitter:image" content="https://gnoyx2.github.io/Intragram/og-card.png" />
 
-  <!-- Self-Contained Carrier Pigeon Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cstyle%3E.bg%7Bfill%3A%23fde79c%7D%40media%28prefers-color-scheme%3Adark%29%7B.bg%7Bfill%3A%231e222b%7D%7D%3C%2Fstyle%3E%3CclipPath%20id%3D%22p%22%3E%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%2214%22%20height%3D%2214%22%20rx%3D%223.2%22%2F%3E%3C/clipPath%3E%3Crect%20class%3D%22bg%22%20x%3D%221%22%20y%3D%221%22%20width%3D%2214%22%20height%3D%2214%22%20rx%3D%223.2%22%2F%3E%3Cg%20clip-path%3D%22url%28%23p%29%22%3E%3Cellipse%20cx%3D%223.5%22%20cy%3D%229.6%22%20rx%3D%222.3%22%20ry%3D%223%22%20transform%3D%22rotate%28-18%203.5%209.6%29%22%20fill%3D%22%234c586e%22%2F%3E%3Cpath%20d%3D%22M4.3%2015.5C4.3%2011%205.2%208.8%205.2%207.4C5.2%204.6%207.4%202.8%2010.1%202.8C12.8%202.8%2014.8%204.7%2015%207.8L15.5%2015.5Z%22%20fill%3D%22%23c3c3c9%22%2F%3E%3Cellipse%20cx%3D%2213.2%22%20cy%3D%2211.2%22%20rx%3D%222.9%22%20ry%3D%222.3%22%20transform%3D%22rotate%28-25%2013.2%2011.2%29%22%20fill%3D%22%234c586e%22%2F%3E%3Ccircle%20cx%3D%227.4%22%20cy%3D%226.7%22%20r%3D%22.9%22%20fill%3D%22%23455367%22%2F%3E%3Ccircle%20cx%3D%2211.2%22%20cy%3D%227%22%20r%3D%22.9%22%20fill%3D%22%23455367%22%2F%3E%3Cpath%20d%3D%22M8.5%207.2Q9.3%206.8%2010.1%207.3Q9.8%208.4%209.2%208.4Q8.6%208.3%208.5%207.2Z%22%20fill%3D%22%2349566b%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E" />
 
-  <!-- Zero-FOUC Language & Theme Bootstrap (Zero Cookies, Zero localStorage) -->
   <script>
     (function () {
       try {
@@ -65,18 +62,13 @@
     "downloadUrl": "https://github.com/gnoyx2/Intragram/releases",
     "codeRepository": "https://github.com/gnoyx2/Intragram",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "description": "Peer-to-peer messenger for devices on the same network. No server, no account. Chats stay in memory unless you choose to keep them."
+    "description": "Local-network messenger for devices on the same Wi-Fi. No server, no account. Chats stay in memory unless you enable the vault."
   }
   </script>
 </head>
 <body>
-  <!-- Plan: kind=software · hero=split(app-frame + mascot companion) · nav=nav-centre · rhythm=surface-pairs · buttons=solid · radius=soft -->
-  <div id="live-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
-
-  <!-- =====================================================================
-       Fixed Opaque Navigation Bar (Equal Edges: Logo on L, Main Action on R)
-       ===================================================================== -->
   <header class="nav">
+    <div id="live-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
     <div class="wrap nav__bar">
       <a class="skip-link" href="#main">
         <span data-lang="ko">본문으로 바로 이동</span>
@@ -90,11 +82,12 @@
       </a>
 
       <nav class="nav__links" data-aria-ko="주요 섹션" data-aria-en="Primary sections" aria-label="주요 섹션">
-        <a class="nav__link" href="#why"><span data-lang="ko">철학</span><span data-lang="en">Story</span></a>
+        <a class="nav__link" href="#why"><span data-lang="ko">소개</span><span data-lang="en">Overview</span></a>
         <a class="nav__link" href="#features"><span data-lang="ko">기능</span><span data-lang="en">Features</span></a>
-        <a class="nav__link" href="#how-it-works"><span data-lang="ko">프로토콜</span><span data-lang="en">Protocol</span></a>
+        <a class="nav__link" href="#how-it-works"><span data-lang="ko">연결 방식</span><span data-lang="en">How it works</span></a>
         <a class="nav__link" href="#security"><span data-lang="ko">보안</span><span data-lang="en">Security</span></a>
         <a class="nav__link" href="#compare"><span data-lang="ko">비교</span><span data-lang="en">Compare</span></a>
+        <a class="nav__link" href="#install"><span data-lang="ko">설치</span><span data-lang="en">Download</span></a>
       </nav>
 
       <div class="nav__actions">
@@ -127,16 +120,15 @@
       </div>
     </div>
 
-    <!-- Full-Screen Mobile Menu Sheet -->
     <div id="mobile-sheet" class="nav__sheet" hidden>
       <nav class="sheet-links" data-aria-ko="모바일 탐색" data-aria-en="Mobile navigation" aria-label="모바일 탐색">
-        <a href="./web/" data-web-link><span data-lang="ko">웹에서 시작</span><span data-lang="en">Open web app</span></a>
-        <a href="#why"><span data-lang="ko">전서구 철학</span><span data-lang="en">Story</span></a>
-        <a href="#features"><span data-lang="ko">핵심 기능</span><span data-lang="en">Features</span></a>
-        <a href="#how-it-works"><span data-lang="ko">프로토콜 v7</span><span data-lang="en">Protocol v7</span></a>
-        <a href="#security"><span data-lang="ko">보안 모델</span><span data-lang="en">Security</span></a>
-        <a href="#compare"><span data-lang="ko">도구 비교</span><span data-lang="en">Compare</span></a>
-        <a href="#faq"><span data-lang="ko">네트워크 안내</span><span data-lang="en">Troubleshooting</span></a>
+        <a href="#why"><span data-lang="ko">소개</span><span data-lang="en">Overview</span></a>
+        <a href="#features"><span data-lang="ko">기능</span><span data-lang="en">Features</span></a>
+        <a href="#how-it-works"><span data-lang="ko">연결 방식</span><span data-lang="en">How it works</span></a>
+        <a href="#security"><span data-lang="ko">보안</span><span data-lang="en">Security</span></a>
+        <a href="#compare"><span data-lang="ko">비교</span><span data-lang="en">Compare</span></a>
+        <a href="#install"><span data-lang="ko">설치</span><span data-lang="en">Download</span></a>
+        <a href="#faq"><span data-lang="ko">문제 해결</span><span data-lang="en">Troubleshooting</span></a>
       </nav>
       <div class="sheet-foot">
         <div class="sheet-row">
@@ -152,9 +144,9 @@
             <span data-lang="ko">웹에서 시작</span>
             <span data-lang="en">Open web app</span>
           </a>
-          <a class="btn btn--secondary" href="https://github.com/gnoyx2/Intragram" target="_blank" rel="noopener noreferrer">
-            <span data-lang="ko">GitHub 저장소 열기</span>
-            <span data-lang="en">View GitHub repository</span>
+          <a class="btn btn--secondary" href="#install">
+            <span data-lang="ko">설치 파일 받기</span>
+            <span data-lang="en">Download app</span>
           </a>
         </div>
       </div>
@@ -162,64 +154,56 @@
   </header>
 
   <main id="main">
-    <!-- ===================================================================
-         Screen 1: Split Hero + Carrier Pigeon Companion + Live App Window
-         =================================================================== -->
+    <!-- Screen 1: Hero -->
     <section id="top" class="hero" style="--h: 1; --ht: 1; --hm: 1">
       <div class="wrap">
         <div class="grid hero-grid">
           <div class="hero__text span-5">
             <div class="hero-top-copy">
               <p class="hero-fact">
-                <span data-lang="ko">v1.0.0-rc.1 프리릴리스 · 프로토콜 v7 · 6개 OS 지원</span>
-                <span data-lang="en">v1.0.0-rc.1 pre-release · Protocol v7 · 6 native OSes</span>
+                <span data-lang="ko">v1.0.0-rc.1 프리릴리스 · 6개 운영체제 및 웹 미리보기</span>
+                <span data-lang="en">v1.0.0-rc.1 pre-release · 6 OSes and web preview</span>
               </p>
 
               <h1>
-                <span data-lang="ko">같은 네트워크 기기끼리 직접 잇는 P2P 메신저</span>
-                <span data-lang="en">Local-network P2P messenger without servers</span>
+                <span data-lang="ko">같은 Wi-Fi 기기끼리 바로 연결하는 로컬 메신저</span>
+                <span data-lang="en">Local network messenger for devices on the same Wi-Fi</span>
               </h1>
 
               <p class="hero__lead">
-                <span data-lang="ko">같은 Wi-Fi나 핫스팟 위의 기기가 mDNS로 서로를 찾아 바로 연결합니다. 외부 서버도 계정도 없으며, 로컬 보관소를 켜기 전까지 모든 대화는 메모리에만 머뭅니다.</span>
-                <span data-lang="en">Devices on the same Wi-Fi or hotspot find each other via mDNS and talk directly. No cloud servers, no sign-up, and chats stay in RAM unless you enable the vault.</span>
+                <span data-lang="ko">외부 서버나 계정 없이 주변 기기를 찾아 메시지와 파일을 주고받습니다. 보관소를 켜지 않으면 대화 내용은 메모리에만 남고 앱을 닫을 때 사라집니다.</span>
+                <span data-lang="en">Find nearby devices on your Wi-Fi or hotspot and send messages and files directly. Without the optional vault, chats stay in memory and clear when you close the app.</span>
               </p>
 
               <div class="btn-row">
-                <a class="btn btn--primary" href="#install">
-                  <span data-lang="ko">설치 파일 받기</span>
-                  <span data-lang="en">Get Intragram</span>
-                  <svg class="m-arrow" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-                </a>
-                <a class="btn btn--secondary" href="./web/" data-web-link>
+                <a class="btn btn--primary" href="./web/" data-web-link>
                   <span data-lang="ko">웹에서 시작</span>
                   <span data-lang="en">Open web app</span>
+                  <svg class="m-arrow" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                </a>
+                <a class="btn btn--secondary" href="#install">
+                  <span data-lang="ko">설치 파일 받기</span>
+                  <span data-lang="en">Download app</span>
                 </a>
               </div>
             </div>
 
-            <!-- Prominent Hero Mascot Companion (Interactive Local Courier Status) -->
-            <button id="mascot-courier-btn" type="button" class="mascot-companion" data-aria-ko="전서구 마스코트 상태 전환" data-aria-en="Cycle Carrier Pigeon courier status" aria-label="전서구 마스코트 상태 전환">
+            <div class="mascot-companion">
               <span class="mascot-pedestal" aria-hidden="true">
-                <img src="./assets/mascot-wave-256.png" alt="" width="76" height="76" fetchpriority="high" />
+                <img src="./assets/mascot-wave-256.png" alt="" width="76" height="76" />
               </span>
-              <span class="mascot-meta">
+              <div class="mascot-meta">
                 <span class="mascot-title">
-                  <span data-lang="ko">전서구 로컬 배달원 · 포트 7890 대기 중</span>
-                  <span data-lang="en">Carrier Pigeon courier · Ready on port 7890</span>
+                  <span data-lang="ko">사설 네트워크 전용 연결 (포트 7890)</span>
+                  <span data-lang="en">Private network connection (port 7890)</span>
                 </span>
-                <span id="mascot-state-ko" class="mascot-state" data-lang="ko">클라우드 전송 0 B · 같은 공유기 안에서만 봉인 전달</span>
-                <span id="mascot-state-en" class="mascot-state" data-lang="en">0 B sent to cloud · Sealed delivery inside your router</span>
-                <span id="mascot-os-cue" class="mascot-cue">
-                  <span id="hero-os-hint-ko" data-lang="ko">눌러서 로컬 탐색 상태 바꾸기</span>
-                  <span id="hero-os-hint-en" data-lang="en">Click to cycle local courier checks</span>
-                </span>
-              </span>
-            </button>
+                <span class="mascot-state" data-lang="ko">mDNS로 주변 기기를 찾거나 초대·응답 코드(IGW1)를 교환해 브라우저와도 암호화 연결합니다.</span>
+                <span class="mascot-state" data-lang="en">Finds nearby devices with mDNS or connects with browsers by exchanging IGW1 invitation and response codes.</span>
+              </div>
+            </div>
           </div>
 
-          <!-- Live Intragram Product Window (app-frame on lit sky stage) -->
-          <div class="frame hero__window span-7" role="region" data-aria-ko="Intragram 실시간 제품 미리보기" data-aria-en="Intragram live product preview" aria-label="Intragram 실시간 제품 미리보기">
+          <div class="frame hero__window span-7" role="region" data-aria-ko="대화 화면 미리보기" data-aria-en="Conversation screen preview" aria-label="대화 화면 미리보기">
             <div class="app-window">
               <div class="demo-chrome">
                 <div class="window-dots" aria-hidden="true">
@@ -231,23 +215,7 @@
                 </span>
               </div>
 
-              <div class="demo-tablist" role="tablist" data-aria-ko="대화 및 네트워크 모드" data-aria-en="Preview modes" aria-label="대화 및 네트워크 모드">
-                <button id="tab-chat" class="demo-tab" type="button" role="tab" aria-selected="true" aria-controls="panel-chat" tabindex="0">
-                  <span data-lang="ko">1:1 암호화 대화</span>
-                  <span data-lang="en">1:1 E2EE Chat</span>
-                </button>
-                <button id="tab-portal" class="demo-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-portal" tabindex="-1">
-                  <span data-lang="ko">앱·웹 암호화 연결</span>
-                  <span data-lang="en">Encrypted Web Connection</span>
-                </button>
-                <button id="tab-guard" class="demo-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-guard" tabindex="-1">
-                  <span data-lang="ko">NetworkGuard 검증</span>
-                  <span data-lang="en">NetworkGuard Lab</span>
-                </button>
-              </div>
-
-              <!-- Tab 1: 1:1 E2EE Chat -->
-              <div id="panel-chat" class="demo-panel" role="tabpanel" aria-labelledby="tab-chat">
+              <div class="demo-panel">
                 <div class="chat-peer-bar">
                   <div class="peer-ident">
                     <div class="peer-avatar" aria-hidden="true">
@@ -258,21 +226,21 @@
                         <span data-lang="ko">민서 · MacBook Pro</span>
                         <span data-lang="en">Minseo · MacBook Pro</span>
                       </div>
-                      <div id="demo-peer-id" class="peer-sub">id a94f…31c8</div>
+                      <div class="peer-sub">id a94f…31c8</div>
                     </div>
                   </div>
-                  <span id="demo-sas-badge" class="sas-badge" data-verified="true">
+                  <span class="sas-badge" data-verified="true">
                     <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                    <span data-lang="ko">SAS 482 917 · 확인됨</span>
-                    <span data-lang="en">SAS 482 917 · Verified</span>
+                    <span data-lang="ko">보안 번호 482 917 · 확인됨</span>
+                    <span data-lang="en">Code 482 917 · Verified</span>
                   </span>
                 </div>
 
-                <div id="demo-chat-stream" class="chat-stream">
+                <div class="chat-stream">
                   <div class="msg-bubble msg-theirs">
                     <div>
-                      <span data-lang="ko">실험실 외부 인터넷은 닫혀 있지만 같은 공유기라 바로 연결됩니다.</span>
-                      <span data-lang="en">Internet is offline in this lab, yet mDNS linked right up on the router.</span>
+                      <span data-lang="ko">외부 인터넷이 없는 연구실 망인데도 같은 공유기라 바로 연결되네요.</span>
+                      <span data-lang="en">Even with internet disconnected in the lab, it connected right over the local router.</span>
                     </div>
                     <div class="msg-meta">
                       <span>X25519 + ChaCha20-Poly1305</span>
@@ -284,114 +252,31 @@
                     <div class="file-transfer-row">
                       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                       <div>
-                        <strong>build-artifacts-rc1/</strong>
+                        <strong>experiment-logs/</strong>
                         <div class="muted">1.84 GiB · 2 MiB chunks · SHA-256 OK</div>
                       </div>
                     </div>
                     <div class="msg-meta">
-                      <span data-lang="ko">서명된 전달 영수증 · 읽음</span>
-                      <span data-lang="en">Signed delivery receipt · Read</span>
+                      <span data-lang="ko">전송 완료 · 읽음</span>
+                      <span data-lang="en">Delivered · Read</span>
                     </div>
                   </div>
 
-                  <div id="demo-burn-bubble" class="msg-bubble msg-mine">
+                  <div class="msg-bubble msg-mine">
                     <div>
-                      <span id="demo-burn-text-ko" data-lang="ko">테스트 장비 초기 PIN은 941820입니다. 읽은 뒤 5초 후 메모리에서 소각됩니다.</span>
-                      <span id="demo-burn-text-en" data-lang="en">Bench PIN is 941820. Burns from RAM 5 seconds after reading.</span>
+                      <span data-lang="ko">장비 초기 비밀번호는 941820입니다. 읽은 뒤 5초 후 화면에서 지워집니다.</span>
+                      <span data-lang="en">Initial device PIN is 941820. Clears 5 seconds after reading.</span>
                     </div>
                     <div class="msg-meta">
-                      <span class="burn-chip">
-                        <span id="demo-burn-counter" class="tabular">5s</span>
-                      </span>
+                      <span class="burn-chip"><span class="tabular">5s</span></span>
                       <span class="tabular">14:09</span>
                     </div>
                   </div>
                 </div>
 
-                <div id="demo-wipe-state" class="demo-wipe-state" hidden>
-                  <strong>
-                    <span data-lang="ko">긴급 소거(Panic Wipe) 완료</span>
-                    <span data-lang="en">Panic wipe complete</span>
-                  </strong>
-                  <p class="muted">
-                    <span data-lang="ko">모든 피어 링크를 닫고 앱 소유 버퍼를 덮어쓴 뒤 새 임시 신원(<code id="demo-new-id">e712…90b4</code>)으로 교체했습니다.</span>
-                    <span data-lang="en">Closed peer links, overwrote owned byte buffers, and rotated to a fresh RAM-only Ed25519 identity.</span>
-                  </p>
-                  <button id="btn-restore-demo" type="button" class="chip-btn">
-                    <span data-lang="ko">대화 데모 복원</span>
-                    <span data-lang="en">Restore chat demo</span>
-                  </button>
-                </div>
-
-                <div class="demo-toolbar">
-                  <button id="btn-sas-toggle" type="button" class="chip-btn">
-                    <span data-lang="ko">SAS 상태 전환</span>
-                    <span data-lang="en">Toggle SAS state</span>
-                  </button>
-                  <button id="btn-burn-test" type="button" class="chip-btn">
-                    <span data-lang="ko">5초 소각 실행</span>
-                    <span data-lang="en">Run 5s burn</span>
-                  </button>
-                  <button id="btn-panic-wipe" type="button" class="chip-btn chip-btn-danger">
-                    <span data-lang="ko">긴급 소거 실행</span>
-                    <span data-lang="en">Run panic wipe</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Tab 2: Encrypted Web Connection -->
-              <div id="panel-portal" class="demo-panel" role="tabpanel" aria-labelledby="tab-portal" hidden>
-                <div class="portal-card">
-                  <div class="qr-frame" aria-hidden="true"><svg viewBox="0 0 100 100" width="88" height="88" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="22" y="42" width="56" height="42" rx="10"/><path d="M34 42V30a16 16 0 0 1 32 0v12M50 58v10"/></svg></div>
-                  <div>
-                    <strong>
-                      <span data-lang="ko">앱 설치 없이 브라우저로 즉시 참여</span>
-                      <span data-lang="en">Join from any browser without installing</span>
-                    </strong>
-                    <p class="muted" style="margin-top:4px;">
-                      <span data-lang="ko">앱과 브라우저에서 초대·응답 코드를 교환하세요. 양쪽 확인 번호를 비교한 뒤 메시지와 파일을 암호화해서 주고받습니다.</span>
-                      <span data-lang="en">Exchange invitation and response codes between the app and browser. Compare both numbers before sharing encrypted messages and files.</span>
-                    </p>
-                    <code style="display:block;margin-top:6px;font-size:var(--t-label);color:var(--text-accent);">IGW1.… · WebRTC · DTLS</code>
-                  </div>
-                </div>
-
-                <div class="notice-box notice-warn" role="note">
-                  <div>
-                    <strong data-lang="ko">연결 번호 확인:</strong>
-                    <strong data-lang="en">Compare the number:</strong>
-                    <span data-lang="ko"> 초대·응답 코드는 대화할 상대에게만 전달하고 양쪽 6자리 번호가 같은지 확인하세요. 이전 HTTP 포털과 별도의 암호화 연결입니다.</span>
-                    <span data-lang="en"> Share codes only with your intended partner and compare both six-digit numbers. This encrypted connection is separate from the legacy HTTP portal.</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Tab 3: NetworkGuard Classifier -->
-              <div id="panel-guard" class="demo-panel" role="tabpanel" aria-labelledby="tab-guard" hidden>
-                <div style="display:flex;flex-direction:column;gap:var(--s-3);">
-                  <div>
-                    <strong>
-                      <span data-lang="ko"><code>NetworkGuard.parsePeerEndpoint</code> 실시간 검증기</span>
-                      <span data-lang="en">Live <code>NetworkGuard.parsePeerEndpoint</code> classifier</span>
-                    </strong>
-                    <p class="muted" style="margin-top:4px;">
-                      <span data-lang="ko">모든 피어 소켓은 정규 10진 RFC 1918 사설 IPv4만 통과시킵니다. 주소를 눌러 판정을 확인하세요.</span>
-                      <span data-lang="en">Every peer dial enforces canonical dotted-decimal RFC 1918 IPv4. Select an endpoint to inspect its verdict.</span>
-                    </p>
-                  </div>
-
-                  <div class="ip-chip-grid" role="group" data-aria-ko="검증 대상 주소" data-aria-en="Target endpoints" aria-label="검증 대상 주소">
-                    <button type="button" class="ip-chip" data-endpoint="192.168.1.42:7890" aria-pressed="true">192.168.1.42:7890</button>
-                    <button type="button" class="ip-chip" data-endpoint="10.24.0.8:7890" aria-pressed="false">10.24.0.8:7890</button>
-                    <button type="button" class="ip-chip" data-endpoint="100.64.0.12:7890" aria-pressed="false">100.64.0.12:7890</button>
-                    <button type="button" class="ip-chip" data-endpoint="203.0.113.9:443" aria-pressed="false">203.0.113.9:443</button>
-                    <button type="button" class="ip-chip" data-endpoint="010.0.0.1:7890" aria-pressed="false">010.0.0.1:7890</button>
-                  </div>
-                </div>
-
-                <div id="guard-verdict" class="guard-verdict" data-allowed="true">
-                  <span id="guard-verdict-ko" data-lang="ko">허용됨 (192.168.1.42:7890) — 정규 RFC 1918 사설 IPv4 주소입니다. WebSocket 다이얼과 X25519 핸드셰이크를 진행합니다.</span>
-                  <span id="guard-verdict-en" data-lang="en">ALLOWED (192.168.1.42:7890) — Canonical RFC 1918 private IPv4. Proceeding to WebSocket dial and X25519 handshake.</span>
+                <div class="demo-status-foot">
+                  <span data-lang="ko">메모리 전용 대화 · 사설 IP(RFC 1918) 연결 · 앱·웹 WebRTC 암호화 지원</span>
+                  <span data-lang="en">Memory-only chat · Private IP (RFC 1918) · Encrypted app-to-web WebRTC</span>
                 </div>
               </div>
             </div>
@@ -400,39 +285,37 @@
       </div>
     </section>
 
-    <!-- ===================================================================
-         Screen 2: Carrier Pigeon LAN Ethos + Studio Diorama (Split 5 / 7)
-         =================================================================== -->
+    <!-- Screen 2: Overview -->
     <section id="why" class="section ground-surface" style="--h: 1; --ht: 1; --hm: 1">
       <div class="wrap">
         <div class="section-head">
           <h2>
-            <span data-lang="ko">옆자리 대화는 같은 공유기 안에서 끝납니다</span>
-            <span data-lang="en">Messages to the next desk stay on your router</span>
+            <span data-lang="ko">인터넷이 없어도 같은 공유기 안에서 대화합니다</span>
+            <span data-lang="en">Chat across your router even without internet access</span>
           </h2>
           <p>
-            <span data-lang="ko">LocalSend가 클라우드 없는 파일 전송을 열었듯, Intragram은 잠긴 편지를 직접 건네는 전서구처럼 로컬 실시간 대화를 완성합니다.</span>
-            <span data-lang="en">Inspired by LocalSend's local-first file sharing, Intragram delivers live conversations directly across your LAN like two carrier pigeons passing a sealed letter.</span>
+            <span data-lang="ko">같은 로컬 네트워크에 연결된 기기끼리 직접 통신합니다. 가입 절차나 중앙 서버 없이 바로 대화를 시작할 수 있습니다.</span>
+            <span data-lang="en">Devices on the same local network talk directly to each other, with no central server or account registration.</span>
           </p>
         </div>
 
         <div class="grid split-grid">
           <div class="rows span-5">
             <div class="row-item">
-              <span class="row-title"><span data-lang="ko">외부 서버 0개, 계정 가입 0단계</span><span data-lang="en">Zero servers and zero sign-up</span></span>
-              <p class="row-desc"><span data-lang="ko">전화번호나 이메일 없이 앱을 여는 즉시 20초 주기로 주변 기기를 찾습니다.</span><span data-lang="en">Open the app and find nearby devices every 20 seconds without phone numbers or accounts.</span></p>
+              <span class="row-title"><span data-lang="ko">계정과 서버 없음</span><span data-lang="en">No accounts or servers</span></span>
+              <p class="row-desc"><span data-lang="ko">전화번호나 이메일 입력 없이 앱을 열면 20초마다 주변 기기를 자동으로 찾습니다.</span><span data-lang="en">Open the app to discover nearby devices every 20 seconds without phone numbers or sign-up.</span></p>
             </div>
             <div class="row-item">
-              <span class="row-title"><span data-lang="ko">폐쇄망·연구실·선박·현장 즉시 대응</span><span data-lang="en">Ready for air-gapped labs and field networks</span></span>
-              <p class="row-desc"><span data-lang="ko">외부 인터넷이 완전히 차단된 사내망이나 모바일 핫스팟만으로도 모든 기능이 작동합니다.</span><span data-lang="en">Works identically on offline lab routers, factory floors, ships, classrooms, and phone hotspots.</span></p>
+              <span class="row-title"><span data-lang="ko">오프라인·폐쇄망 동작</span><span data-lang="en">Works on offline networks</span></span>
+              <p class="row-desc"><span data-lang="ko">외부 인터넷이 차단된 연구실, 사내망, 선박, 휴대폰 핫스팟에서도 그대로 동작합니다.</span><span data-lang="en">Runs the same on isolated lab routers, office LANs, ships, classrooms, and phone hotspots.</span></p>
             </div>
             <div class="row-item">
-              <span class="row-title"><span data-lang="ko">단발 전송을 넘어선 정식 대화</span><span data-lang="en">Full conversation beyond file drops</span></span>
-              <p class="row-desc"><span data-lang="ko">인용 답장, 리액션, 입력·읽음 표시, 2분 메모리 음성 노트, 폴더 스트리밍을 한곳에 담았습니다.</span><span data-lang="en">Replies, reactions, typing and read states, 2-minute RAM voice notes, and whole-folder streaming.</span></p>
+              <span class="row-title"><span data-lang="ko">메시지·음성·폴더 전송</span><span data-lang="en">Messages, voice notes and folders</span></span>
+              <p class="row-desc"><span data-lang="ko">답장, 반응, 읽음 표시, 최대 2분 음성 메시지, 대용량 파일과 폴더 전송을 한곳에서 지원합니다.</span><span data-lang="en">Includes replies, reactions, read receipts, 2-minute voice notes, and whole-folder transfers.</span></p>
             </div>
           </div>
 
-          <a class="frame diorama-frame m-zoom span-7" href="#how-it-works" data-aria-ko="프로토콜 v7 동작 단계 보기" data-aria-en="See Wire Protocol v7 stages" aria-label="프로토콜 v7 동작 단계 보기">
+          <div class="frame diorama-frame span-7">
             <img
               class="frame__img"
               src="./assets/mascot-lan-courier-1376.jpg"
@@ -441,40 +324,38 @@
               alt=""
               width="1376"
               height="768"
+              loading="lazy"
               decoding="async"
             />
-          </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ===================================================================
-         Screen 3 & 4: Two-Level Feature Cards with Lit Panels & Mascots
-         =================================================================== -->
+    <!-- Screen 3 & 4: Key Features -->
     <section id="features" class="section" style="--h: 2; --ht: 2; --hm: 2">
       <div class="wrap">
         <div class="section-head">
           <h2>
-            <span data-lang="ko">사설망을 위해 설계한 네 가지 핵심 계층</span>
-            <span data-lang="en">Four core layers built for private networks</span>
+            <span data-lang="ko">주요 기능</span>
+            <span data-lang="en">Key features</span>
           </h2>
           <p>
-            <span data-lang="ko">암호화 핸드셰이크부터 메모리 소거, 대용량 청크 전송, 무설치 게스트 포털까지 단일 코드트리로 구현했습니다.</span>
-            <span data-lang="en">From commit-first handshakes and RAM zeroing to 2 MiB streaming and browser guest rooms in one cohesive tree.</span>
+            <span data-lang="ko">1:1 암호화 대화, 메모리 전용 기본 동작, 대용량 파일 전송, 브라우저 연결을 제공합니다.</span>
+            <span data-lang="en">End-to-end encrypted 1:1 chat, memory-only defaults, large file transfers, and browser connections.</span>
           </p>
         </div>
 
         <div class="grid cards-2x2">
-          <!-- Card 1 -->
-          <a class="card card--link span-6" href="#how-it-works">
+          <article class="card span-6">
             <div class="card-copy">
               <h3>
-                <span data-lang="ko">커밋 우선(Commit-First) 1:1 종단 간 암호화</span>
-                <span data-lang="en">Commit-first 1:1 end-to-end encryption</span>
+                <span data-lang="ko">1:1 종단 간 암호화와 보안 번호 확인</span>
+                <span data-lang="en">1:1 end-to-end encryption and security codes</span>
               </h3>
               <p>
-                <span data-lang="ko">다이얼러가 임시 키 해시(<code>cmt</code>)를 먼저 전송한 뒤 X25519와 Ed25519로 서명하고, 6자리 SAS 음성 대조로 중간자 중계를 잡아냅니다.</span>
-                <span data-lang="en">The dialer commits to its ephemeral key before the listener replies, pairing X25519, Ed25519 peer proofs, and a 6-digit verbal SAS check.</span>
+                <span data-lang="ko">X25519 키 교환과 ChaCha20-Poly1305로 1:1 대화를 암호화합니다. 양쪽 화면의 6자리 번호를 비교해 연결 상대를 확인할 수 있습니다.</span>
+                <span data-lang="en">Encrypts 1:1 chats with X25519 key exchange and ChaCha20-Poly1305, with a 6-digit security code to verify your partner.</span>
               </p>
             </div>
             <div class="panel panel--sky">
@@ -487,46 +368,44 @@
                 <div class="ui-frag-row"><span>Derivation</span><strong>HKDF-SHA256 × 4 keys</strong></div>
                 <div class="ui-frag-row"><span>Frame cipher</span><strong>ChaCha20-Poly1305</strong></div>
               </div>
-              <img class="panel-mascot" src="./assets/mascot-lock-192.png" alt="" aria-hidden="true" width="88" height="94" decoding="async" />
+              <img class="panel-mascot" src="./assets/mascot-lock-192.png" alt="" aria-hidden="true" width="88" height="94" loading="lazy" decoding="async" />
             </div>
-          </a>
+          </article>
 
-          <!-- Card 2 -->
-          <a class="card card--link span-6" href="#security">
+          <article class="card span-6">
             <div class="card-copy">
               <h3>
-                <span data-lang="ko">기본 무저장(Zero-Disk)과 협박 대비 PIN</span>
-                <span data-lang="en">Zero-disk RAM default and duress PIN</span>
+                <span data-lang="ko">메모리 전용 기본값과 선택형 보관소</span>
+                <span data-lang="en">Memory-only default and optional vault</span>
               </h3>
               <p>
-                <span data-lang="ko">SQLite·Hive·<code>SharedPreferences</code>를 전혀 쓰지 않으며, PBKDF2 선택형 보관소와 빈 세션을 여는 협박 대비 PIN, 긴급 소거를 지원합니다.</span>
-                <span data-lang="en">No SQLite, Hive, or <code>SharedPreferences</code>. Includes an opt-in PBKDF2 vault, a separate Duress PIN decoy session, and one-tap Panic Wipe.</span>
+                <span data-lang="ko">기본 설정에서는 대화 기록을 디스크에 쓰지 않습니다. 기록을 남기려면 PIN으로 잠그는 보관소를 켜고, 비상 PIN이나 즉시 삭제 기능으로 데이터를 지울 수 있습니다.</span>
+                <span data-lang="en">Chats stay in memory by default. Enable the optional PBKDF2 vault to keep history, with a decoy PIN and one-tap wipe when needed.</span>
               </p>
             </div>
             <div class="panel panel--sand">
               <div class="ui-frag">
                 <div class="ui-frag-head">
                   <span>Memory &amp; Vault</span>
-                  <span>RAM-only</span>
+                  <span>RAM default</span>
                 </div>
-                <div class="ui-frag-row"><span>Disk databases</span><strong>0 (Zero-Disk)</strong></div>
+                <div class="ui-frag-row"><span>Default storage</span><strong>Memory only</strong></div>
                 <div class="ui-frag-row"><span>Released buffers</span><strong>Uint8List zeroed</strong></div>
-                <div class="ui-frag-row"><span>Opt-in vault</span><strong>PBKDF2 + Duress PIN</strong></div>
+                <div class="ui-frag-row"><span>Optional vault</span><strong>PBKDF2 + Decoy PIN</strong></div>
               </div>
-              <img class="panel-mascot" src="./assets/mascot-vault-192.png" alt="" aria-hidden="true" width="88" height="88" decoding="async" />
+              <img class="panel-mascot" src="./assets/mascot-vault-192.png" alt="" aria-hidden="true" width="88" height="88" loading="lazy" decoding="async" />
             </div>
-          </a>
+          </article>
 
-          <!-- Card 3 -->
-          <a class="card card--link span-6" href="#compare">
+          <article class="card span-6">
             <div class="card-copy">
               <h3>
-                <span data-lang="ko">2 MiB 청크 스트리밍과 읽음 기반 소각</span>
-                <span data-lang="en">2 MiB chunk streaming and read-burn timers</span>
+                <span data-lang="ko">대용량 파일 전송과 자동 삭제 타이머</span>
+                <span data-lang="en">Large file transfers and disappearing messages</span>
               </h3>
               <p>
-                <span data-lang="ko">파일과 폴더 전체를 2 MiB 단위로 흘려보내 메모리 한계 없이 전달하고, 읽는 순간 시작되는 5·30·60초 소각 타이머와 음성 노트를 제공합니다.</span>
-                <span data-lang="en">Streams files and folders in 2 MiB chunks up to free disk space, paired with 5s/30s/60s read-triggered burn timers and 120s RAM voice notes.</span>
+                <span data-lang="ko">파일과 폴더를 2 MiB 단위로 나누어 보내 메모리를 과도하게 쓰지 않습니다. 읽은 뒤 5·30·60초 후 사라지는 타이머와 최대 2분 음성 메시지를 지원합니다.</span>
+                <span data-lang="en">Streams files and folders in 2 MiB chunks up to available disk space, with 5s/30s/60s read timers and 120s voice notes.</span>
               </p>
             </div>
             <div class="panel panel--sage">
@@ -535,176 +414,162 @@
                   <span>dataset-2026-raw/</span>
                   <span class="tabular">2 MiB chunks</span>
                 </div>
-                <div class="ui-frag-row"><span>Size ceiling</span><strong>Free disk space</strong></div>
+                <div class="ui-frag-row"><span>Size limit</span><strong>Free disk space</strong></div>
                 <div class="ui-frag-row"><span>Burn timers</span><strong>5s · 30s · 60s on read</strong></div>
                 <div class="ui-frag-row"><span>Voice notes</span><strong>Up to 120s in RAM</strong></div>
               </div>
             </div>
-          </a>
+          </article>
 
-          <!-- Card 4 -->
-          <a class="card card--link span-6" href="#install">
+          <article class="card span-6">
             <div class="card-copy">
               <h3>
-                <span data-lang="ko">허브 그룹 방·QR 포털·네이티브 프라이버시</span>
-                <span data-lang="en">Hub group rooms, QR portal, and OS privacy</span>
+                <span data-lang="ko">그룹 대화방과 브라우저 참여</span>
+                <span data-lang="en">Group rooms and browser access</span>
               </h3>
               <p>
-                <span data-lang="ko">앱 허브 그룹 방, 32명 단일 HTML 게스트 포털, Salted Merkle 영수증과 폴더블 2단 화면, OS 화면 캡처 차단 및 60초 클립보드 만료를 갖췄습니다.</span>
-                <span data-lang="en">App-hosted group rooms, 32-guest QR web portal, Salted Merkle proofs, foldable dual-pane layout, OS screen-capture shields, and 60s clipboard expiry.</span>
+                <span data-lang="ko">앱에서 최대 32명이 참여하는 그룹 방을 열거나, 앱 설치가 어려운 기기에서 브라우저로 대화에 참여할 수 있습니다.</span>
+                <span data-lang="en">Host group rooms for up to 32 participants, or connect from a browser when installing the native app is not an option.</span>
               </p>
             </div>
             <div class="panel panel--stone">
               <div class="ui-frag">
                 <div class="ui-frag-head">
-                  <span>Guest Portal &amp; OS Shield</span>
+                  <span>Rooms &amp; Browser</span>
                   <span class="tabular">Max 32</span>
                 </div>
-                <div class="ui-frag-row"><span>Browser join</span><strong>Single HTML + CSP</strong></div>
-                <div class="ui-frag-row"><span>Receipts</span><strong>Salted Merkle batch</strong></div>
-                <div class="ui-frag-row"><span>OS channels</span><strong>FLAG_SECURE · ⌘F/N/O</strong></div>
+                <div class="ui-frag-row"><span>Browser link</span><strong>Encrypted WebRTC</strong></div>
+                <div class="ui-frag-row"><span>Receipts</span><strong>Signed Merkle batch</strong></div>
+                <div class="ui-frag-row"><span>OS privacy</span><strong>Screen shield · 60s clip</strong></div>
               </div>
-              <img class="panel-mascot" src="./assets/mascot-qr-192.png" alt="" aria-hidden="true" width="88" height="88" decoding="async" />
+              <img class="panel-mascot" src="./assets/mascot-qr-192.png" alt="" aria-hidden="true" width="88" height="88" loading="lazy" decoding="async" />
             </div>
-          </a>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- ===================================================================
-         Screen 5: Protocol v7 Pulsing Lanes Diagram + Codebase Discipline
-         =================================================================== -->
+    <!-- Screen 5: How It Works -->
     <section id="how-it-works" class="section ground-surface" style="--h: 1; --ht: 1; --hm: 2">
       <div class="wrap">
         <div class="section-head">
           <h2>
-            <span data-lang="ko">와이어 프로토콜 v7의 4단계 로컬 연결</span>
-            <span data-lang="en">Four local stages of Wire Protocol v7</span>
+            <span data-lang="ko">기기를 찾고 연결하는 과정</span>
+            <span data-lang="en">How devices find and connect to each other</span>
           </h2>
           <p>
-            <span data-lang="ko">탐색부터 소켓 경계 검증, 커밋 핸드셰이크, 단조 순번 프레임 암호화까지 모두 사설 인터페이스 안에서 완결됩니다.</span>
-            <span data-lang="en">Discovery, private-IP socket gating, commit-reveal authentication, and monotonic sequence nonces run entirely on your LAN.</span>
+            <span data-lang="ko">주변 기기 탐색부터 사설 IP 확인, 키 교환, 암호화 전송까지 네 단계로 연결됩니다.</span>
+            <span data-lang="en">Connections run in four steps across your local network: discovery, private IP check, key exchange, and encrypted transfer.</span>
           </p>
         </div>
 
-        <div id="protocol-diagram" class="frame dg-frame" data-m-loop data-paused="false">
+        <div id="protocol-diagram" class="frame dg-frame">
           <div class="dg-lanes">
             <div class="dg-node">
               <span class="dg-step"><span>01</span><span>mDNS :7890</span></span>
-              <h3><span data-lang="ko">물리 LAN 바인딩</span><span data-lang="en">Physical LAN bind</span></h3>
-              <p><span data-lang="ko"><code>_intragram._tcp</code> 광고 및 VPN보다 물리 사설 주소를 우선해 내장 <code>shelf</code> 서버를 엽니다.</span><span data-lang="en">Broadcasts <code>_intragram._tcp</code> and binds an embedded <code>shelf</code> server to physical LAN IPs.</span></p>
+              <h3><span data-lang="ko">주변 기기 탐색</span><span data-lang="en">Local discovery</span></h3>
+              <p><span data-lang="ko">같은 네트워크에서 <code>_intragram._tcp</code>로 기기를 알리고 사설 IP 주소에 로컬 서버를 엽니다.</span><span data-lang="en">Announces <code>_intragram._tcp</code> on the local network and binds to a private LAN address.</span></p>
             </div>
             <div class="dg-node">
               <span class="dg-step"><span>02</span><span>NetworkGuard</span></span>
-              <h3><span data-lang="ko">정수 옥텟 경계 차단</span><span data-lang="en">Integer octet gate</span></h3>
-              <p><span data-lang="ko">리다이렉트·업그레이드를 포함한 모든 소켓에서 CGNAT·8진수·공인 WAN 목적지를 즉시 차단합니다.</span><span data-lang="en">Blocks public WAN, CGNAT <code>100.64/10</code>, and octal octets across every socket and redirect.</span></p>
+              <h3><span data-lang="ko">사설 IP 주소 확인</span><span data-lang="en">Private IP check</span></h3>
+              <p><span data-lang="ko">공인 IP, 통신사 CGNAT(<code>100.64/10</code>), 비표준 주소 표기로 나가는 소켓 연결을 차단합니다.</span><span data-lang="en">Blocks public WAN addresses, CGNAT <code>100.64/10</code>, and non-standard IP formats on every socket.</span></p>
             </div>
             <div class="dg-node">
-              <span class="dg-step"><span>03</span><span>Commit-Reveal</span></span>
-              <h3><span data-lang="ko">상호 서명과 4개 키</span><span data-lang="en">Mutual proof &amp; 4 keys</span></h3>
-              <p><span data-lang="ko"><code>cmt</code> 선전송과 작은 위수 점 거부 뒤 <code>HKDF-SHA256</code>으로 방향별 키 4개와 SAS를 파생합니다.</span><span data-lang="en">Rejects small-order Ed25519 keys and derives 4 directional keys plus 6-digit SAS via <code>HKDF-SHA256</code>.</span></p>
+              <span class="dg-step"><span>03</span><span>Handshake</span></span>
+              <h3><span data-lang="ko">상호 서명과 키 교환</span><span data-lang="en">Key exchange</span></h3>
+              <p><span data-lang="ko">X25519와 Ed25519 서명으로 상대를 확인하고 방향별 암호화 키 4개와 6자리 보안 번호를 만듭니다.</span><span data-lang="en">Verifies peer signatures and derives four directional keys plus a 6-digit security code via <code>HKDF-SHA256</code>.</span></p>
             </div>
             <div class="dg-node">
-              <span class="dg-step"><span>04</span><span>Seq Nonce</span></span>
-              <h3><span data-lang="ko">단조 순번 봉인 전송</span><span data-lang="en">Monotonic frame seal</span></h3>
-              <p><span data-lang="ko">모든 대화와 1:1 파일 청크를 순번 nonce로 봉인하며, 누락이 감지되면 즉시 연결을 끊습니다.</span><span data-lang="en">Seals frames and 1:1 file chunks with strict sequence nonces, dropping the link on any gap.</span></p>
+              <span class="dg-step"><span>04</span><span>ChaCha20</span></span>
+              <h3><span data-lang="ko">순번 검증 암호화 전송</span><span data-lang="en">Encrypted frames</span></h3>
+              <p><span data-lang="ko">메시지와 1:1 파일 조각마다 순번을 붙여 암호화하며, 순서가 어긋나면 즉시 연결을 닫습니다.</span><span data-lang="en">Encrypts messages and 1:1 file chunks with sequence numbers, closing the link if any frame is missing.</span></p>
             </div>
           </div>
-
-          <div class="dg-pulse-track" aria-hidden="true">
-            <div class="dg-pulse-bar"></div>
-          </div>
-
-          <button id="dg-pause-btn" type="button" class="loop-pause" aria-pressed="false" data-aria-ko="다이어그램 애니메이션 일시정지" data-aria-en="Pause diagram pulse" aria-label="다이어그램 애니메이션 일시정지">
-            <svg id="dg-icon-pause" viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="3.5" height="10" rx="1"/><rect x="9.5" y="3" width="3.5" height="10" rx="1"/></svg>
-            <svg id="dg-icon-play" viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true" hidden><path d="M4 3l9 5-9 5V3z"/></svg>
-          </button>
         </div>
 
         <div class="grid rules-row">
           <div class="rule-col span-4">
-            <h3><span data-lang="ko">파일당 250줄 상한</span><span data-lang="en">250-line file ceiling</span></h3>
-            <p><span data-lang="ko">코드 생성기 없이 <code>tool/check_loc.py</code>가 모든 자체 <code>.dart</code> 파일을 250줄 이하로 유지합니다.</span><span data-lang="en">Zero code generation; <code>tool/check_loc.py</code> keeps every first-party <code>.dart</code> file at or below 250 lines.</span></p>
+            <h3><span data-lang="ko">파일당 250줄 제한</span><span data-lang="en">250 lines per file</span></h3>
+            <p><span data-lang="ko">코드 생성기 없이 <code>tool/check_loc.py</code>로 모든 자체 <code>.dart</code> 파일을 250줄 이하로 관리합니다.</span><span data-lang="en">No code generation; <code>tool/check_loc.py</code> keeps every first-party <code>.dart</code> file at or below 250 lines.</span></p>
           </div>
           <div class="rule-col span-4">
-            <h3><span data-lang="ko">외부 CDN 및 텔레메트리 0건</span><span data-lang="en">Zero external requests</span></h3>
-            <p><span data-lang="ko">분석 도구, 외부 폰트, 원격 스크립트 없이 순수 로컬 리소스만으로 동작합니다.</span><span data-lang="en">No analytics SDKs, remote fonts, or third-party scripts in either the native app or guest portal.</span></p>
+            <h3><span data-lang="ko">외부 서버 요청 없음</span><span data-lang="en">Zero external requests</span></h3>
+            <p><span data-lang="ko">분석 도구, 외부 글꼴, 원격 스크립트를 불러오지 않고 앱과 웹 모두 내장 리소스만 사용합니다.</span><span data-lang="en">No analytics SDKs, remote fonts, or external scripts in either the native app or the web app.</span></p>
           </div>
           <div class="rule-col span-4">
-            <h3><span data-lang="ko">1,411+ 자동 검증 테스트</span><span data-lang="en">1,411+ automated CI checks</span></h3>
-            <p><span data-lang="ko">프로토콜 v7, 소켓 가드, 브라우저 CSP, SHA 고정 GitHub Actions 워크플로가 매 변경을 검증합니다.</span><span data-lang="en">Pinned-SHA workflows verify protocol vectors, socket guards, web CSP, and asset rules on every push.</span></p>
+            <h3><span data-lang="ko">자동 테스트 검증</span><span data-lang="en">Automated test suite</span></h3>
+            <p><span data-lang="ko">단위·위젯·브라우저·네이티브 자동 테스트와 고정 해시 GitHub Actions 워크플로로 매 변경을 검증합니다.</span><span data-lang="en">Unit, widget, browser, and native E2E tests run on pinned GitHub Actions workflows for every change.</span></p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===================================================================
-         Screen 6: Transparent Threat Model Split (6 + 6)
-         =================================================================== -->
+    <!-- Screen 6: Security -->
     <section id="security" class="section" style="--h: 1; --ht: 1; --hm: 2">
       <div class="wrap">
         <div class="section-head">
           <h2>
-            <span data-lang="ko">방어하는 위협과 보장 밖의 한계</span>
-            <span data-lang="en">Defended threats and explicit boundaries</span>
+            <span data-lang="ko">보안 범위와 주의사항</span>
+            <span data-lang="en">Security scope and limitations</span>
           </h2>
           <p>
-            <span data-lang="ko">아직 독립 외부 보안 감사를 받지 않았습니다. 실패 시 신변 위험이 생길 수 있는 고위험 상황에서는 사용하지 마세요.</span>
-            <span data-lang="en">Intragram has not undergone an independent security audit yet. Do not rely on it where a failure could put someone at risk.</span>
+            <span data-lang="ko">아직 외부 기관의 독립 보안 감사를 받지 않았습니다. 높은 수준의 보안이 필수인 환경에서는 사용하지 마세요.</span>
+            <span data-lang="en">Intragram has not undergone an independent security audit. Do not rely on it where a failure could put someone at risk.</span>
           </p>
         </div>
 
         <div class="grid sec-grid">
           <div class="sec-card span-6">
-            <h3><span data-lang="ko">설계상 방어하는 위협</span><span data-lang="en">Built to defend against</span></h3>
+            <h3><span data-lang="ko">보호하는 항목</span><span data-lang="en">What is protected</span></h3>
             <ul class="sec-list">
               <li>
                 <svg class="sec-icon-ok" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                <div><strong data-lang="ko">같은 LAN의 도청·사칭:</strong><strong data-lang="en">Other LAN devices:</strong> <span data-lang="ko">1:1 E2EE와 Ed25519 피어 증명, 6자리 SAS 대조로 도청과 초대 가로채기를 막습니다.</span><span data-lang="en">1:1 E2EE, signed peer IDs, and 6-digit SAS checks stop LAN eavesdropping or invite hijacking.</span></div>
+                <div><strong data-lang="ko">같은 네트워크의 도청과 사칭:</strong><strong data-lang="en">Other LAN devices:</strong> <span data-lang="ko">1:1 대화는 종단 간 암호화되며, 6자리 보안 번호를 대조해 중간자 공격을 확인할 수 있습니다.</span><span data-lang="en">1:1 E2EE, signed peer IDs, and 6-digit security code checks prevent LAN eavesdropping or impersonation.</span></div>
               </li>
               <li>
                 <svg class="sec-icon-ok" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                <div><strong data-lang="ko">미인증 소켓 고갈:</strong><strong data-lang="en">Idle socket floods:</strong> <span data-lang="ko">미완료 핸드셰이크를 호스트당 4개(전체 16개), 연결 시도를 10초당 24회로 제한합니다.</span><span data-lang="en">Caps unauthenticated handshakes at 4 per host (16 total) and 24 connects per 10 seconds.</span></div>
+                <div><strong data-lang="ko">과도한 연결 요청 제한:</strong><strong data-lang="en">Connection rate limits:</strong> <span data-lang="ko">완료되지 않은 핸드셰이크는 호스트당 4개(전체 16개), 연결 시도는 10초당 24회로 제한합니다.</span><span data-lang="en">Limits unauthenticated handshakes to 4 per host (16 total) and 24 connection attempts per 10 seconds.</span></div>
               </li>
               <li>
                 <svg class="sec-icon-ok" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                <div><strong data-lang="ko">공인 인터넷 유출:</strong><strong data-lang="en">Public WAN leaks:</strong> <span data-lang="ko">모든 소켓이 <code>NetworkGuard</code>를 통과하며 QR 디코딩(<code>zxing2</code>)도 기기 안에서만 돕니다.</span><span data-lang="en">Every socket passes through <code>NetworkGuard</code>, and pure-Dart <code>zxing2</code> scans QR codes offline.</span></div>
+                <div><strong data-lang="ko">외부 인터넷 연결 차단:</strong><strong data-lang="en">No public internet traffic:</strong> <span data-lang="ko">모든 소켓은 사설 IP 대역만 허용하며, QR 코드 인식(<code>zxing2</code>)도 기기 안에서 오프라인으로 처리합니다.</span><span data-lang="en">Every socket is restricted to private IP ranges, and QR scanning (<code>zxing2</code>) runs offline on the device.</span></div>
               </li>
               <li>
                 <svg class="sec-icon-ok" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                <div><strong data-lang="ko">디스크 기록 및 경로 이탈:</strong><strong data-lang="en">Disk history &amp; traversal:</strong> <span data-lang="ko">기본 RAM 전용으로 동작하며 수신 파일명은 경로 이탈을 엄격히 정제합니다.</span><span data-lang="en">Chats stay in RAM by default, and incoming filenames are sanitized against path traversal.</span></div>
+                <div><strong data-lang="ko">기본 무저장과 파일명 정리:</strong><strong data-lang="en">Memory default &amp; safe filenames:</strong> <span data-lang="ko">보관소를 켜지 않으면 대화를 디스크에 저장하지 않으며, 받은 파일 이름에서 경로 이동 문자를 제거합니다.</span><span data-lang="en">Chats stay in memory by default, and incoming filenames are stripped of path traversal sequences.</span></div>
               </li>
             </ul>
             <a class="link" href="https://github.com/gnoyx2/Intragram/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">
-              <span data-lang="ko">보안 아키텍처 문서(SECURITY.md) 읽기</span>
-              <span data-lang="en">Read full SECURITY.md specification</span>
+              <span data-lang="ko">보안 문서(SECURITY.md) 보기</span>
+              <span data-lang="en">Read SECURITY.md</span>
               <svg class="m-arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </a>
           </div>
 
           <div class="sec-card span-6">
-            <h3><span data-lang="ko">보장 범위 밖의 명시적 한계</span><span data-lang="en">Explicit boundaries to know</span></h3>
+            <h3><span data-lang="ko">알아두어야 할 한계</span><span data-lang="en">Known limitations</span></h3>
             <ul class="sec-list">
               <li>
                 <svg class="sec-icon-warn" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                <div><strong data-lang="ko">그룹 방 호스트 및 방 파일:</strong><strong data-lang="en">Group room host &amp; files:</strong> <span data-lang="ko">그룹 방은 호스트 경유 구간 암호화라 호스트가 볼 수 있고, 방 파일은 평문 전송 후 SHA-256으로 검증합니다.</span><span data-lang="en">Group rooms are hop-by-hop through the host, and room files cross the LAN unencrypted with SHA-256 checks.</span></div>
+                <div><strong data-lang="ko">그룹 대화방과 방 파일:</strong><strong data-lang="en">Group room host &amp; files:</strong> <span data-lang="ko">그룹 방은 방을 연 호스트를 거쳐 전달되므로 호스트가 내용을 볼 수 있고, 그룹 방 파일은 평문 전송 후 SHA-256으로 확인합니다.</span><span data-lang="en">Group rooms route through the host, and group files cross the LAN unencrypted with SHA-256 verification.</span></div>
               </li>
               <li>
                 <svg class="sec-icon-warn" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                <div><strong data-lang="ko">이전 HTTP 포털:</strong><strong data-lang="en">Legacy HTTP portal:</strong> <span data-lang="ko">호환용 HTTP 포털은 평문입니다. 새 앱·웹 연결은 메시지와 파일을 WebRTC로 암호화하며 이전 초대를 거부합니다.</span><span data-lang="en">The legacy HTTP portal is plaintext. New app/web connections encrypt messages and files with WebRTC and reject legacy invitations.</span></div>
+                <div><strong data-lang="ko">구형 HTTP 게스트 포털:</strong><strong data-lang="en">Legacy HTTP portal:</strong> <span data-lang="ko">호환용 HTTP 포털은 암호화되지 않습니다. 새 앱·웹 연결은 메시지와 파일을 WebRTC로 암호화합니다.</span><span data-lang="en">The legacy HTTP portal is plaintext. New app-to-web connections encrypt messages and files with WebRTC.</span></div>
               </li>
               <li>
                 <svg class="sec-icon-warn" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                <div><strong data-lang="ko">OS 캐시·물리 소거 한계:</strong><strong data-lang="en">OS swap &amp; picker caches:</strong> <span data-lang="ko">버퍼 덮어쓰기와 긴급 소거로도 Dart 문자열 사본이나 OS 스왑·공유 캐시의 물리 삭제는 보장 못 합니다.</span><span data-lang="en">Panic Wipe cannot guarantee physical flash erasure or purge OS swap, keyboard, or file-picker caches.</span></div>
+                <div><strong data-lang="ko">운영체제 캐시와 메모리 복사본:</strong><strong data-lang="en">OS swap &amp; picker caches:</strong> <span data-lang="ko">앱 버퍼를 덮어쓰거나 즉시 삭제를 실행해도 운영체제 스왑, 키보드 캐시, 파일 선택기 임시 파일까지 지우지는 못합니다.</span><span data-lang="en">Wiping app memory cannot erase OS swap space, keyboard caches, or temporary files created by system file pickers.</span></div>
               </li>
               <li>
                 <svg class="sec-icon-warn" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                <div><strong data-lang="ko">사설 대역 VPN 터널:</strong><strong data-lang="en">Private-IP VPN overlays:</strong> <span data-lang="ko">사설 주소를 할당하는 VPN이 켜져 있으면 목적지 검사만으로는 터널 경유를 막지 못합니다.</span><span data-lang="en">A VPN assigning RFC 1918 addresses will carry traffic inside its tunnel despite destination checks.</span></div>
+                <div><strong data-lang="ko">사설 대역 VPN:</strong><strong data-lang="en">Private-IP VPN tunnels:</strong> <span data-lang="ko">사설 IP 주소를 배정하는 VPN이 켜져 있으면 트래픽이 VPN 터널을 통과할 수 있습니다.</span><span data-lang="en">If a VPN assigns private RFC 1918 addresses, traffic may travel through that VPN tunnel.</span></div>
               </li>
             </ul>
             <a class="link" href="https://github.com/gnoyx2/Intragram/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer">
-              <span data-lang="ko">무수집 개인정보 방침(PRIVACY.md) 읽기</span>
-              <span data-lang="en">Read zero-collection PRIVACY.md</span>
+              <span data-lang="ko">개인정보 처리방침(PRIVACY.md) 보기</span>
+              <span data-lang="en">Read PRIVACY.md</span>
               <svg class="m-arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </a>
           </div>
@@ -712,19 +577,17 @@
       </div>
     </section>
 
-    <!-- ===================================================================
-         Screen 7: Ruled Comparison Matrix
-         =================================================================== -->
+    <!-- Screen 7: Comparison -->
     <section id="compare" class="section ground-surface" style="--h: 1; --ht: 1; --hm: 1">
       <div class="wrap">
         <div class="section-head">
           <h2>
-            <span data-lang="ko">파일 전송 도구와 클라우드 메신저 비교</span>
-            <span data-lang="en">Compared with local file tools and cloud chat</span>
+            <span data-lang="ko">다른 도구와의 비교</span>
+            <span data-lang="en">Comparison with other tools</span>
           </h2>
           <p>
-            <span data-lang="ko">단순 파일 전송엔 LocalSend가 훌륭합니다. 같은 네트워크에서 계정 없이 실시간 대화를 나눌 때 Intragram이 빈자리를 채웁니다.</span>
-            <span data-lang="en">Use LocalSend when you only need file drops; choose Intragram for live, account-free conversations on the same LAN.</span>
+            <span data-lang="ko">단발성 파일 전송에는 LocalSend나 AirDrop이 적합하고, 같은 네트워크에서 계정 없이 대화를 이어 가야 할 때는 Intragram을 쓸 수 있습니다.</span>
+            <span data-lang="en">LocalSend and AirDrop are great for quick file drops. Intragram is built for ongoing conversations on the same local network.</span>
           </p>
         </div>
 
@@ -752,21 +615,21 @@
                 <td><span data-lang="ko">예</span><span data-lang="en">Yes</span></td>
                 <td class="muted"><span data-lang="ko">전화번호 필요</span><span data-lang="en">Phone required</span></td>
                 <td><span data-lang="ko">예</span><span data-lang="en">Yes</span></td>
-                <td class="col-intragram"><span data-lang="ko">예 (가입 절차 없음)</span><span data-lang="en">Yes (zero sign-up)</span></td>
+                <td class="col-intragram"><span data-lang="ko">예 (가입 절차 없음)</span><span data-lang="en">Yes (no sign-up)</span></td>
               </tr>
               <tr>
-                <th scope="row"><span data-lang="ko">실시간 대화·답장·소각</span><span data-lang="en">Live chat, replies, burn</span></th>
+                <th scope="row"><span data-lang="ko">실시간 대화·답장·자동 삭제</span><span data-lang="en">Live chat, replies, burn</span></th>
                 <td class="muted"><span data-lang="ko">아니오</span><span data-lang="en">No</span></td>
                 <td><span data-lang="ko">예</span><span data-lang="en">Yes</span></td>
                 <td class="muted"><span data-lang="ko">단발 텍스트만</span><span data-lang="en">One-off text</span></td>
-                <td class="col-intragram"><span data-lang="ko">예 + 2분 음성 노트</span><span data-lang="en">Yes + 120s voice notes</span></td>
+                <td class="col-intragram"><span data-lang="ko">예 + 2분 음성 메시지</span><span data-lang="en">Yes + 120s voice notes</span></td>
               </tr>
               <tr>
                 <th scope="row"><span data-lang="ko">그룹 방·브라우저 참여</span><span data-lang="en">Group chat &amp; browser join</span></th>
                 <td class="muted"><span data-lang="ko">아니오</span><span data-lang="en">No</span></td>
                 <td><span data-lang="ko">예 (클라우드 서버)</span><span data-lang="en">Yes (cloud servers)</span></td>
                 <td class="muted"><span data-lang="ko">아니오</span><span data-lang="en">No</span></td>
-                <td class="col-intragram"><span data-lang="ko">예 (앱 허브 + QR 게스트)</span><span data-lang="en">Yes (app hub + QR portal)</span></td>
+                <td class="col-intragram"><span data-lang="ko">예 (앱 호스트 + 웹 연결)</span><span data-lang="en">Yes (app host + web link)</span></td>
               </tr>
               <tr>
                 <th scope="row"><span data-lang="ko">남는 기록</span><span data-lang="en">Data left on disk</span></th>
@@ -777,9 +640,9 @@
               </tr>
               <tr>
                 <th scope="row"><span data-lang="ko">지원 플랫폼</span><span data-lang="en">Platforms</span></th>
-                <td><span data-lang="ko">Apple 기기 위주</span><span data-lang="en">Apple ecosystem</span></td>
-                <td><span data-lang="ko">주요 OS 전체</span><span data-lang="en">All major OS</span></td>
-                <td><span data-lang="ko">주요 OS 전체</span><span data-lang="en">All major OS</span></td>
+                <td><span data-lang="ko">Apple 기기</span><span data-lang="en">Apple devices</span></td>
+                <td><span data-lang="ko">주요 OS 전체</span><span data-lang="en">All major OSes</span></td>
+                <td><span data-lang="ko">주요 OS 전체</span><span data-lang="en">All major OSes</span></td>
                 <td class="col-intragram">iOS, iPadOS, Android, macOS, Windows, Linux + Web</td>
               </tr>
             </tbody>
@@ -788,58 +651,57 @@
       </div>
     </section>
 
-    <section id="web" class="section ground-surface" style="--h: 1; --ht: 1; --hm: 1">
+    <!-- Screen 8: Web App -->
+    <section id="web" class="section" style="--h: 1; --ht: 1; --hm: 2">
       <div class="wrap">
         <div class="section-head">
-          <h2><span data-lang="ko">브라우저에서도 대화를 시작하세요</span><span data-lang="en">Start a conversation in your browser</span></h2>
-          <p><span data-lang="ko">같은 Wi-Fi의 두 기기에서 웹을 열고 연결 코드를 교환하세요. 설치도 계정도 연결 서버도 필요 없습니다.</span><span data-lang="en">Open the web app on two devices on the same Wi-Fi and exchange connection codes. No installation, account or signaling server.</span></p>
-          <p class="muted"><span data-lang="ko">웹 앱은 미리보기(beta)입니다. Chromium과 Firefox 자동 검사는 통과했고, Safari와 휴대폰 브라우저, 실제 두 기기 확인은 아직입니다. 탭을 열어 두어야 메시지를 받습니다.</span><span data-lang="en">The web app is a preview (beta). It passed automated Chromium and Firefox runs; Safari, phone browsers and two real devices are not checked yet. Keep the tab open to receive messages.</span></p>
+          <h2><span data-lang="ko">브라우저에서 바로 연결하기</span><span data-lang="en">Connect directly in your browser</span></h2>
+          <p><span data-lang="ko">같은 Wi-Fi에 있는 두 기기에서 웹 앱을 열고 연결 코드를 교환하세요. 별도 설치나 계정, 중계 서버 없이 연결됩니다.</span><span data-lang="en">Open the web app on two devices on the same Wi-Fi and exchange connection codes. No installation, account, or signaling server required.</span></p>
+          <p class="muted"><span data-lang="ko">웹 앱은 미리보기(beta)입니다. 데스크톱 Chromium·Firefox·Safari 자동 검사를 통과했으며, 탭을 열어 두어야 메시지를 받습니다.</span><span data-lang="en">The web app is a preview (beta). Automated runs pass on desktop Chromium, Firefox, and Safari; keep the tab open to receive messages.</span></p>
         </div>
         <div class="web-entry-grid">
           <article class="web-entry-card">
-            <p class="web-entry-label">01 · <span data-lang="ko">브라우저끼리</span><span data-lang="en">Between browsers</span></p>
-            <h3><span data-lang="ko">코드 교환으로 직접 연결</span><span data-lang="en">Exchange codes. Connect directly.</span></h3>
+            <p class="web-entry-label">01 · <span data-lang="ko">브라우저끼리</span><span data-lang="en">Browser to browser</span></p>
+            <h3><span data-lang="ko">코드 교환으로 브라우저 간 연결</span><span data-lang="en">Connect two browsers with codes</span></h3>
             <ol>
-              <li><span data-lang="ko">‘새 연결 만들기’에서 초대 코드 전달</span><span data-lang="en">Create a connection and share your invitation</span></li>
-              <li><span data-lang="ko">상대가 만든 응답 코드 입력</span><span data-lang="en">Enter your partner’s response code</span></li>
-              <li><span data-lang="ko">확인 번호를 비교하고 대화 시작</span><span data-lang="en">Compare the verification number and start chatting</span></li>
+              <li><span data-lang="ko">‘새 연결 만들기’에서 초대 코드 복사·전달</span><span data-lang="en">Create an invitation code and share it</span></li>
+              <li><span data-lang="ko">상대가 만든 응답 코드 붙여넣기</span><span data-lang="en">Paste your partner’s response code</span></li>
+              <li><span data-lang="ko">6자리 보안 번호를 비교하고 대화 시작</span><span data-lang="en">Compare the 6-digit security code and chat</span></li>
             </ol>
-            <p><span data-lang="ko">WebRTC 암호화 · 1:1과 최대 32명 방 · 파일은 64 GiB까지(브라우저가 파일 공간에 못 쓰면 메모리 100 MiB) · 대화는 기본으로 탭 메모리에만</span><span data-lang="en">Encrypted WebRTC · 1:1 and rooms of up to 32 · Files up to 64 GiB (100 MiB in memory where the browser cannot write to its file space) · Messages stay in tab memory by default</span></p>
+            <p><span data-lang="ko">WebRTC 암호화 · 1:1과 최대 32명 방 · 파일 최대 64 GiB(브라우저 파일 공간을 못 쓰면 메모리 100 MiB) · 대화는 기본으로 탭 메모리에만 유지</span><span data-lang="en">Encrypted WebRTC · 1:1 and rooms of up to 32 · Files up to 64 GiB (100 MiB in memory where browser file storage is unavailable) · Messages stay in tab memory by default</span></p>
             <a class="btn btn--primary" href="./web/" data-web-link><span data-lang="ko">웹에서 시작</span><span data-lang="en">Open web app</span></a>
           </article>
           <article class="web-entry-card">
             <p class="web-entry-label">02 · <span data-lang="ko">앱과 브라우저</span><span data-lang="en">App to browser</span></p>
-            <h3><span data-lang="ko">앱에서도 같은 코드로 암호화 연결</span><span data-lang="en">Encrypted app-to-browser connection</span></h3>
+            <h3><span data-lang="ko">설치된 앱과 브라우저 연결</span><span data-lang="en">Connect the native app and a browser</span></h3>
             <ol>
-              <li><span data-lang="ko">앱에서 ‘암호화 웹 연결’ 열기</span><span data-lang="en">Open Encrypted web connection in the app</span></li>
-              <li><span data-lang="ko">앱과 웹 사이 초대·응답 코드 교환</span><span data-lang="en">Exchange invitation and response codes</span></li>
-              <li><span data-lang="ko">양쪽 확인 번호를 비교하고 대화 시작</span><span data-lang="en">Compare both verification numbers and start chatting</span></li>
+              <li><span data-lang="ko">앱에서 ‘앱·웹 암호화 연결’ 열기</span><span data-lang="en">Open Encrypted app–web connection in the app</span></li>
+              <li><span data-lang="ko">앱과 브라우저 사이에 초대·응답 코드 교환</span><span data-lang="en">Exchange invitation and response codes</span></li>
+              <li><span data-lang="ko">양쪽 6자리 보안 번호를 비교하고 대화 시작</span><span data-lang="en">Compare both 6-digit numbers and start chatting</span></li>
             </ol>
-            <p><span data-lang="ko">앱과 웹의 메시지·파일도 WebRTC 암호화 · 외부 연결 서버 없음</span><span data-lang="en">App messages and files also use encrypted WebRTC · No signaling server</span></p>
-            <p class="muted"><span data-lang="ko">v1.0.0-rc.1 설치 파일은 이 연결이 생기기 전에 만든 것이라 웹 앱과 연결할 수 없습니다. 이후 릴리스나 소스 빌드가 필요합니다.</span><span data-lang="en">The v1.0.0-rc.1 downloads were built before this connection existed and cannot connect to the web app. A later release or a build from source is needed.</span></p>
-            <a class="btn btn--secondary" href="./web/?mode=portal" data-web-link><span data-lang="ko">앱과 암호화 연결</span><span data-lang="en">Connect to the app securely</span></a>
+            <p><span data-lang="ko">앱과 웹의 메시지·파일도 WebRTC 암호화 · 외부 시그널링 서버 없음</span><span data-lang="en">App messages and files also use encrypted WebRTC · No signaling server</span></p>
+            <p class="muted"><span data-lang="ko">v1.0.0-rc.1 설치 파일은 웹 연결 기능이 들어가기 전 빌드이므로, 앱·웹 연결에는 이후 릴리스나 최신 소스 빌드가 필요합니다.</span><span data-lang="en">The v1.0.0-rc.1 downloads were built before web linking was added; use a newer release or build from source to connect app and web.</span></p>
+            <a class="btn btn--secondary" href="./web/?mode=portal" data-web-link><span data-lang="ko">앱과 암호화 연결</span><span data-lang="en">Connect with app</span></a>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ===================================================================
-         Screen 8: Six-Platform Downloads + Parcel Pigeon + Attestation CLI
-         =================================================================== -->
-    <section id="install" class="section" style="--h: 1; --ht: 1; --hm: 2">
+    <!-- Screen 9: Downloads -->
+    <section id="install" class="section ground-surface" style="--h: 1; --ht: 1; --hm: 2">
       <div class="wrap">
         <div class="section-head--row">
           <div class="head-copy">
             <h2>
-              <span data-lang="ko">6개 운영체제 설치 파일과 출처 검증</span>
-              <span data-lang="en">Six-platform downloads and build verification</span>
+              <span data-lang="ko">운영체제별 설치 파일</span>
+              <span data-lang="en">Downloads by operating system</span>
             </h2>
             <p class="muted">
-              <span data-lang="ko">v1.0.0-rc.1 프리릴리스는 자동 CI 검증을 통과했으며 실기기 점검표(DEVICE_QA.md) 완료 전 단계입니다. 사설 네트워크에서만 방화벽을 허용하세요.</span>
-              <span data-lang="en">v1.0.0-rc.1 passed automated CI checks while real-device sign-off in DEVICE_QA.md is in progress. Allow firewall prompts on private networks only.</span>
+              <span data-lang="ko">현재 공개된 v1.0.0-rc.1은 테스트용 프리릴리스입니다. 사설 네트워크(가정·사무실 Wi-Fi)에서만 방화벽을 허용하세요.</span>
+              <span data-lang="en">v1.0.0-rc.1 is a pre-release build for testing. Allow firewall prompts on private networks only.</span>
             </p>
           </div>
-          <img class="install-mascot" src="./assets/mascot-parcel-192.png" alt="" aria-hidden="true" width="72" height="76" decoding="async" />
+          <img class="install-mascot" src="./assets/mascot-parcel-192.png" alt="" aria-hidden="true" width="72" height="76" loading="lazy" decoding="async" />
         </div>
 
         <div class="grid dl-grid">
@@ -850,8 +712,8 @@
                 <span class="detected-badge"><span data-lang="ko">현재 기기</span><span data-lang="en">Detected</span></span>
               </div>
               <p class="dl-note" style="margin-top:var(--s-2);">
-                <span data-lang="ko">Android 7.0 (API 24)+ ARM·x64 통합 APK. 정식 서명 키가 확인된 빌드만 게시합니다.</span>
-                <span data-lang="en">Android 7.0 (API 24)+ universal APK. Debug-signed APKs are never published.</span>
+                <span data-lang="ko">Android 7.0 (API 24)+ ARM·x64 통합 APK. 릴리스 서명 키로 서명된 빌드입니다.</span>
+                <span data-lang="en">Android 7.0 (API 24)+ universal APK signed with the release key.</span>
               </p>
             </div>
             <div class="dl-links">
@@ -868,16 +730,13 @@
                 <span class="detected-badge"><span data-lang="ko">현재 기기</span><span data-lang="en">Detected</span></span>
               </div>
               <p class="dl-note" style="margin-top:var(--s-2);">
-                <span data-lang="ko">macOS 12.0+ Universal. 미공증 ad-hoc 서명이므로 첫 실행 시 개인정보 보호 및 보안에서 열기를 허용하세요.</span>
-                <span data-lang="en">macOS 12.0+ Universal. Ad-hoc signed; allow first launch in Privacy &amp; Security › Open Anyway.</span>
+                <span data-lang="ko">macOS 12.0+ Universal DMG. 공증 전 빌드는 첫 실행 시 시스템 설정 › 개인정보 보호 및 보안에서 열기를 허용하세요.</span>
+                <span data-lang="en">macOS 12.0+ Universal DMG. On first launch, allow it in System Settings › Privacy &amp; Security.</span>
               </p>
             </div>
             <div class="dl-links">
               <a class="btn btn--primary" href="https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.1/intragram-macos.dmg" rel="noopener">
                 <span data-lang="ko">DMG 다운로드</span><span data-lang="en">Download DMG</span>
-              </a>
-              <a class="btn btn--secondary" href="https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.1/intragram-macos.zip" rel="noopener">
-                <span data-lang="ko">ZIP 받기</span><span data-lang="en">Get ZIP</span>
               </a>
             </div>
           </article>
@@ -889,8 +748,8 @@
                 <span class="detected-badge"><span data-lang="ko">현재 기기</span><span data-lang="en">Detected</span></span>
               </div>
               <p class="dl-note" style="margin-top:var(--s-2);">
-                <span data-lang="ko">Windows 10+ 포터블. 폴더 전체 압축을 풀고 DLL 및 <code>data</code> 폴더와 함께 실행하세요.</span>
-                <span data-lang="en">Windows 10+ portable. Extract the entire archive and keep DLLs and <code>data</code> beside <code>intragram.exe</code>.</span>
+                <span data-lang="ko">Windows 10+ 포터블 ZIP. 압축을 모두 풀고 같은 폴더의 DLL 및 <code>data</code> 폴더와 함께 실행하세요.</span>
+                <span data-lang="en">Windows 10+ portable ZIP. Extract all files and keep DLLs and <code>data</code> beside <code>intragram.exe</code>.</span>
               </p>
             </div>
             <div class="dl-links">
@@ -907,7 +766,7 @@
                 <span class="detected-badge"><span data-lang="ko">현재 기기</span><span data-lang="en">Detected</span></span>
               </div>
               <p class="dl-note" style="margin-top:var(--s-2);">
-                <span data-lang="ko">GTK 3 실험 번들. <code>./intragram</code> 실행, <code>avahi-daemon</code> 및 <code>xdg-desktop-portal</code> 필요.</span>
+                <span data-lang="ko">GTK 3 실험 번들. <code>./intragram</code>으로 실행하며 <code>avahi-daemon</code>과 <code>xdg-desktop-portal</code>이 필요합니다.</span>
                 <span data-lang="en">GTK 3 experimental bundle. Requires <code>avahi-daemon</code>, <code>libgtk-3</code>, and PipeWire or PulseAudio tools.</span>
               </p>
             </div>
@@ -925,13 +784,13 @@
                 <span class="detected-badge"><span data-lang="ko">현재 기기</span><span data-lang="en">Detected</span></span>
               </div>
               <p class="dl-note" style="margin-top:var(--s-2);">
-                <span data-lang="ko">iOS 15.0+ 미서명 <code>.ipa</code>. Apple 개발자 프로비저닝 프로파일로 직접 재서명해 설치합니다.</span>
-                <span data-lang="en">iOS 15.0+ unsigned <code>.ipa</code> for advanced re-signing with an Apple provisioning profile.</span>
+                <span data-lang="ko">iOS 15.0+ 미서명 <code>.ipa</code>. 본인 Apple 개발자 인증서와 프로비저닝 프로필로 서명해 설치합니다.</span>
+                <span data-lang="en">iOS 15.0+ unsigned <code>.ipa</code>. Re-sign with your own Apple developer profile before installing.</span>
               </p>
             </div>
             <div class="dl-links">
               <a class="btn btn--secondary" href="https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.1/intragram-ios-unsigned.ipa" rel="noopener">
-                <span data-lang="ko">미서명 IPA 받기</span><span data-lang="en">Get unsigned IPA</span>
+                <span data-lang="ko">미서명 IPA 받기</span><span data-lang="en">Download unsigned IPA</span>
               </a>
             </div>
           </article>
@@ -942,8 +801,8 @@
                 <h3 class="dl-os"><span data-lang="ko">Intragram Web · 미리보기(beta)</span><span data-lang="en">Intragram Web · preview (beta)</span></h3>
               </div>
               <p class="dl-note" style="margin-top:var(--s-2);">
-                <span data-lang="ko">앱이나 브라우저와 연결 코드를 교환해 암호화된 대화와 파일을 주고받으세요.</span>
-                <span data-lang="en">Exchange codes to share encrypted messages and files with the app or another browser.</span>
+                <span data-lang="ko">설치 없이 브라우저에서 연결 코드를 교환해 암호화된 메시지와 파일을 주고받습니다.</span>
+                <span data-lang="en">Exchange connection codes in your browser to send encrypted messages and files without installing.</span>
               </p>
             </div>
             <div class="dl-links">
@@ -955,92 +814,67 @@
         </div>
 
         <div class="code-panel">
-          <div class="code-panel-head">
-            <span class="code-panel-title">
-              <span data-lang="ko">SHA-256 체크섬 및 GitHub Actions 빌드 출처 증명 검증</span>
-              <span data-lang="en">Verify SHA-256 checksums and GitHub Actions build provenance</span>
-            </span>
-            <button type="button" class="copy-btn" data-copy-target="verify-cmd">
-              <span data-lang="ko">명령어 복사</span>
-              <span data-lang="en">Copy commands</span>
-            </button>
-          </div>
           <pre id="verify-cmd"><code>shasum -a 256 -c --ignore-missing SHA256SUMS.txt
 gh attestation verify intragram-macos.dmg --repo gnoyx2/Intragram</code></pre>
         </div>
       </div>
     </section>
 
-    <!-- ===================================================================
-         Screen 9: Open Troubleshooting Rows & Build from Source
-         =================================================================== -->
-    <section id="faq" class="section ground-surface" style="--h: 1; --ht: 1; --hm: 2">
+    <!-- Screen 10: Troubleshooting & Source Build -->
+    <section id="faq" class="section" style="--h: 1; --ht: 1; --hm: 1">
       <div class="wrap">
         <div class="section-head">
           <h2>
-            <span data-lang="ko">자주 겪는 네트워크 환경과 소스 빌드</span>
-            <span data-lang="en">Local network answers and source build</span>
+            <span data-lang="ko">연결 문제 해결과 소스 빌드</span>
+            <span data-lang="en">Connection troubleshooting and building from source</span>
           </h2>
           <p>
-            <span data-lang="ko">공유기 격리나 방화벽 설정 때문에 탐색이 막힐 때 바로 확인할 수 있는 네 가지 해결책입니다.</span>
-            <span data-lang="en">Four immediate checks when router isolation, CGNAT, or OS firewall prompts block local discovery.</span>
+            <span data-lang="ko">공유기 격리 설정이나 운영체제 방화벽 때문에 상대 기기가 보이지 않을 때 확인할 항목입니다.</span>
+            <span data-lang="en">What to check when router isolation, CGNAT, or OS firewall settings block discovery.</span>
           </p>
         </div>
 
         <div class="grid faq-open-grid">
           <div class="faq-open-item span-6">
-            <h3><span data-lang="ko">같은 Wi-Fi인데 상대 기기가 보이지 않을 때</span><span data-lang="en">Peers missing on guest or office Wi-Fi</span></h3>
-            <p><span data-lang="ko">카페·회사·학교 공유기의 클라이언트 격리(AP Isolation) 때문일 수 있습니다. 폰 핫스팟으로 묶거나 멀티캐스트만 막힌 경우 <code>⌘/Ctrl+N</code> IP 직접 연결·기기 QR 스캔을 쓰세요.</span><span data-lang="en">Guest and office routers often enable AP client isolation. Join a phone hotspot together, or connect directly by IP (<code>⌘/Ctrl+N</code>) or device QR if only multicast is filtered.</span></p>
+            <h3><span data-lang="ko">같은 Wi-Fi인데 상대 기기가 보이지 않을 때</span><span data-lang="en">Devices do not appear on guest or office Wi-Fi</span></h3>
+            <p><span data-lang="ko">카페·회사·학교 공유기의 클라이언트 격리(AP Isolation) 때문일 수 있습니다. 휴대폰 핫스팟에 함께 연결하거나, 멀티캐스트만 막힌 망이면 <code>⌘/Ctrl+N</code> IP 직접 입력 또는 기기 QR 스캔을 사용하세요.</span><span data-lang="en">Public and office routers often isolate Wi-Fi clients. Connect both devices to a phone hotspot, or use direct IP connect (<code>⌘/Ctrl+N</code>) or device QR scan if only multicast is blocked.</span></p>
           </div>
 
           <div class="faq-open-item span-6">
-            <h3><span data-lang="ko">이 Wi-Fi를 쓸 수 없다는 안내가 뜰 때</span><span data-lang="en">Warning that this Wi-Fi cannot be used</span></h3>
-            <p><span data-lang="ko">공유기가 공인 IP나 통신사 CGNAT(<code>100.64.x.x</code>) 대역을 할당한 상태입니다. 사설 공유기나 모바일 핫스팟으로 전환하면 즉시 해결됩니다.</span><span data-lang="en">The network assigned a public or carrier-grade NAT (<code>100.64.x.x</code>) address, which <code>NetworkGuard</code> refuses. Switch to a private router or phone hotspot.</span></p>
+            <h3><span data-lang="ko">이 Wi-Fi에서는 쓸 수 없다는 안내가 뜰 때</span><span data-lang="en">Banner says this Wi-Fi cannot be used</span></h3>
+            <p><span data-lang="ko">공유기가 공인 IP나 통신사 CGNAT(<code>100.64.x.x</code>) 대역을 배정한 경우 사설망 보호를 위해 연결을 거부합니다. 일반 가정용 공유기나 휴대폰 핫스팟으로 전환하세요.</span><span data-lang="en">The network assigned a public IP or carrier-grade NAT (<code>100.64.x.x</code>) address, which <code>NetworkGuard</code> refuses. Switch to a private router or phone hotspot.</span></p>
           </div>
 
           <div class="faq-open-item span-6">
-            <h3><span data-lang="ko">OS 권한 및 방화벽 포트(7890) 확인</span><span data-lang="en">OS local network permissions and port 7890</span></h3>
-            <p><span data-lang="ko">iOS·macOS는 설정에서 로컬 네트워크 권한을 켜고, Windows는 개인 네트워크 방화벽 허용, Linux는 <code>ufw</code>/<code>firewalld</code>에서 표시된 포트(기본 <code>7890</code>)를 열어 주세요.</span><span data-lang="en">Allow Local Network in iOS/macOS Settings, allow private-network firewall access on Windows, and open port <code>7890</code> in <code>ufw</code> or <code>firewalld</code> on Linux.</span></p>
+            <h3><span data-lang="ko">운영체제 로컬 네트워크 권한과 방화벽 포트(7890)</span><span data-lang="en">OS local network permissions and port 7890</span></h3>
+            <p><span data-lang="ko">iOS·macOS는 시스템 설정에서 로컬 네트워크 권한을 켜고, Windows는 개인 네트워크 방화벽 허용, Linux는 <code>ufw</code>/<code>firewalld</code>에서 포트(기본 <code>7890</code>)를 열어 주세요.</span><span data-lang="en">Allow Local Network in iOS/macOS Settings, allow private-network firewall access on Windows, and open port <code>7890</code> in <code>ufw</code> or <code>firewalld</code> on Linux.</span></p>
           </div>
 
           <div class="faq-open-item span-6">
-            <h3><span data-lang="ko">iPhone 화면을 닫으면 잠시 뒤 끊기는 이유</span><span data-lang="en">iOS background socket suspension</span></h3>
-            <p><span data-lang="ko">외부 푸시 서버를 두지 않기 때문에 iOS가 백그라운드 소켓을 일시 중단합니다. 앱을 다시 열면 주변 피어와 곧바로 재연결됩니다.</span><span data-lang="en">Because there is no external push server, iOS suspends background sockets after a few seconds. Reopen Intragram to reconnect right away.</span></p>
+            <h3><span data-lang="ko">iPhone 화면을 끄면 잠시 뒤 연결이 끊기는 이유</span><span data-lang="en">Why iOS disconnects when the screen locks</span></h3>
+            <p><span data-lang="ko">외부 푸시 서버를 쓰지 않기 때문에 iOS가 백그라운드 소켓을 잠시 뒤 일시 중단합니다. 앱을 다시 열면 주변 기기와 바로 재연결됩니다.</span><span data-lang="en">Without an external push server, iOS suspends background sockets after a short time. Reopen the app to reconnect.</span></p>
           </div>
         </div>
 
         <div class="code-panel">
-          <div class="code-panel-head">
-            <span class="code-panel-title">
-              <span data-lang="ko">소스 빌드 및 CI 동일 검증 실행 (Flutter 3.44.9)</span>
-              <span data-lang="en">Build from source and run full CI checks (Flutter 3.44.9)</span>
-            </span>
-            <button type="button" class="copy-btn" data-copy-target="build-cmd">
-              <span data-lang="ko">명령어 복사</span>
-              <span data-lang="en">Copy commands</span>
-            </button>
-          </div>
           <pre id="build-cmd"><code>git clone https://github.com/gnoyx2/Intragram.git &amp;&amp; cd Intragram
-flutter pub get --enforce-lockfile &amp;&amp; flutter analyze &amp;&amp; python3 tool/check_loc.py &amp;&amp; flutter test --exclude-tags large</code></pre>
+flutter pub get --enforce-lockfile &amp;&amp; flutter test --exclude-tags large</code></pre>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- =====================================================================
-       Footer: Dealt Closing Call + Documentation Directory + One Legal Line
-       ===================================================================== -->
   <footer id="contact" class="closing">
     <div class="wrap">
       <div class="closing-call">
         <div class="closing-copy">
           <h2>
-            <span data-lang="ko">외부 서버 없이 지금 같은 Wi-Fi에서 시작하세요</span>
-            <span data-lang="en">Start chatting on your Wi-Fi with zero servers</span>
+            <span data-lang="ko">같은 Wi-Fi에서 바로 대화를 시작해 보세요</span>
+            <span data-lang="en">Start a conversation on your local Wi-Fi</span>
           </h2>
           <p>
-            <span data-lang="ko">앱과 브라우저에서 연결 코드를 교환하세요. 메시지와 파일을 암호화해 직접 주고받습니다.</span>
-            <span data-lang="en">Exchange connection codes in the app or browser to share encrypted messages and files.</span>
+            <span data-lang="ko">앱을 설치하거나 브라우저에서 연결 코드를 교환해 메시지와 파일을 주고받을 수 있습니다.</span>
+            <span data-lang="en">Install the app or exchange connection codes in your browser to send encrypted messages and files.</span>
           </p>
         </div>
         <div class="btn-row">
@@ -1056,48 +890,50 @@ flutter pub get --enforce-lockfile &amp;&amp; flutter analyze &amp;&amp; python3
         </div>
       </div>
 
-      <div class="grid footer-dir">
-        <div class="span-6">
-          <a class="nav__logo" href="#top">
-            <img class="brand-icon-light" src="./assets/icon-light-72.png" alt="" aria-hidden="true" width="34" height="34" decoding="async" />
-            <img class="brand-icon-dark" src="./assets/icon-dark-72.png" alt="" aria-hidden="true" width="34" height="34" decoding="async" />
-            <span>Intragram</span>
-          </a>
-          <p class="muted measure" style="margin-top:var(--s-3);">
-            <span data-lang="ko">같은 네트워크 안의 기기끼리 직접 연결하는 오픈소스 P2P 메신저. 클라우드 없는 로컬 워크플로에 영감을 준 LocalSend 프로젝트에 감사드립니다.</span>
-            <span data-lang="en">Open-source peer-to-peer messenger for devices on the same network. With gratitude to LocalSend for inspiring cloud-free local tools.</span>
-          </p>
+      <div class="footer-bottom">
+        <div class="grid footer-dir">
+          <div class="span-6">
+            <a class="nav__logo" href="#top">
+              <img class="brand-icon-light" src="./assets/icon-light-72.png" alt="" aria-hidden="true" width="34" height="34" loading="lazy" decoding="async" />
+              <img class="brand-icon-dark" src="./assets/icon-dark-72.png" alt="" aria-hidden="true" width="34" height="34" loading="lazy" decoding="async" />
+              <span>Intragram</span>
+            </a>
+            <p class="muted measure" style="margin-top:var(--s-3);">
+              <span data-lang="ko">같은 네트워크의 기기끼리 직접 연결하는 오픈소스 로컬 메신저입니다. 로컬 파일 전송 도구인 LocalSend에서 영감을 받았습니다.</span>
+              <span data-lang="en">Open-source local messenger for devices on the same network, inspired by LocalSend.</span>
+            </p>
+          </div>
+
+          <div class="span-3">
+            <p class="footer-col-title"><span data-lang="ko">문서 및 정책</span><span data-lang="en">Documentation</span></p>
+            <ul class="footer-links">
+              <li><a href="./web/" data-web-link><span data-lang="ko">Intragram Web 열기</span><span data-lang="en">Open Intragram Web</span></a></li>
+              <li><a href="https://github.com/gnoyx2/Intragram#readme" target="_blank" rel="noopener noreferrer">README (EN / KO)</a></li>
+              <li><a href="https://github.com/gnoyx2/Intragram/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">보안 정책 (SECURITY.md)</span><span data-lang="en">Security policy</span></a></li>
+              <li><a href="https://github.com/gnoyx2/Intragram/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">개인정보 처리방침 (PRIVACY.md)</span><span data-lang="en">Privacy policy</span></a></li>
+              <li><a href="https://github.com/gnoyx2/Intragram/blob/main/DEVICE_QA.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">실기기 점검표 (DEVICE_QA.md)</span><span data-lang="en">Device QA checklist</span></a></li>
+            </ul>
+          </div>
+
+          <div class="span-3">
+            <p class="footer-col-title"><span data-lang="ko">릴리스 및 소스</span><span data-lang="en">Releases &amp; Source</span></p>
+            <ul class="footer-links">
+              <li><a href="https://github.com/gnoyx2/Intragram/releases" target="_blank" rel="noopener noreferrer"><span data-lang="ko">GitHub 릴리스</span><span data-lang="en">GitHub Releases</span></a></li>
+              <li><a href="https://github.com/gnoyx2/Intragram/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">기여 안내</span><span data-lang="en">Contributing guide</span></a></li>
+              <li><a href="https://github.com/gnoyx2/Intragram/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">변경 이력</span><span data-lang="en">Changelog</span></a></li>
+              <li><a href="https://github.com/gnoyx2/Intragram/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><span data-lang="ko">MIT 라이선스</span><span data-lang="en">MIT License</span></a></li>
+              <li><a href="https://github.com/gnoyx2/Intragram/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">오픈소스 고지</span><span data-lang="en">Third-party notices</span></a></li>
+            </ul>
+          </div>
         </div>
 
-        <div class="span-3">
-          <p class="footer-col-title"><span data-lang="ko">문서 및 정책</span><span data-lang="en">Documentation</span></p>
-          <ul class="footer-links">
-            <li><a href="./web/" data-web-link><span data-lang="ko">Intragram Web 열기</span><span data-lang="en">Open Intragram Web</span></a></li>
-            <li><a href="https://github.com/gnoyx2/Intragram#readme" target="_blank" rel="noopener noreferrer">README (EN / KO)</a></li>
-            <li><a href="https://github.com/gnoyx2/Intragram/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">보안 정책 (SECURITY.md)</span><span data-lang="en">Security policy</span></a></li>
-            <li><a href="https://github.com/gnoyx2/Intragram/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">개인정보 방침 (PRIVACY.md)</span><span data-lang="en">Privacy policy</span></a></li>
-            <li><a href="https://github.com/gnoyx2/Intragram/blob/main/DEVICE_QA.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">실기기 점검표 (DEVICE_QA.md)</span><span data-lang="en">Device QA checklist</span></a></li>
-          </ul>
+        <div class="footer-legal">
+          <span>MIT License · © 2026 Intragram Contributors (two LocalSend-derived helpers also carry Apache-2.0)</span>
+          <span>
+            <span data-lang="ko">Intragram은 Instagram, Telegram, Meta와 무관한 독립 오픈소스 프로젝트입니다. 제품명과 로고는 각 소유자의 상표입니다.</span>
+            <span data-lang="en">Intragram is not affiliated with Instagram, Telegram, or Meta. Product names and logos are trademarks of their owners.</span>
+          </span>
         </div>
-
-        <div class="span-3">
-          <p class="footer-col-title"><span data-lang="ko">릴리스 및 커뮤니티</span><span data-lang="en">Releases &amp; Source</span></p>
-          <ul class="footer-links">
-            <li><a href="https://github.com/gnoyx2/Intragram/releases" target="_blank" rel="noopener noreferrer"><span data-lang="ko">GitHub 릴리스</span><span data-lang="en">GitHub Releases</span></a></li>
-            <li><a href="https://github.com/gnoyx2/Intragram/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">기여 안내 (CONTRIBUTING.md)</span><span data-lang="en">Contributing guide</span></a></li>
-            <li><a href="https://github.com/gnoyx2/Intragram/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">변경 이력 (CHANGELOG.md)</span><span data-lang="en">Changelog</span></a></li>
-            <li><a href="https://github.com/gnoyx2/Intragram/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><span data-lang="ko">MIT 라이선스</span><span data-lang="en">MIT License</span></a></li>
-            <li><a href="https://github.com/gnoyx2/Intragram/blob/main/THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener noreferrer"><span data-lang="ko">오픈소스 고지</span><span data-lang="en">Third-party notices</span></a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-legal">
-        <span>MIT License · © 2026 Intragram Contributors (two LocalSend-derived helpers also carry Apache-2.0)</span>
-        <span>
-          <span data-lang="ko">Intragram은 Instagram, Telegram, Meta와 무관한 독립 오픈소스 프로젝트입니다. 제품명과 로고는 각 소유자의 상표입니다.</span>
-          <span data-lang="en">Intragram is not affiliated with Instagram, Telegram, or Meta. Product names and logos are trademarks of their owners.</span>
-        </span>
       </div>
     </div>
   </footer>

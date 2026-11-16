@@ -1,8 +1,5 @@
 /* ==========================================================================
-   Intragram Landing Page — Layout, Components & Micro-Interaction Layer (v2)
-   Built with Leonxlnx/taste-skill (design-taste-frontend 2.5)
-   + nextlevelbuilder/ui-ux-pro-max-skill
-   100% Token-Driven (Zero Hardcoded Hex Values, Zero Scroll-Reveal Slop)
+   Intragram Landing Page — Layout & Component Styles
    ========================================================================== */
 
 *,
@@ -36,7 +33,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- Bilingual Toggle Engine (Zero FOUC, SEO-Crawlable) --- */
+/* --- Bilingual Toggle --- */
 html[lang="ko"] [data-lang="en"] {
   display: none !important;
 }
@@ -45,7 +42,7 @@ html[lang="en"] [data-lang="ko"] {
   display: none !important;
 }
 
-/* --- Theme-Aware Brand App Icon Switching --- */
+/* --- Theme-Aware Brand App Icon --- */
 .brand-icon-dark {
   display: none;
 }
@@ -67,7 +64,7 @@ html[lang="en"] [data-lang="ko"] {
   display: block;
 }
 
-/* --- Universal Accessibility & Skip Link (Never Shifts Nav Left Edge) --- */
+/* --- Accessibility & Skip Link --- */
 :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
@@ -110,7 +107,7 @@ html[lang="en"] [data-lang="ko"] {
   font-weight: var(--w-medium);
 }
 
-/* --- Typography System (Sentence Case, Tight Display Tracking, >= 13px) --- */
+/* --- Typography --- */
 h1,
 h2,
 h3,
@@ -147,6 +144,7 @@ dd,
 figure,
 pre {
   margin: 0;
+  text-wrap: pretty;
 }
 
 code,
@@ -173,7 +171,7 @@ img {
   display: block;
 }
 
-/* --- Equal-Edge Container & 12-Column Grid (layout-v4.md Section 4) --- */
+/* --- Container & 12-Column Grid --- */
 .wrap {
   width: min(calc(100% - 2 * var(--gut)), var(--wrap-max));
   margin-inline: auto;
@@ -216,7 +214,7 @@ img {
   grid-column: 1 / -1;
 }
 
-/* --- Screen-Aligned Sections (One or Two Screens, Ground Separation Only) --- */
+/* --- Screen-Aligned Sections --- */
 main > section {
   position: relative;
   height: calc(var(--h, 1) * 100svh);
@@ -258,7 +256,6 @@ main > section.hero > .wrap {
   }
 }
 
-/* Accessibility escape hatch for short landscape windows or high browser zoom */
 @media (max-height: 44rem) {
   main > section {
     height: auto;
@@ -291,7 +288,7 @@ main > section.hero > .wrap {
   gap: var(--s-2);
 }
 
-/* --- Fixed Opaque Navigation Bar (taste-skill system.md Nav) --- */
+/* --- Fixed Navigation Bar --- */
 header.nav {
   position: fixed;
   inset: 0 0 auto 0;
@@ -366,7 +363,6 @@ header.nav {
   flex-shrink: 0;
 }
 
-/* Compact Language & Theme Switches */
 .seg-group {
   display: inline-flex;
   align-items: center;
@@ -417,7 +413,6 @@ header.nav {
   cursor: pointer;
 }
 
-/* Full-Screen Mobile Menu Sheet (< 1024px) */
 .nav__sheet {
   position: fixed;
   inset: var(--nav) 0 0 0;
@@ -480,7 +475,7 @@ header.nav {
   }
 }
 
-/* --- Unified Button Pair & Links (taste-skill system.md & motion.md) --- */
+/* --- Unified Buttons & Links --- */
 .btn-row {
   display: flex;
   flex-wrap: wrap;
@@ -542,7 +537,6 @@ header.nav {
     color var(--m-in) var(--m-ease);
 }
 
-/* --- Hover & Pointer Micro-Animation Layer (motion.md House Rule 5) --- */
 @media (hover: hover) and (pointer: fine) {
   .btn:hover {
     transform: translateY(-1px);
@@ -570,18 +564,9 @@ header.nav {
     color: var(--text-primary);
     background-size: 100% 1px;
   }
-  .card--link:hover {
-    transform: translateY(-2px);
-    border-color: var(--hairline-strong);
-    box-shadow: var(--shadow-hover);
-  }
-  .m-zoom:hover .frame__img,
-  .card--link:hover .frame__img {
-    transform: scale(1.028);
-  }
 }
 
-/* --- Screen 1: Hero + Carrier Pigeon Companion + Live App Window --- */
+/* --- Screen 1: Hero --- */
 .hero > .wrap {
   justify-content: center;
 }
@@ -616,7 +601,6 @@ header.nav {
   max-inline-size: 46ch;
 }
 
-/* Prominent Carrier Pigeon Mascot Companion Card in Hero */
 .mascot-companion {
   display: grid;
   grid-template-columns: 5.5rem minmax(0, 1fr);
@@ -626,26 +610,7 @@ header.nav {
   border-radius: var(--r-lg);
   background-color: var(--card-bg);
   border: 1px solid var(--hairline);
-  text-align: left;
-  cursor: pointer;
   width: 100%;
-  font-family: var(--font-sans);
-  color: var(--text-primary);
-  transition:
-    transform var(--m-out) var(--m-ease),
-    border-color var(--m-in) var(--m-ease),
-    box-shadow var(--m-out) var(--m-ease);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .mascot-companion:hover {
-    transform: translateY(-2px);
-    border-color: var(--hairline-strong);
-    box-shadow: var(--shadow-hover);
-  }
-  .mascot-companion:hover .mascot-pedestal img {
-    transform: scale(1.03);
-  }
 }
 
 .mascot-pedestal {
@@ -664,7 +629,6 @@ header.nav {
   width: 4.75rem;
   height: 4.75rem;
   object-fit: contain;
-  transition: transform var(--m-image) var(--m-ease);
 }
 
 .mascot-meta {
@@ -684,13 +648,6 @@ header.nav {
   color: var(--text-secondary);
 }
 
-.mascot-cue {
-  font-size: var(--t-label);
-  font-weight: var(--w-medium);
-  color: var(--text-accent);
-}
-
-/* Right Column: Lit Stage Holding Live Intragram Software Window */
 .hero__window {
   border-radius: var(--r-lg);
   padding: var(--s-4);
@@ -744,41 +701,6 @@ header.nav {
   color: var(--frag-muted);
 }
 
-.demo-tablist {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
-  padding: 6px;
-  background-color: var(--frag-subtle);
-  border-bottom: 1px solid var(--frag-border);
-}
-
-.demo-tab {
-  appearance: none;
-  border: 1px solid transparent;
-  border-radius: var(--r-sm);
-  background: transparent;
-  color: var(--frag-muted);
-  font-family: var(--font-sans);
-  font-size: var(--t-small);
-  font-weight: var(--w-medium);
-  min-height: 2.375rem;
-  padding-inline: var(--s-2);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  transition:
-    background-color var(--m-slide) var(--m-ease),
-    color var(--m-slide) var(--m-ease);
-}
-
-.demo-tab[aria-selected="true"] {
-  background-color: var(--text-primary);
-  color: var(--bg-canvas);
-}
-
 .demo-panel {
   padding: var(--s-4);
   display: flex;
@@ -786,11 +708,6 @@ header.nav {
   justify-content: space-between;
   gap: var(--s-3);
   flex: 1;
-  min-height: 22.5rem;
-}
-
-.demo-panel[hidden] {
-  display: none;
 }
 
 .chat-peer-bar {
@@ -844,24 +761,13 @@ header.nav {
   border: 1px solid var(--status-ok-border);
 }
 
-.sas-badge[data-verified="false"] {
-  background-color: var(--status-warn-bg);
-  color: var(--status-warn-fg);
-  border-color: var(--status-warn-border);
-}
-
 .chat-stream {
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
 }
 
-.chat-stream[hidden] {
-  display: none;
-}
-
 .msg-bubble {
-  max-width: 88%;
   padding: var(--s-2) var(--s-3);
   border-radius: var(--r-md);
   font-size: var(--t-small);
@@ -872,14 +778,12 @@ header.nav {
 }
 
 .msg-theirs {
-  align-self: flex-start;
   background-color: var(--bubble-theirs-bg);
   color: var(--bubble-theirs-fg);
   border: 1px solid var(--bubble-theirs-edge);
 }
 
 .msg-mine {
-  align-self: flex-end;
   background-color: var(--bubble-mine-bg);
   color: var(--bubble-mine-fg);
   border: 1px solid var(--bubble-mine-edge);
@@ -912,129 +816,14 @@ header.nav {
   font-weight: var(--w-medium);
 }
 
-.demo-wipe-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: var(--s-2);
-  padding: var(--s-4);
-  border-radius: var(--r-md);
-  background-color: var(--frag-subtle);
-  border: 1px solid var(--frag-border);
-}
-
-.demo-wipe-state[hidden] {
-  display: none;
-}
-
-.demo-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2);
+.demo-status-foot {
   padding-top: var(--s-2);
   border-top: 1px solid var(--frag-border);
-}
-
-.chip-btn {
-  appearance: none;
-  min-height: 2.25rem;
-  padding-inline: var(--s-3);
-  border-radius: var(--r-sm);
-  border: 1px solid var(--frag-border);
-  background-color: var(--frag-subtle);
-  color: var(--frag-ink);
-  font-family: var(--font-sans);
   font-size: var(--t-label);
-  font-weight: var(--w-medium);
-  cursor: pointer;
-  transition: background-color var(--m-in) var(--m-ease);
+  color: var(--frag-muted);
 }
 
-.chip-btn-danger {
-  background-color: var(--status-burn-bg);
-  color: var(--status-burn-fg);
-  border-color: var(--status-burn-border);
-}
-
-.portal-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--s-4);
-  align-items: center;
-  padding: var(--s-3);
-  border-radius: var(--r-md);
-  background-color: var(--frag-subtle);
-  border: 1px solid var(--frag-border);
-}
-
-.qr-frame {
-  padding: var(--s-2);
-  border-radius: var(--r-sm);
-  background-color: var(--p-white);
-  border: 1px solid var(--p-paper-200);
-}
-
-.notice-box {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--s-3);
-  padding: var(--s-3) var(--s-4);
-  border-radius: var(--r-md);
-  font-size: var(--t-small);
-  line-height: 1.5;
-}
-
-.notice-warn {
-  background-color: var(--status-warn-bg);
-  color: var(--status-warn-fg);
-  border: 1px solid var(--status-warn-border);
-}
-
-.ip-chip-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2);
-}
-
-.ip-chip {
-  appearance: none;
-  min-height: 2.25rem;
-  padding-inline: var(--s-3);
-  border-radius: var(--r-sm);
-  border: 1px solid var(--frag-border);
-  background-color: var(--frag-subtle);
-  color: var(--frag-ink);
-  font-family: var(--font-mono);
-  font-size: var(--t-label);
-  cursor: pointer;
-}
-
-.ip-chip[aria-pressed="true"] {
-  background-color: var(--text-primary);
-  color: var(--bg-canvas);
-  border-color: var(--text-primary);
-}
-
-.guard-verdict {
-  padding: var(--s-3) var(--s-4);
-  border-radius: var(--r-md);
-  font-size: var(--t-small);
-  font-weight: var(--w-medium);
-  background-color: var(--status-ok-bg);
-  color: var(--status-ok-fg);
-  border: 1px solid var(--status-ok-border);
-}
-
-.guard-verdict[data-allowed="false"] {
-  background-color: var(--status-burn-bg);
-  color: var(--status-burn-fg);
-  border-color: var(--status-burn-border);
-}
-
-/* --- Screen 2: Why Intragram Split + Bespoke Carrier Pigeon LAN Diorama --- */
+/* --- Screen 2: Overview Split --- */
 .rows {
   display: flex;
   flex-direction: column;
@@ -1077,10 +866,9 @@ header.nav {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--m-image) var(--m-ease);
 }
 
-/* --- Screen 3 & 4: Two-Level Feature Cards with Lit Panels (cards.md) --- */
+/* --- Screen 3 & 4: Feature Cards --- */
 .card {
   background-color: var(--card-bg);
   border: 1px solid var(--hairline);
@@ -1091,12 +879,7 @@ header.nav {
   justify-content: space-between;
   gap: var(--s-5);
   height: 100%;
-  text-decoration: none;
   color: inherit;
-  transition:
-    transform var(--m-out) var(--m-ease),
-    border-color var(--m-in) var(--m-ease),
-    box-shadow var(--m-out) var(--m-ease);
 }
 
 .card-copy {
@@ -1111,7 +894,6 @@ header.nav {
   max-inline-size: 52ch;
 }
 
-/* Lit Panel Inside Feature Card (Level 2: Soft Field Holding True-Size UI + Mascot) */
 .panel {
   position: relative;
   border-radius: var(--r-md);
@@ -1125,7 +907,6 @@ header.nav {
 }
 
 @media (min-width: 80rem) {
-  /* Two-screen desktop cadence (.g2): Row 1 fills Tile 1, Row 2 lands in Tile 2 */
   .cards-2x2 {
     row-gap: 15rem;
   }
@@ -1190,22 +971,15 @@ header.nav {
   height: 5.5rem;
   object-fit: contain;
   flex-shrink: 0;
-  transition: transform var(--m-image) var(--m-ease);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .card--link:hover .panel-mascot {
-    transform: scale(1.04);
-  }
-}
-
-/* --- Screen 5: Protocol v7 Pulsing Lanes Diagram + Pause Disc (diagrams.md) --- */
+/* --- Screen 5: Connection Steps --- */
 .dg-frame {
   position: relative;
   background-color: var(--card-bg);
   border: 1px solid var(--hairline);
   border-radius: var(--r-lg);
-  padding: var(--s-6) var(--s-6) 3.75rem;
+  padding: var(--s-6);
 }
 
 .dg-lanes {
@@ -1237,64 +1011,14 @@ header.nav {
   color: var(--text-accent);
 }
 
-.dg-node h3 {
-  font-size: var(--t-body);
-  font-weight: var(--w-display);
-}
-
 .dg-node p {
   font-size: var(--t-small);
   color: var(--text-secondary);
   line-height: 1.5;
 }
 
-/* 3.2s Pulse Track Along Protocol Lanes */
-.dg-pulse-track {
-  margin-top: var(--s-4);
-  height: 4px;
-  border-radius: var(--r-pill);
-  background-color: var(--bg-surface);
-  overflow: hidden;
-  position: relative;
-}
-
-.dg-pulse-bar {
-  width: 28%;
-  height: 100%;
-  border-radius: var(--r-pill);
-  background-color: var(--btn-primary-bg);
-  animation: dgPulse var(--m-cycle) linear infinite;
-}
-
-.dg-frame[data-paused="true"] .dg-pulse-bar {
-  animation-play-state: paused;
-}
-
-@keyframes dgPulse {
-  0% {
-    transform: translateX(-100%);
-  }
-  85%,
-  100% {
-    transform: translateX(360%);
-  }
-}
-
-.loop-pause {
-  position: absolute;
-  right: 0.75rem;
-  bottom: 0.75rem;
-  width: 2rem;
-  height: 2rem;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--hairline-strong);
-  background-color: var(--bg-surface);
-  color: var(--text-primary);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
+.rules-row {
+  align-items: stretch;
 }
 
 .rules-row .rule-col {
@@ -1303,10 +1027,7 @@ header.nav {
   display: flex;
   flex-direction: column;
   gap: var(--s-1);
-}
-
-.rule-col h3 {
-  font-size: var(--t-body);
+  height: 100%;
 }
 
 .rule-col p {
@@ -1314,7 +1035,7 @@ header.nav {
   color: var(--text-secondary);
 }
 
-/* --- Screen 6: Security Threat Model Split --- */
+/* --- Screen 6: Security Split --- */
 .sec-card {
   background-color: var(--card-bg);
   border: 1px solid var(--hairline);
@@ -1359,7 +1080,7 @@ header.nav {
   margin-top: 3px;
 }
 
-/* --- Screen 7: Ruled Comparison Matrix --- */
+/* --- Screen 7: Comparison Table --- */
 .table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -1372,7 +1093,6 @@ header.nav {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  min-width: 40rem;
 }
 
 .compare-table th,
@@ -1406,7 +1126,47 @@ header.nav {
   font-weight: var(--w-medium);
 }
 
-/* --- Screen 8: Six-Platform Downloads + Build Attestation --- */
+/* --- Screen 8: Web Entry Cards --- */
+.web-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-6);
+  align-items: stretch;
+}
+
+.web-entry-card {
+  background: var(--card-bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.web-entry-card ol {
+  margin: 0;
+  padding-left: var(--s-5);
+  line-height: 1.75;
+}
+
+.web-entry-card > p:not(.web-entry-label) {
+  color: var(--text-secondary);
+  font-size: var(--t-body);
+}
+
+.web-entry-card .btn {
+  align-self: flex-start;
+  margin-top: var(--s-2);
+}
+
+.web-entry-label {
+  color: var(--text-accent);
+  font-size: var(--t-label);
+  font-weight: var(--w-medium);
+}
+
+/* --- Screen 9: Downloads --- */
 .install-mascot {
   width: 4.5rem;
   height: auto;
@@ -1471,70 +1231,33 @@ header.nav {
   gap: var(--s-2);
 }
 
-.dl-links .btn {
-  height: 2.375rem;
-  padding-inline: var(--s-4);
-  font-size: var(--t-small);
-}
-
 .code-panel {
   border-radius: var(--r-md);
-  background-color: var(--code-bg);
-  color: var(--code-fg);
+  background-color: var(--card-bg);
+  color: var(--text-primary);
   border: 1px solid var(--hairline);
   overflow: hidden;
 }
 
-.code-panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-3);
-  padding: var(--s-2) var(--s-4);
-  border-bottom: 1px solid rgba(241, 245, 250, 0.12);
-}
-
-.code-panel-title {
-  font-size: var(--t-label);
-  font-weight: var(--w-medium);
-  color: var(--p-slate-300);
-}
-
-.copy-btn {
-  appearance: none;
-  min-height: 2rem;
-  padding-inline: var(--s-3);
-  border-radius: var(--r-sm);
-  border: 1px solid rgba(241, 245, 250, 0.2);
-  background: transparent;
-  color: var(--code-fg);
-  font-family: var(--font-sans);
-  font-size: var(--t-label);
-  font-weight: var(--w-medium);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
 .code-panel pre {
   padding: var(--s-3) var(--s-4);
-  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
   font-size: var(--t-label);
   line-height: 1.55;
 }
 
-/* --- Screen 9: Open FAQ Rows (Zero Accordions, system.md line 139) --- */
+/* --- Screen 10: Troubleshooting Rows --- */
 .faq-open-grid {
-  row-gap: var(--s-5);
+  row-gap: var(--s-6);
 }
 
 .faq-open-item {
-  padding-top: var(--s-4);
+  padding-top: var(--s-5);
   border-top: 1px solid var(--hairline);
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  gap: var(--s-3);
 }
 
 .faq-open-item h3 {
@@ -1547,27 +1270,36 @@ header.nav {
   color: var(--text-secondary);
 }
 
-/* --- Footer: Dealt Closing Call + Documentation Directory --- */
+/* --- Footer --- */
 footer.closing {
-  background-color: var(--bg-canvas);
+  background-color: var(--bg-surface);
   border-top: 1px solid var(--hairline);
-  padding-block: var(--s-9) var(--s-7);
+  min-height: 100svh;
+  padding-block: var(--padt) var(--padb);
+  display: flex;
+  flex-direction: column;
+}
+
+footer.closing > .wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s-7);
 }
 
 .closing-call {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--s-6);
-  padding-bottom: var(--s-8);
-  border-bottom: 1px solid var(--hairline);
 }
 
 .closing-copy {
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
-  max-inline-size: 46rem;
+  max-inline-size: 42rem;
 }
 
 .closing-copy p {
@@ -1575,8 +1307,14 @@ footer.closing {
   color: var(--text-secondary);
 }
 
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+
 .footer-dir {
-  padding-block: var(--s-7);
+  padding-block: var(--s-4);
 }
 
 .footer-col-title {
@@ -1618,7 +1356,7 @@ footer.closing {
   color: var(--text-secondary);
 }
 
-/* --- Responsive Breakpoints (1024 / 820 / 768 / 390) --- */
+/* --- Responsive Breakpoints --- */
 @media (max-width: 63.99rem) {
   .hero-grid > .span-5,
   .hero-grid > .span-7,
@@ -1670,7 +1408,6 @@ footer.closing {
     grid-column: 1 / -1;
   }
 
-  /* Hero: keep whole live app window + buttons above 844px fold */
   main > section.hero {
     padding-top: 4.5rem;
     padding-bottom: var(--s-3);
@@ -1699,7 +1436,10 @@ footer.closing {
   }
 
   .closing-call .btn-row,
-  .sheet-foot .btn-row {
+  .sheet-foot .btn-row,
+  .web-entry-card .btn,
+  .dl-links,
+  .dl-links .btn {
     width: 100%;
   }
 
@@ -1716,16 +1456,6 @@ footer.closing {
     padding: 6px var(--s-3);
   }
 
-  .demo-tablist {
-    padding: 4px;
-  }
-
-  .demo-tab {
-    min-height: 2rem;
-    font-size: var(--t-label);
-    padding-inline: 4px;
-  }
-
   .demo-panel {
     min-height: 0;
     padding: var(--s-3);
@@ -1736,25 +1466,9 @@ footer.closing {
     display: none;
   }
 
-  .chip-btn {
-    min-height: 2rem;
-    padding-inline: var(--s-2);
-  }
-
-  .portal-card {
-    grid-template-columns: 1fr;
-    gap: var(--s-2);
-  }
-
-  .qr-frame svg {
-    width: 64px;
-    height: 64px;
-  }
-
-  /* Section heads & Story split */
   .section-head,
   .section-head--row {
-    margin-bottom: var(--s-3);
+    margin-bottom: var(--s-2);
   }
 
   .section-head > p {
@@ -1771,7 +1485,6 @@ footer.closing {
     line-height: 1.45;
   }
 
-  /* Feature cards: fit 4 rich cards cleanly inside 2H (1688px) */
   .card {
     padding: var(--s-4);
     gap: var(--s-3);
@@ -1804,9 +1517,8 @@ footer.closing {
     height: 3.5rem;
   }
 
-  /* Protocol v7 diagram & discipline row */
   .dg-frame {
-    padding: var(--s-4) var(--s-4) 2.75rem;
+    padding: var(--s-4);
   }
 
   .dg-lanes {
@@ -1828,33 +1540,36 @@ footer.closing {
     line-height: 1.45;
   }
 
-  /* Security split */
   .sec-card {
-    padding: var(--s-5);
-    gap: var(--s-4);
-  }
-
-  .sec-list {
+    padding: var(--s-4);
     gap: var(--s-3);
   }
 
-  .sec-list li {
-    font-size: var(--t-body);
-    line-height: 1.5;
+  .sec-list {
+    gap: var(--s-2);
   }
 
-  /* Comparison matrix */
-  .compare-table {
-    min-width: 34rem;
+  .sec-list li {
+    font-size: 0.9375rem;
+    line-height: 1.45;
   }
 
   .compare-table th,
   .compare-table td {
-    padding: var(--s-2) var(--s-3);
-    font-size: var(--t-small);
+    padding: var(--s-2);
+    font-size: var(--t-label);
   }
 
-  /* Six-platform downloads */
+  .web-entry-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-3);
+  }
+
+  .web-entry-card {
+    padding: var(--s-4);
+    gap: var(--s-2);
+  }
+
   .install-mascot {
     display: none;
   }
@@ -1869,33 +1584,26 @@ footer.closing {
     line-height: 1.38;
   }
 
-  .dl-links .btn {
-    height: 2.125rem;
-    padding-inline: var(--s-3);
-    font-size: var(--t-label);
-  }
-
   .code-panel pre {
     padding: var(--s-2) var(--s-3);
   }
 
-  /* Open FAQ rows */
   #faq > .wrap {
-    gap: var(--s-6);
+    gap: var(--s-4);
   }
 
   .faq-open-grid {
-    row-gap: var(--s-5);
+    row-gap: var(--s-4);
   }
 
   .faq-open-item {
-    padding-top: var(--s-4);
-    gap: var(--s-2);
+    padding-top: var(--s-3);
+    gap: var(--s-1);
   }
 
   .faq-open-item p {
-    font-size: var(--t-body);
-    line-height: 1.55;
+    font-size: 0.9375rem;
+    line-height: 1.5;
   }
 }
 
@@ -1915,33 +1623,6 @@ footer.closing {
   }
 }
 
-/* --- Reduced Motion & High Contrast / Forced Colors --- */
-.web-entry-grid {
-  display: grid;
-  flex: 1;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--s-6);
-}
-.web-entry-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: var(--s-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
-}
-.web-entry-card h3 { font-size: var(--t-h3); }
-.web-entry-card ol { margin: 0; padding-left: var(--s-5); line-height: 1.8; }
-.web-entry-card > p:not(.web-entry-label) { color: var(--text-secondary); font-size: var(--t-body); }
-.web-entry-card .btn { align-self: flex-start; margin-top: auto; }
-.web-entry-label { color: var(--text-accent); font-size: var(--t-label); font-weight: 600; }
-@media (max-width: 39.99rem) {
-  #web { height: auto; min-height: 100svh; }
-  .web-entry-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
-  .web-entry-card { padding: var(--s-5); gap: var(--s-3); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1950,15 +1631,6 @@ footer.closing {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  .dg-pulse-bar {
-    width: 100%;
-    transform: none !important;
-  }
-
-  .loop-pause {
-    display: none !important;
   }
 }
 
