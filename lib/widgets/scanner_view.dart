@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intragram/core/qr_decode.dart';
 import 'camera_unavailable.dart';
 import 'scanner_frame.dart';
+import 'web_scanner_view.dart';
 
 export 'camera_unavailable.dart';
 
@@ -217,6 +218,8 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    // 브라우저는 getUserMedia로 따로 엶 (camera 플러그인 웹 구현엔 프레임 스트림이 없음)
+    if (kIsWeb) return WebScannerView(view: widget);
     final problem = _problem;
     if (!_hasCamera || problem != null) {
       return CameraUnavailable(
@@ -229,9 +232,11 @@ class _ScannerViewState extends State<ScannerView> with WidgetsBindingObserver {
     if (camera == null || !camera.value.isInitialized || size == null) {
       return const ColoredBox(color: Colors.black);
     }
+    // previewSize는 센서 기준 가로라 세로 화면에선 뒤집어 넘김
+    final portrait = MediaQuery.orientationOf(context) == Orientation.portrait;
     return ScannerFrame(
-      camera: camera,
-      previewSize: size,
+      preview: CameraPreview(camera),
+      previewSize: portrait ? size.flipped : size,
       hint: widget.hint,
       reticleSide: widget.reticleSide,
       reticleRadius: widget.reticleRadius,

@@ -33,6 +33,7 @@ import 'widgets/identity_card.dart';
 import 'widgets/peer_tile.dart';
 import 'adaptive_panes.dart';
 import 'two_pane.dart';
+import 'web_leave_guard.dart';
 
 part 'home_screen/app_bar.dart';
 
@@ -91,7 +92,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final ids = ref.watch(conversationsProvider).value?.map((c) => c.id);
     final paneChat = ids?.contains(_paneChat) ?? false ? _paneChat : null;
     final split = paneSplit(context);
-    return CallbackShortcuts(
+    final shortcuts = CallbackShortcuts(
       bindings: {
         for (final shift in const [false, true])
           SingleActivator(
@@ -114,6 +115,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         ),
       ),
     );
+    return WebLeaveGuard(child: shortcuts);
   }
 
   // ⌘/Ctrl+F·, 같은 단축키는 앱 루트(AppCommands)가 받음. 여긴 키 이벤트가 닿을 초점만 둠

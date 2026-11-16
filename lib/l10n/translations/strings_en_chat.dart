@@ -32,6 +32,8 @@ const Map<String, String> kStringsEnChat = {
   'transfer.savedTo': 'Saved to {path}',
   'transfer.receivedInBrowser':
       'Received in browser · Save to device to keep a copy',
+  'transfer.receivedInBrowserShare':
+      'Received in browser · Tap Share or save to keep a copy',
   'transfer.saveToDevice': 'Save to device',
   'transfer.saveFailed': 'Save failed',
   'transfer.disk': 'disk',

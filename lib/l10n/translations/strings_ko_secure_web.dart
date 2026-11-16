@@ -69,4 +69,14 @@ const Map<String, String> kStringsKoSecureWeb = {
   'secureWeb.relayBanner':
       '호스트 중계(Hop-by-Hop) · 종단 간 암호화 아님: 호스트는 이 방 내용을 볼 수 있어요. '
       '멤버와 호스트 사이 연결은 파일까지 암호화돼요.',
+  'secureWeb.scanInvite': '초대 코드 스캔',
+  'secureWeb.scanInviteHint': '상대 화면의 초대 QR을 비추세요.',
+  'secureWeb.scanNoCamera': '스캔하려면 카메라가 필요해요. 대신 QR 이미지에서 읽거나 코드를 붙여 넣으세요.',
+  'secureWeb.mobileBackground':
+      '휴대폰 브라우저는 다른 앱이나 탭으로 바꾸면 곧 이 페이지를 멈춰서 대화가 끊길 수 있어요. '
+      '대화하는 동안 이 페이지를 열어 두세요.',
+  'secureWeb.leaveTitle': '이 페이지를 나갈까요?',
+  'secureWeb.leaveBody': '나가면 연결된 대화가 모두 끊겨요. 이 기기에 보관하지 않은 대화는 지워져요.',
+  'secureWeb.leaveStay': '머무르기',
+  'secureWeb.leave': '나가기',
 };

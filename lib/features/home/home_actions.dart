@@ -21,6 +21,8 @@ import 'connect_failure.dart';
 import 'widgets/manual_connect_dialog.dart';
 import 'package:intragram/widgets/picker_feedback.dart';
 import 'package:intragram/features/portal/web_connection_dialog.dart';
+import 'package:intragram/features/portal/web_invite_scan_screen.dart';
+import 'package:intragram/widgets/web_camera.dart';
 
 export 'package:intragram/features/chat/open_chat.dart' show openChat;
 export 'home_panic_action.dart';
@@ -57,7 +59,14 @@ bool get canScanQr => isMobileTarget;
 // 상대가 방을 열고 있으면 room_join이 방으로 들이고 아니면 1:1 (LAN 밖 코드는 ScanScreen이 이미 거름)
 Future<void> scanConnect(BuildContext context, WidgetRef ref) async {
   if (kIsWeb) {
-    final raw = await pickQrImageOrExplain(context);
+    // 폰 브라우저는 앱처럼 카메라로 읽음 (카메라 API가 없으면 이미지에서 읽기)
+    final raw = isMobileTarget && WebCamera.supported
+        ? await Navigator.of(context).push<String>(
+            MaterialPageRoute<String>(
+              builder: (_) => const WebInviteScanScreen(),
+            ),
+          )
+        : await pickQrImageOrExplain(context);
     if (raw != null && context.mounted) {
       await showWebConnectionDialog(context, invitation: raw);
     }

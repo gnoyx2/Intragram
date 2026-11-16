@@ -16,7 +16,7 @@ class _ConnectionSection extends ConsumerWidget {
         SectionHeader(s.t('settings.sectionConnection')),
         BoxedList(
           children: [
-            if (kIsWeb)
+            if (kIsWeb && BrowserNotifications.supported)
               ListTile(
                 leading: const Icon(Icons.notifications_outlined),
                 title: Text(s.t('secureWeb.browserNotifications')),
@@ -31,11 +31,16 @@ class _ConnectionSection extends ConsumerWidget {
               value: settings.onlyChatsIStart,
               onChanged: notifier.setOnlyChatsIStart,
             ),
-            // iOS엔 백그라운드 연결 유지가 없음: 끊기는 이유를 미리 알림
+            // iOS 앱과 폰 브라우저엔 백그라운드 연결 유지가 없음: 끊기는 이유를 미리 알림
             if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)
               ListTile(
                 leading: const Icon(Icons.info_outline),
                 title: Text(s.t('settings.iosForegroundOnly')),
+              ),
+            if (kIsWeb && isMobileTarget)
+              ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: Text(s.t('secureWeb.mobileBackground')),
               ),
             // 시스템이 막아 설정이 저절로 꺼졌으면 스위치 밑에 이유를 둠 (말없이 꺼지면 왜인지 모름)
             if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)

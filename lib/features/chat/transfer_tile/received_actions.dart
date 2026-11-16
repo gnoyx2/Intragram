@@ -4,30 +4,41 @@ part of '../transfer_tile.dart';
 
 enum _ExecChoice { open, reveal }
 
+// 폰 브라우저는 앱처럼 공유 시트로 저장함. 공유 못 하는 브라우저·형식이면 다운로드
 class _BrowserSaveReceived extends StatelessWidget {
   const _BrowserSaveReceived({required this.path, required this.color});
   final String path;
   final Color color;
   @override
-  Widget build(BuildContext context) => TextButton.icon(
-    onPressed: BrowserReceivedFiles.contains(path)
-        ? () => BrowserReceivedFiles.save(path)
-        : null,
-    icon: const Icon(Icons.download_outlined, size: 14),
-    label: Text(
-      S
-          .of(context)
-          .t(
-            BrowserReceivedFiles.contains(path)
-                ? 'transfer.saveToDevice'
-                : 'transfer.fileGone',
-          ),
-    ),
-    style: TextButton.styleFrom(
-      foregroundColor: color,
-      minimumSize: const Size(0, 44),
-    ),
-  );
+  Widget build(BuildContext context) {
+    final available = BrowserReceivedFiles.contains(path);
+    final share = available && isMobileTarget && BrowserShare.canShareFiles;
+    return TextButton.icon(
+      onPressed: available
+          ? () {
+              if (!share || !BrowserShare.shareReceived(path)) {
+                BrowserReceivedFiles.save(path);
+              }
+            }
+          : null,
+      icon: Icon(share ? Icons.ios_share : Icons.download_outlined, size: 14),
+      label: Text(
+        S
+            .of(context)
+            .t(
+              !available
+                  ? 'transfer.fileGone'
+                  : share
+                  ? 'transfer.shareSave'
+                  : 'transfer.saveToDevice',
+            ),
+      ),
+      style: TextButton.styleFrom(
+        foregroundColor: color,
+        minimumSize: const Size(0, 44),
+      ),
+    );
+  }
 }
 
 class _ReceivedActions extends StatelessWidget {

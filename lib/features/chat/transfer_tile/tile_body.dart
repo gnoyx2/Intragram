@@ -106,7 +106,13 @@ extension _TransferTileBody on TransferTile {
                 Flexible(
                   child: Text(
                     incoming && kIsWeb
-                        ? S.of(context).t('transfer.receivedInBrowser')
+                        ? S
+                              .of(context)
+                              .t(
+                                isMobileTarget && BrowserShare.canShareFiles
+                                    ? 'transfer.receivedInBrowserShare'
+                                    : 'transfer.receivedInBrowser',
+                              )
                         : incoming
                         ? S.of(context).t('transfer.savedTo', {
                             'path':

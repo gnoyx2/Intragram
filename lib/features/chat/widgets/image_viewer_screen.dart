@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:share_plus/share_plus.dart';
 
 import 'package:intragram/core/browser_received_files.dart';
+import 'package:intragram/core/browser_share.dart';
 import 'package:intragram/core/target_platform.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/motion.dart';
@@ -183,7 +184,9 @@ class _ImageViewerScreenState extends State<ImageViewerScreen>
                 child: SafeArea(
                   child: _ViewerTopBar(
                     path: widget.path,
-                    canShare: !kIsWeb && isMobileTarget,
+                    canShare:
+                        isMobileTarget &&
+                        (!kIsWeb || BrowserShare.canShareFiles),
                   ),
                 ),
               ),

@@ -1,5 +1,8 @@
 part of '../home_screen.dart';
 
+// 브라우저의 스캔은 기기 코드가 아니라 초대 코드를 읽음
+const _scanLabel = kIsWeb ? 'secureWeb.scanInvite' : 'home.scanDevice';
+
 mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
   PreferredSizeWidget _appBar(ColorScheme scheme) {
     // 좁은 폰에 큰 글씨면 제목을 줄이지 않고 아이콘 액션을 메뉴로 옮김
@@ -64,9 +67,9 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
             IconButton(
               icon: Icon(
                 Icons.qr_code_scanner,
-                semanticLabel: macOSAppName(S.of(context).t('home.scanDevice')),
+                semanticLabel: macOSAppName(S.of(context).t(_scanLabel)),
               ),
-              tooltip: S.of(context).t('home.scanDevice'),
+              tooltip: S.of(context).t(_scanLabel),
               onPressed: () => scanConnect(context, ref),
             ),
           // 브라우저엔 게스트 포털이 없음: 연결은 바로 앞 버튼 하나로 엶
@@ -125,7 +128,7 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
               if (canScanQr)
                 PopupMenuItem(
                   value: 'scan',
-                  child: Text(S.of(context).t('home.scanDevice')),
+                  child: Text(S.of(context).t(_scanLabel)),
                 ),
               if (!kIsWeb)
                 PopupMenuItem(

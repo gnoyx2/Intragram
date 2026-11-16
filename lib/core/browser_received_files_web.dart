@@ -80,6 +80,8 @@ abstract final class BrowserReceivedFiles {
 
   static String? nameOf(String path) => _files[path]?.name;
 
+  static web.Blob? blobOf(String path) => _files[path]?.blob;
+
   static Stream<Uint8List> openRead(String path, {int chunkSize = 64 * 1024}) {
     if (chunkSize <= 0) {
       throw ArgumentError.value(chunkSize, 'chunkSize', 'must be positive');

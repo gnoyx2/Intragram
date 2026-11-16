@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intragram/theme/tokens.dart';
@@ -7,7 +6,7 @@ import 'package:intragram/theme/adaptive_layout.dart';
 // 켜진 카메라 미리보기를 화면에 꽉 채우고 가운데 조준틀과 아래 안내를 얹음
 class ScannerFrame extends StatelessWidget {
   const ScannerFrame({
-    required this.camera,
+    required this.preview,
     required this.previewSize,
     required this.hint,
     required this.reticleSide,
@@ -15,7 +14,9 @@ class ScannerFrame extends StatelessWidget {
     super.key,
   });
 
-  final CameraController camera;
+  // 앱은 CameraPreview, 브라우저는 <video> 플랫폼 뷰
+  final Widget preview;
+  // 화면 방향 기준 크기 (센서 기준 가로 크기는 호출부가 세로 화면에서 뒤집어 넘김)
   final Size previewSize;
   final String hint;
   final double reticleSide;
@@ -23,8 +24,6 @@ class ScannerFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // previewSize는 센서 기준 가로라 세로 화면에선 뒤집어 채움(넘치는 쪽은 잘림)
-    final portrait = MediaQuery.orientationOf(context) == Orientation.portrait;
     final fold = tabletopFold(context);
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -39,14 +38,11 @@ class ScannerFrame extends StatelessWidget {
         return Stack(
           fit: StackFit.expand,
           children: [
+            // 넘치는 쪽은 잘림
             ClipRect(
               child: FittedBox(
                 fit: BoxFit.cover,
-                child: SizedBox(
-                  width: portrait ? previewSize.height : previewSize.width,
-                  height: portrait ? previewSize.width : previewSize.height,
-                  child: CameraPreview(camera),
-                ),
+                child: SizedBox.fromSize(size: previewSize, child: preview),
               ),
             ),
             Positioned(

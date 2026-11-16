@@ -25,12 +25,16 @@ AppBarTheme _appBarTheme(
   foregroundColor: scheme.onSurface,
   iconTheme: IconThemeData(color: scheme.onSurface),
   actionsIconTheme: IconThemeData(color: scheme.onSurface),
-  // 상태바·내비바 아이콘 밝기를 테마로 정함 (SystemChrome을 직접 안 불러도 됨)
+  // 상태바·내비바 아이콘 밝기를 테마로 정함 (SystemChrome을 직접 안 불러도 됨).
+  // 브라우저는 상태바 색이 theme-color가 됨: 비우면 엔진이 지워서 주소창이 앱바와 다른 색으로 남음
   systemOverlayStyle:
       (scheme.brightness == Brightness.dark
               ? SystemUiOverlayStyle.light
               : SystemUiOverlayStyle.dark)
-          .copyWith(systemNavigationBarColor: Colors.transparent),
+          .copyWith(
+            systemNavigationBarColor: Colors.transparent,
+            statusBarColor: kIsWeb ? scheme.surface : null,
+          ),
 );
 
 // iOS는 스와이프 뒤로 가기, Android는 predictive back, 데스크톱(macOS 포함)은 페이드를 씀 (Mac 창에서 옆으로 밀려 들어오는 건 Mac 관례가 아님)
@@ -45,17 +49,22 @@ PageTransitionsTheme _pageTransitionsTheme() => PageTransitionsTheme(
 );
 
 // macOS 앱 VoiceOver는 뒤로·닫기 버튼 tooltip을 이름으로 못 읽음 (lib/core/target_platform.dart macOSAppName):
-// 아이콘은 Flutter macOS 기본과 같고 같은 문구를 label로만 붙임. 다른 플랫폼은 Flutter 기본 그대로
-ActionIconThemeData? _actionIcons(TargetPlatform os) =>
-    kIsWeb || os != TargetPlatform.macOS
-    ? null
-    : ActionIconThemeData(
-        backButtonIconBuilder: (context) => Icon(
-          Icons.arrow_back_ios_new_rounded,
-          semanticLabel: MaterialLocalizations.of(context).backButtonTooltip,
-        ),
-        closeButtonIconBuilder: (context) => Icon(
-          Icons.close,
-          semanticLabel: MaterialLocalizations.of(context).closeButtonTooltip,
-        ),
-      );
+// 아이콘은 Flutter macOS 기본과 같고 같은 문구를 label로만 붙임. Android 브라우저는 반대로 tooltip이 이미
+// 이름인데 Flutter가 Android 앱용 label을 또 붙여서 "뒤로 뒤로"로 읽힘: 그림만 둠. 나머지는 Flutter 기본 그대로
+ActionIconThemeData? _actionIcons(TargetPlatform os) => switch ((kIsWeb, os)) {
+  (false, TargetPlatform.macOS) => ActionIconThemeData(
+    backButtonIconBuilder: (context) => Icon(
+      Icons.arrow_back_ios_new_rounded,
+      semanticLabel: MaterialLocalizations.of(context).backButtonTooltip,
+    ),
+    closeButtonIconBuilder: (context) => Icon(
+      Icons.close,
+      semanticLabel: MaterialLocalizations.of(context).closeButtonTooltip,
+    ),
+  ),
+  (true, TargetPlatform.android) => ActionIconThemeData(
+    backButtonIconBuilder: (_) => const Icon(Icons.arrow_back),
+    closeButtonIconBuilder: (_) => const Icon(Icons.close),
+  ),
+  _ => null,
+};

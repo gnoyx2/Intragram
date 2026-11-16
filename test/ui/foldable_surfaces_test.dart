@@ -1,6 +1,5 @@
 import 'dart:ui' show DisplayFeature, DisplayFeatureState, DisplayFeatureType;
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -167,23 +166,13 @@ void main() {
     addTearDown(tester.view.resetViewPadding);
     final h = Harness();
     addTearDown(h.dispose);
-    final camera = CameraController(
-      const CameraDescription(
-        name: 'test',
-        lensDirection: CameraLensDirection.back,
-        sensorOrientation: 0,
-      ),
-      ResolutionPreset.medium,
-      enableAudio: false,
-    );
-    addTearDown(camera.dispose);
     await tester.pumpWidget(
       h.wrap(
         Scaffold(
           appBar: AppBar(title: const Text('Scan')),
-          body: ScannerFrame(
-            camera: camera,
-            previewSize: const Size(640, 480),
+          body: const ScannerFrame(
+            preview: ColoredBox(color: Colors.black),
+            previewSize: Size(480, 640),
             hint: 'Scanner guidance',
             reticleSide: 280,
             reticleRadius: 20,

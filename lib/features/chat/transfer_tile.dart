@@ -18,6 +18,7 @@ import 'package:intragram/core/image_header.dart';
 import 'package:intragram/core/native_open.dart';
 import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/core/browser_received_files.dart';
+import 'package:intragram/core/browser_share.dart';
 import 'package:intragram/core/target_platform.dart';
 import 'package:intragram/core/voice/voice_clip.dart';
 import 'package:intragram/core/voice/voice_wav.dart';

@@ -10,6 +10,7 @@ import 'package:intragram/features/chat/widgets/sas_scan_screen.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/widgets/adaptive_dialog_action.dart';
+import 'package:intragram/widgets/web_camera.dart';
 
 // null은 '나중에' (아무것도 안 바뀜)
 enum SasOutcome { matched, mismatched }
@@ -77,7 +78,8 @@ Future<SasOutcome?> showSasFingerprintDialog(
               TextButton.icon(
                 onPressed: () async {
                   final bool? matched;
-                  if (kIsWeb) {
+                  // 폰 브라우저는 앱처럼 카메라로 읽음. 데스크톱 브라우저는 QR 이미지
+                  if (kIsWeb && !(isMobileTarget && WebCamera.supported)) {
                     final raw = await pickQrImageOrExplain(dialogContext);
                     matched = raw == null ? null : sasScanVerdict(raw, sas);
                   } else {

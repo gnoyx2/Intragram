@@ -99,6 +99,9 @@ class _WebConnectionState extends ConsumerState<WebConnectionDialog> {
   );
 
   Future<void> _run(Future<void> Function() action) async {
+    // 입력창을 비활성으로 바꾸기 전에 포커스부터 내림: 폰에선 키보드가 내려가고, 스크린리더를 켠
+    // 폰 브라우저에서 입력 중인 칸의 설정을 바꾸다 나는 Flutter 엔진 예외도 피함
+    FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       _busy = true;
       _error = null;

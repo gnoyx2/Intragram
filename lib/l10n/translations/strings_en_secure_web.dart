@@ -83,4 +83,17 @@ const Map<String, String> kStringsEnSecureWeb = {
   'secureWeb.relayBanner':
       'Host relay (hop-by-hop), not end-to-end: the host can read this room. '
       "Each member's link to the host is encrypted, files included.",
+  'secureWeb.scanInvite': 'Scan an invitation code',
+  'secureWeb.scanInviteHint': 'Point at the invitation QR on the other screen.',
+  'secureWeb.scanNoCamera':
+      'Scanning needs a camera. Read a QR image or paste the code instead.',
+  'secureWeb.mobileBackground':
+      'Phone browsers pause this page soon after you switch to another app or '
+      'tab, and the chat can disconnect. Keep this page open while you chat.',
+  'secureWeb.leaveTitle': 'Leave this page?',
+  'secureWeb.leaveBody':
+      'Leaving ends every connected chat. Chats not kept on this device are '
+      'erased.',
+  'secureWeb.leaveStay': 'Stay',
+  'secureWeb.leave': 'Leave',
 };
