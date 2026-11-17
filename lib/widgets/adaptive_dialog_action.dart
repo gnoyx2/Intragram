@@ -40,26 +40,31 @@ class AppAlertDialog extends StatelessWidget {
         MediaQuery.viewInsetsOf(context).bottom;
     final compact = visible < _kCompactDialogHeight;
     final buttons = actions;
+    final inlineButtons = compact && buttons != null;
     return AlertDialog(
       icon: icon,
       title: title,
-      // 낮은 창에선 버튼도 본문과 같이 스크롤함: 큰 글씨로 버튼이 세로로 쌓이면 버튼만으로 창 높이를 넘음
-      content: compact && buttons != null
-          ? Column(
+      // 낮은 창에선 버튼도 본문과 같이 스크롤함: 큰 글씨로 버튼이 세로로 쌓이면 버튼만으로 창 높이를 넘음.
+      // 본문은 늘 같은 Column 첫 칸에 둠: 키보드가 올라와 낮은 창이 되는 순간 감싸는 구조가 바뀌면 입력칸이
+      // 새로 만들어져 포커스와 키보드가 바로 사라짐 (폰 브라우저는 키보드만 올라와도 480 밑)
+      content: content == null && !inlineButtons
+          ? null
+          : Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ?content,
-                const SizedBox(height: AppSpacing.lg),
-                OverflowBar(
-                  alignment: MainAxisAlignment.end,
-                  overflowAlignment: OverflowBarAlignment.end,
-                  spacing: AppSpacing.sm,
-                  children: buttons,
-                ),
+                if (inlineButtons) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  OverflowBar(
+                    alignment: MainAxisAlignment.end,
+                    overflowAlignment: OverflowBarAlignment.end,
+                    spacing: AppSpacing.sm,
+                    children: buttons,
+                  ),
+                ],
               ],
-            )
-          : content,
+            ),
       actions: compact ? null : buttons,
       scrollable: true,
       insetPadding: compact
