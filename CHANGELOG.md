@@ -9,7 +9,26 @@ different protocol versions refuse to talk to each other.
 Protocol 7. Not a supported release yet: device QA is pending on every
 platform (see `DEVICE_QA.md`).
 
-Added after `v1.0.0-rc.1` (app `1.0.0+10`; the v7 wire protocol is unchanged):
+Added after `v1.0.0-rc.1` (app `1.0.0+11`; the v7 wire protocol is unchanged):
+
+- Fixed: dialogs with a text field (connection codes, PIN, rename, IP address)
+  dropped its focus and closed the keyboard as soon as the keyboard left less
+  than 480 px of window height, so nothing could be typed there. That is every
+  phone browser, and small phones or large text in the apps. The compact dialog
+  layout now keeps the same widget structure (`1.0.0+11`; the `1.0.0+10` store
+  files predate this fix).
+- Fixed (web): Back in an open chat on a phone browser closed the chat and also
+  asked to leave the page; it now only closes the chat and Home asks. With chats
+  open, a reload, tab close or address change asks through the browser
+  (`beforeunload`), because browsers let two back presses in a row without
+  touching the page skip the in-app question.
+- Fixed (web): after a camera permission prompt, the share sheet or a file
+  picker, phone browsers stayed blurred until the next tap, and that tap hit the
+  control underneath. The page is covered only while the tab is hidden.
+- Fixed (web): Chrome offered to translate the app from Korean on English
+  phones, because the page starts as `lang="ko"` before the app sets its
+  language. The app page opts out of page translation, which cannot change
+  canvas text anyway.
 
 - Phone browsers: the web app now covers what the phone apps get from the OS.
   The scan icon on Home and **Scan their code** in the security code dialog use

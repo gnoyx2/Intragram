@@ -167,8 +167,19 @@ counterpart:
 - **Vibration.** Android browsers vibrate where the app does (a message arriving
   in the open app, a scan). iOS Safari has no vibration API.
 - **Leaving the page.** The app keeps its chats when you go back from Home; a
-  page loses them. With chats open, Android back, the iOS edge swipe or the
-  browser back button on Home asks before leaving.
+  page loses them. Back in an open chat closes the chat, as in the app. With
+  chats open, Android back, the iOS edge swipe or the browser back button on
+  Home asks before leaving, and a reload, tab close or address change asks
+  through the browser. Browsers stop pages from trapping the back button: two
+  back presses in a row without touching the page leave without the question
+  (an Android tab opened from another app closes), and iOS Safari never shows
+  the browser's own question.
+- **Keyboard.** Tapping a text field brings up the phone keyboard and the field
+  or the chat input stays above it; dialogs switch to a compact layout without
+  dropping the field's focus. Send keeps the keyboard open.
+- **Browser prompts.** A camera permission prompt, the share sheet or a file
+  picker no longer leaves the page blurred; the page is covered only while the
+  tab is hidden.
 - **Browser bar.** The address bar color follows the app bar in light and dark
   themes.
 - **Notifications and background.** Phone browsers cannot show this page's
