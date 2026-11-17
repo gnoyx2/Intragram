@@ -161,8 +161,8 @@ void main() {
       await webPeerUntil(() => received.last.transferred == 64 * 1024);
       await left.cancelFile(id);
       await webPeerUntil(() => received.last.state == 'cancelled');
-      await Future<void>.delayed(const Duration(milliseconds: 30));
-      expect(outDir.listSync(), isEmpty);
+      // 취소 표시는 바로, .part 지우기는 쓰던 조각을 마친 뒤 비동기로 끝남 (느린 CI에선 30ms를 넘김)
+      await webPeerUntil(() => outDir.listSync().isEmpty);
     },
   );
 
