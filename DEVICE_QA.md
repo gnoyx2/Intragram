@@ -300,6 +300,8 @@ iOS/macOS 디버그와 Windows·Linux 디버그), 태그 없는 `release`(`workf
 
 **v1.0.0-rc.1 공개 예외 (2026-10-27):** 관리자가 실기기 QA 미완료를 명시한 테스트용 RC 공개를 승인했습니다. 이 버전에 한해 미검증 플랫폼 파일을 프리릴리스로 제공하며, 단계 1 통과나 정식 지원을 뜻하지 않습니다. 기존 QA 기록은 NOT RUN으로 유지하고 `DEVICE_QA_PASSED`는 켜지 않습니다.
 
+**v1.0.0-rc.4 공개 예외 (2026-11-18):** 관리자가 같은 조건으로 rc.4 테스트용 RC 공개를 승인했습니다(`03972e8`, 자산 15개, 제목과 본문에 실기기 QA 미완료 표기). 단계 1 통과나 정식 지원을 뜻하지 않으며 `DEVICE_QA_PASSED`는 켜지 않습니다. 예전 rc.3 초안과 태그는 지웠습니다.
+
 ## 기록
 
 ### 새 암호화 웹 연결 자동 검증 (2026-11-06)
@@ -338,6 +340,7 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | Firefox Android 160, 수정본 | 로컬 미리보기와 배포된 공개 주소(`main.dart.js` `2f9ef4df2c0a9071`)에서 같은 연결 흐름, 대화에서 뒤로 → 대화만 닫힘, 화면을 건드리지 않고 다시 뒤로 → 앱의 떠나기 확인 → 뒤로 → 확인만 닫힘, 다시 연 대화에서 입력·보내기 | PASS. 배포 뒤 Chromium 라이브 스모크도 PASS |
 | Android Chrome 145, 수정본 | 같은 연결 흐름, 대화에서 뒤로 → 대화만 닫힘, 화면을 건드린 뒤 뒤로 → 앱의 떠나기 확인 → 머무르기 | PASS (수정 전과 같음) |
 | iOS Safari 27(시뮬레이터, safaridriver), 수정본 | 첫 터치 전 기록 칸 1개(`origin`), 첫 터치 뒤 2개(`flutter`), 설정 화면에서 브라우저 뒤로 → 앱 안에서 홈으로, 페이지·기록 칸 유지, 설정 화면 뒤로 버튼이 iOS 앱과 같은 꺾쇠 | PASS (합성 터치라 실제 가장자리 밀기는 아님) |
+| macOS Safari 27.0.1, 배포본(`c911905`) | Safari WebDriver 스모크(Safari ↔ Chromium 양쪽 초대 방향, 확인 번호, 텍스트, 파일 양방향 해시 일치), 첫 클릭 전 기록 칸 1개, 스크립트 클릭으로는 안 생기고 실제 클릭 뒤 2개, 설정에서 브라우저 뒤로 → 앱 안에서 홈 | PASS |
 | 데스크톱 Edge 157, `03972e8` | 공개 주소 라이브 스모크(랜딩 → 앱, 코드 교환·확인 번호, 텍스트·파일 양방향, 새로고침), 3-브라우저 기본 검사 | PASS |
 | 브라우저 자동 회귀, 수정본 | Chromium 휴대폰 동등성(iPhone·Android 프로필, 뒤로용 기록 칸이 첫 터치 뒤에만 생김), Chromium 3-브라우저, Firefox 160 데스크톱 ↔ Chromium, 진입 검사 | PASS |
 | 실제 휴대폰, Samsung Internet, 두 기기 Wi-Fi, VoiceOver·TalkBack | 없음 | NOT RUN |
@@ -354,7 +357,7 @@ Flutter 웹 기본 뒤로 화살표(←)를 그렸는데, 이제 iPhone 앱과 �
 
 스토어용 `1.0.0+11` 파일(App Store IPA, Mac App Store PKG, Play AAB)을 만들고 서명을 확인했다. Play AAB는
 `v1.0.0-rc.4` 초안의 `intragram.aab`(업로드 키 서명, SHA-256 `ebedd75eb2c9dfde…`)다. rc.4 초안(`03972e8`)은
-15개 자산, `SHA256SUMS.txt` 일치, 실행물 7개 출처 증명(`gh attestation verify`) 통과, 공개하지 않았다. 스토어
+15개 자산, `SHA256SUMS.txt` 일치, 실행물 7개 출처 증명(`gh attestation verify`) 통과했고, 11-18에 테스트용 프리릴리스로 공개했다(9절 예외). 스토어
 올리기는 하지 않았다.
 
 ### 2026-11-17 실제 Android Chrome(에뮬레이터)·iOS Safari(시뮬레이터) 실입력 검증
