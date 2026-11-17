@@ -30,10 +30,14 @@ const open = async (page, touch) => {
   await page.goto(app + '?lang=en');
   await page.locator('flt-semantics-placeholder').waitFor({ state: 'attached' });
   await page.locator('#app-loading').waitFor({ state: 'detached', timeout: 30000 });
+  // Flutter's Back-catching history entry waits for the first touch: Firefox skips entries nobody
+  // touched, so the entry under it must have been touched for Back to reach the app.
+  if (touch) await page.waitForFunction(() => history.state?.origin === true, null, { timeout: 5000 });
   const box = await page.locator('flt-semantics-placeholder').boundingBox();
   if (touch) await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
   else await page.locator('flt-semantics-placeholder').evaluate(e => e.click());
   await page.getByRole('heading', { name: /^Intragram/ }).waitFor();
+  if (touch) await page.waitForFunction(() => history.state?.flutter === true, null, { timeout: 5000 });
 };
 const button = (page, name) => page.getByRole('button', { name, exact: true });
 const tap = (page, locator) => page.context()._touch ? locator.tap() : locator.click();

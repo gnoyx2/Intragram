@@ -9,6 +9,7 @@ import 'app.dart';
 import 'app_providers.dart';
 import 'core/app_identity.dart';
 import 'core/app_licenses.dart';
+import 'core/browser_history_web.dart';
 import 'core/browser_received_files.dart';
 import 'core/os_privacy.dart';
 import 'core/platform_files_web.dart';
@@ -16,6 +17,8 @@ import 'theme/tokens.dart';
 
 // The browser runs the same application, screens and state as the native app.
 Future<void> main() async {
+  // 엔진이 브라우저 기록을 처음 만지기 전에 둬야 함
+  installFirstTouchHistory();
   WidgetsFlutterBinding.ensureInitialized();
   registerAppLicenses();
   try {
