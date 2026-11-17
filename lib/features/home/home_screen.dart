@@ -115,7 +115,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         ),
       ),
     );
-    return WebLeaveGuard(child: shortcuts);
+    return WebLeaveGuard(chatOpen: paneChat != null, child: shortcuts);
   }
 
   // ⌘/Ctrl+F·, 같은 단축키는 앱 루트(AppCommands)가 받음. 여긴 키 이벤트가 닿을 초점만 둠

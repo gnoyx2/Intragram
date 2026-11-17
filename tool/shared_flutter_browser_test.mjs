@@ -37,6 +37,8 @@ try {
     const page = await context.newPage();
     pages.push(page);
     page.setDefaultTimeout(15000);
+    // 대화가 있는 새로고침은 앱이 브라우저 확인을 띄움: 그 확인만 수락 (나머지 대화상자는 기본처럼 닫음)
+    page.on('dialog', d => d.type() === 'beforeunload' ? d.accept() : d.dismiss());
     page.on('pageerror', error => errors.push(`[after ${step}] ${error.message}`));
     page.on('console', message => { if (message.type() === 'error') errors.push(`[after ${step}] ${message.text()}`); });
     page.on('request', request => requests.push(request.url()));

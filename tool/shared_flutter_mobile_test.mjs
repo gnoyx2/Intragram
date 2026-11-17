@@ -179,10 +179,16 @@ async function run(kind) {
   assert.deepEqual(shared, { name: 'photo.png', type: 'image/png', size: png.length, head: [...png.subarray(0, 8)] });
   console.log(`${kind}: received photo handed to the share sheet byte-exact`);
 
-  // Back gesture on the home screen asks before leaving the page and its chats.
-  await tap(mob, button(mob, 'Back').first());
+  // With chats open, a reload, tab close or address change asks first (the browser skips the in-app
+  // question when Back is pressed twice without touching the page).
+  assert.equal(await mob.evaluate(() => { const e = new Event('beforeunload', { cancelable: true }); dispatchEvent(e); return e.defaultPrevented; }), true);
+  // The back gesture first closes the open chat without asking, then on Home asks before leaving
+  // the page and its chats.
+  await mob.waitForTimeout(600);
+  await mob.evaluate(() => history.back());
   await mob.getByRole('heading', { name: /^Intragram/ }).waitFor();
   await mob.waitForTimeout(600);
+  assert.equal(await mob.getByText('Leave this page?').count(), 0, 'back from a chat only closes the chat');
   await mob.evaluate(() => history.back());
   await mob.getByText('Leave this page?').waitFor();
   await shot(mob, `${kind}-leave-guard`);
