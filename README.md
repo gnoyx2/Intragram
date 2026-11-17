@@ -49,7 +49,7 @@ Intragram is a release candidate (app 1.0.0, wire protocol 7). It builds for six
 | Windows | 10, x64 | portable `.zip` | not signed | not run |
 | Linux | x64, GTK 3 | `.tar.gz` bundle (experimental) | none | not run |
 | Browser guest | current browsers | page served by the host app | n/a | not run |
-| Web app (preview, beta) | current Chromium and Firefox, and Safari on macOS; phone browsers checked in emulation and the iOS Simulator only | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), the same Flutter app (`lib/main_web.dart`) | n/a | automated browser runs on one computer only, see [DEVICE_QA.md](DEVICE_QA.md) |
+| Web app (preview, beta) | current Chromium, Edge and Firefox, and Safari on macOS; phone browsers checked in emulation, the Android Emulator and the iOS Simulator only | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), the same Flutter app (`lib/main_web.dart`) | n/a | automated browser runs on one computer only, see [DEVICE_QA.md](DEVICE_QA.md) |
 
 CI runs the test suite and an Android debug build on every push, and builds the Apple, Windows and Linux apps whenever their native code changes (see [Development and CI](#development-and-ci)). Automated tests do not replace a run on real devices and a real network.
 
@@ -145,7 +145,7 @@ The vault (`vault.json`) and a remembered display name (`identity.json`) live in
 
 ### Use in a browser
 
-The web app is a **preview (beta)** at **[gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/)**. It passed automated runs in Chromium, Firefox and Safari on one computer. On a phone it shows the phone app's screens and gestures: the scan icon opens the camera for an invitation QR, received files open the share sheet, and Android browsers vibrate for new messages ([docs/WEB.md](docs/WEB.md#phone-browsers)). Phone browsers were checked in iPhone and Android emulation and in Safari on the iOS Simulator; real phones, two devices on a real Wi-Fi and screen readers have not been checked yet ([DEVICE_QA.md](DEVICE_QA.md) has the list and the results so far), so treat it as a test version.
+The web app is a **preview (beta)** at **[gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/)**. It passed automated runs in Chromium, Edge, Firefox and Safari on one computer. On a phone it shows the phone app's screens and gestures: the scan icon opens the camera for an invitation QR, received files open the share sheet, and Android browsers vibrate for new messages ([docs/WEB.md](docs/WEB.md#phone-browsers)). Phone browsers were checked in iPhone and Android emulation, in Chrome and Firefox on the Android Emulator and in Safari on the iOS Simulator; real phones, two devices on a real Wi-Fi and screen readers have not been checked yet ([DEVICE_QA.md](DEVICE_QA.md) has the list and the results so far), so treat it as a test version.
 
 Open **Open web app** on the website. For two browsers, choose **Encrypted app–web connection** › **Create a connection** › **Create invitation code**, send the `IGW1.` invitation (text or QR image) to your partner, and keep the tab open. They choose **Join with a code** and return their response code. Paste that response on the inviting browser and compare the six-digit number on both screens before sending messages or files. No app, account, signaling server, STUN or TURN server is needed; the web page itself must first be loaded from its host.
 
@@ -434,7 +434,7 @@ Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰�
 | Windows | 10, x64 | 포터블 `.zip` | 서명 없음 | 미실시 |
 | Linux | x64, GTK 3 | `.tar.gz` 번들 (실험 단계) | 없음 | 미실시 |
 | 브라우저 게스트 | 최신 브라우저 | 호스트 앱이 내려주는 페이지 | 해당 없음 | 미실시 |
-| 웹 앱 (미리보기, beta) | 최신 Chromium·Firefox와 macOS Safari. 휴대폰 브라우저는 에뮬레이션과 iOS 시뮬레이터에서만 확인 | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), 같은 Flutter 앱(`lib/main_web.dart`) | 해당 없음 | 컴퓨터 한 대의 자동 브라우저 검사만, [DEVICE_QA.md](DEVICE_QA.md) 참고 |
+| 웹 앱 (미리보기, beta) | 최신 Chromium·Edge·Firefox와 macOS Safari. 휴대폰 브라우저는 에뮬레이션, Android 에뮬레이터, iOS 시뮬레이터에서만 확인 | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), 같은 Flutter 앱(`lib/main_web.dart`) | 해당 없음 | 컴퓨터 한 대의 자동 브라우저 검사만, [DEVICE_QA.md](DEVICE_QA.md) 참고 |
 
 CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티브 코드가 바뀌면 Apple, Windows, Linux 앱도 빌드합니다([개발과 CI](#개발과-ci) 참고). 자동 테스트가 실기기와 실제 네트워크에서 돌려 보는 일을 대신하지는 않습니다.
 
@@ -530,7 +530,7 @@ Intragram은 사설 주소에서만 연결을 받고 겁니다. 방화벽 팝업
 
 ### 웹에서 사용하기
 
-웹 앱은 **미리보기(beta)**이고 주소는 **[gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/)**입니다. 컴퓨터 한 대의 Chromium, Firefox, Safari 자동 검사는 통과했습니다. 휴대폰에서는 앱과 같은 휴대폰 화면과 제스처로 동작합니다. 스캔 아이콘은 카메라로 초대 QR을 읽고, 받은 파일은 공유 시트로 저장하며, Android 브라우저는 새 메시지에 진동합니다([docs/WEB.md](docs/WEB.md#phone-browsers)). 휴대폰 브라우저는 iPhone·Android 에뮬레이션과 iOS 시뮬레이터의 Safari에서만 확인했고, 실제 휴대폰, 실제 Wi-Fi의 두 기기, 스크린 리더는 아직 확인하지 못했으므로 시험판으로 써 주세요. 확인 항목과 지금까지의 결과는 [DEVICE_QA.md](DEVICE_QA.md)에 있습니다.
+웹 앱은 **미리보기(beta)**이고 주소는 **[gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/)**입니다. 컴퓨터 한 대의 Chromium, Edge, Firefox, Safari 자동 검사는 통과했습니다. 휴대폰에서는 앱과 같은 휴대폰 화면과 제스처로 동작합니다. 스캔 아이콘은 카메라로 초대 QR을 읽고, 받은 파일은 공유 시트로 저장하며, Android 브라우저는 새 메시지에 진동합니다([docs/WEB.md](docs/WEB.md#phone-browsers)). 휴대폰 브라우저는 iPhone·Android 에뮬레이션, Android 에뮬레이터의 Chrome·Firefox, iOS 시뮬레이터의 Safari에서만 확인했고, 실제 휴대폰, 실제 Wi-Fi의 두 기기, 스크린 리더는 아직 확인하지 못했으므로 시험판으로 써 주세요. 확인 항목과 지금까지의 결과는 [DEVICE_QA.md](DEVICE_QA.md)에 있습니다.
 
 공식 페이지의 **웹에서 시작**을 엽니다. 브라우저끼리 연결하려면 **앱·웹 암호화 연결** › **새 연결 만들기** › **초대 코드 만들기**로 만든 `IGW1.` 초대 코드(텍스트나 QR 이미지)를 상대에게 보내고 탭을 열어 둡니다. 상대는 **코드로 참여**에 코드를 넣고 응답 코드를 돌려줍니다. 초대한 쪽에서 응답 코드를 입력한 뒤, 양쪽의 6자리 번호가 같은지 확인하고 대화와 파일 전송을 시작하세요. 앱·계정·연결 서버·STUN·TURN 서버는 필요 없지만, 웹페이지 자체는 먼저 호스팅 서버에서 불러와야 합니다.
 

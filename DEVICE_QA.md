@@ -325,6 +325,36 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | N3, F5, U15, 5a F8 | 브라우저 게스트 | — | 호스트 내장 웹(`7dc9a53fe02d`) | — | 2026-10-26 | NOT RUN | iOS QA 번들 게스트 접속 시 발견된 호스트 멈춤(`0x8BADF00D`)은 `7dc9a53`에서 수정 완료; Safari·Chrome·Firefox·Edge·iOS Safari·Android Chrome 실기기 수동 검증은 미실시 (헤드리스 자동 점검·CSP 응답만 확인) |
 
 
+### 2026-11-17 저녁 Firefox Android·Edge 실행과 Firefox 뒤로 수정
+
+같은 Android 17 에뮬레이터에 Firefox for Android 160.0(Mozilla 서명 APK)을 설치해 공개 주소(`03972e8`)와
+수정본(`2a60e3f`, 로컬 미리보기)을 adb 입력으로 돌렸다. 상대는 데스크톱 Chromium 151. 데스크톱 Edge 157은
+이 Mac에 새로 설치해 돌렸다. 실제 휴대폰과 두 기기 Wi-Fi를 대체하지 않는다.
+
+| 대상 | 범위 | 결과 |
+| :-- | :-- | :-- |
+| Firefox Android 160, 공개 주소 | 첫 실행 화면, 스캔 → 카메라 권한(Firefox 사이트 권한, Android 앱 권한) → 에뮬레이터 카메라의 초대 QR 읽기, 권한을 거절하면 안내 뒤 **QR 이미지에서 읽기**(Android 사진 선택 창)로 초대 읽기, 응답 QR로 연결, 양방향 메시지, 입력칸 탭 → 키보드·입력, 보내기 뒤 키보드 유지, 브라우저 떠나기 확인에서 머무르기 뒤 연결 유지 | PASS |
+| Firefox Android 160, 공개 주소, 뒤로 | 대화를 연 채 뒤로(키보드를 닫은 뒤) | FAIL: 대화가 닫히지 않고 브라우저 확인("Are you sure?")이 떴고, 다른 앱에서 연 탭은 바로 닫혔다. 아래에서 고침 |
+| Firefox Android 160, 수정본 | 로컬 미리보기와 배포된 공개 주소(`main.dart.js` `2f9ef4df2c0a9071`)에서 같은 연결 흐름, 대화에서 뒤로 → 대화만 닫힘, 화면을 건드리지 않고 다시 뒤로 → 앱의 떠나기 확인 → 뒤로 → 확인만 닫힘, 다시 연 대화에서 입력·보내기 | PASS. 배포 뒤 Chromium 라이브 스모크도 PASS |
+| Android Chrome 145, 수정본 | 같은 연결 흐름, 대화에서 뒤로 → 대화만 닫힘, 화면을 건드린 뒤 뒤로 → 앱의 떠나기 확인 → 머무르기 | PASS (수정 전과 같음) |
+| 데스크톱 Edge 157, `03972e8` | 공개 주소 라이브 스모크(랜딩 → 앱, 코드 교환·확인 번호, 텍스트·파일 양방향, 새로고침), 3-브라우저 기본 검사 | PASS |
+| 브라우저 자동 회귀, 수정본 | Chromium 휴대폰 동등성(iPhone·Android 프로필, 뒤로용 기록 칸이 첫 터치 뒤에만 생김), Chromium 3-브라우저, Firefox 160 데스크톱 ↔ Chromium, 진입 검사 | PASS |
+| 실제 휴대폰, Samsung Internet, 두 기기 Wi-Fi, VoiceOver·TalkBack | 없음 | NOT RUN |
+
+고친 것: Flutter는 시작하자마자(화면을 건드리기 전) 뒤로를 받는 기록 칸을 하나 더 쌓는데, Firefox는 한 번도
+건드리지 않은 기록 칸을 뒤로에서 건너뛴다. 그래서 Firefox에서는 뒤로가 앱에 오지 않고 페이지를 떠나려 했다.
+이제 첫 터치나 키 입력이 끝난 뒤에 그 칸을 쌓는다(웹만 해당, 앱 `1.0.0+11` 빌드는 그대로).
+
+남는 제한: 앱이 탭의 첫 페이지면 떠나기 확인의 **Leave**는 돌아갈 페이지가 없어 페이지가 그대로 남는다
+(Chrome·Firefox 같음, 탭을 닫으면 됨). Firefox는 카메라 권한 창에서 "이 사이트에 대한 결정 기억"을 고르지
+않으면 스캔할 때마다 묻는다. Samsung Internet은 에뮬레이터에 Google 계정이 없어 Play에서 받지 못했고
+비공식 APK는 쓰지 않았다.
+
+스토어용 `1.0.0+11` 파일(App Store IPA, Mac App Store PKG, Play AAB)을 만들고 서명을 확인했다. Play AAB는
+`v1.0.0-rc.4` 초안의 `intragram.aab`(업로드 키 서명, SHA-256 `ebedd75eb2c9dfde…`)다. rc.4 초안(`03972e8`)은
+15개 자산, `SHA256SUMS.txt` 일치, 실행물 7개 출처 증명(`gh attestation verify`) 통과, 공개하지 않았다. 스토어
+올리기는 하지 않았다.
+
 ### 2026-11-17 실제 Android Chrome(에뮬레이터)·iOS Safari(시뮬레이터) 실입력 검증
 
 같은 Mac 한 대에서 Android 17 에뮬레이터(Pixel 9 프로필, Google Play 이미지, Chrome 145)와 iOS 27.0

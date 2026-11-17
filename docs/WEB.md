@@ -15,11 +15,12 @@ the installed app. This is a Flutter build, not the separate HTML client.
 
 The public address is **https://gnoyx2.github.io/Intragram/web/**. It is a
 **preview (beta)**: the checks so far are automated runs in Chromium 151,
-Firefox 160 and Safari 27 on one Mac, and phone runs in iPhone- and
-Android-emulated Chromium and in Safari on the iOS 27 Simulator. Edge, real
-phones (iOS Safari and Android Chrome on a device), two devices on a real Wi-Fi
-and screen readers are **NOT RUN** (see *Phone browsers* and *Browser support*
-below and [DEVICE_QA.md](../DEVICE_QA.md)).
+Edge 157, Firefox 160 and Safari 27 on one Mac, and phone runs in iPhone- and
+Android-emulated Chromium, in Chrome and Firefox on the Android 17 Emulator and
+in Safari on the iOS 27 Simulator. Real phones (iOS Safari and Android browsers
+on a device), two devices on a real Wi-Fi and screen readers are **NOT RUN**
+(see *Phone browsers* and *Browser support* below and
+[DEVICE_QA.md](../DEVICE_QA.md)).
 
 Local source changes do not publish the website. `docs/web/app/` is generated
 and ignored by git: GitHub Pages must use the **GitHub Actions** source
@@ -170,10 +171,14 @@ counterpart:
   page loses them. Back in an open chat closes the chat, as in the app. With
   chats open, Android back, the iOS edge swipe or the browser back button on
   Home asks before leaving, and a reload, tab close or address change asks
-  through the browser. Browsers stop pages from trapping the back button: two
-  back presses in a row without touching the page leave without the question
-  (an Android tab opened from another app closes), and iOS Safari never shows
-  the browser's own question.
+  through the browser. Browsers stop pages from trapping the back button: in
+  Chrome, two back presses in a row without touching the page leave without the
+  question (an Android tab opened from another app closes); Firefox skips
+  history entries nobody touched, so the app adds the entry that catches Back
+  only after the first touch or key press (Back before that leaves at once, with
+  no chats to lose yet); iOS Safari never shows the browser's own question. When
+  the app is the first page in its tab, **Leave** has no page to go back to and
+  the page stays open; close the tab instead.
 - **Keyboard.** Tapping a text field brings up the phone keyboard and the field
   or the chat input stays above it; dialogs switch to a compact layout without
   dropping the field's focus. Send keeps the keyboard open.
@@ -237,11 +242,12 @@ counterpart:
 - **Browser support.** Folder drag and drop, clipboard images, media codecs,
   OPFS, camera, microphone and notification permissions depend on the browser.
   Chromium 151 and Firefox 160 pass the automated runs listed under
-  *Reproducible verification* on macOS 27, and Safari 27 passes the Safari
-  WebDriver smoke test there. The phone behavior above passes in iPhone- and
-  Android-emulated Chromium and was checked in Safari on the iOS 27 Simulator
-  (no real camera, touch or on-screen keyboard there). Edge and real phones are
-  NOT RUN.
+  *Reproducible verification* on macOS 27, Edge 157 passes the three-browser
+  run and the live smoke test, and Safari 27 passes the Safari WebDriver smoke
+  test there. The phone behavior above passes in iPhone- and Android-emulated
+  Chromium, in Chrome 145 and Firefox 160 on the Android 17 Emulator and in
+  Safari on the iOS 27 Simulator (emulated cameras and input, not a real
+  phone). Real phones are NOT RUN.
   Results are recorded in [DEVICE_QA.md](../DEVICE_QA.md); sharing a widget does
   not prove every platform integration.
 
