@@ -35,6 +35,8 @@ Added after `v1.0.0-rc.1` (app `1.0.0+11`; the v7 wire protocol is unchanged):
   closed a tab opened from another app). The entry is now added after the first
   touch or key press: Back in Firefox closes the chat and Home asks, as in the
   other browsers. Web only; the native `1.0.0+11` builds are unchanged.
+- Fixed (web): iPhone browsers drew Flutter's web back arrow (←) on pushed
+  screens; they now show the iOS chevron the iPhone app uses.
 
 - Phone browsers: the web app now covers what the phone apps get from the OS.
   The scan icon on Home and **Scan their code** in the security code dialog use
