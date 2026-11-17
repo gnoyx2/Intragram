@@ -50,7 +50,8 @@ PageTransitionsTheme _pageTransitionsTheme() => PageTransitionsTheme(
 
 // macOS 앱 VoiceOver는 뒤로·닫기 버튼 tooltip을 이름으로 못 읽음 (lib/core/target_platform.dart macOSAppName):
 // 아이콘은 Flutter macOS 기본과 같고 같은 문구를 label로만 붙임. Android 브라우저는 반대로 tooltip이 이미
-// 이름인데 Flutter가 Android 앱용 label을 또 붙여서 "뒤로 뒤로"로 읽힘: 그림만 둠. 나머지는 Flutter 기본 그대로
+// 이름인데 Flutter가 Android 앱용 label을 또 붙여서 "뒤로 뒤로"로 읽힘: 그림만 둠. Flutter는 웹이면 늘 ←를
+// 그려서 iPhone 브라우저만 iOS 앱과 같은 꺾쇠로 바꿈(이름은 tooltip). 나머지는 Flutter 기본 그대로
 ActionIconThemeData? _actionIcons(TargetPlatform os) => switch ((kIsWeb, os)) {
   (false, TargetPlatform.macOS) => ActionIconThemeData(
     backButtonIconBuilder: (context) => Icon(
@@ -65,6 +66,9 @@ ActionIconThemeData? _actionIcons(TargetPlatform os) => switch ((kIsWeb, os)) {
   (true, TargetPlatform.android) => ActionIconThemeData(
     backButtonIconBuilder: (_) => const Icon(Icons.arrow_back),
     closeButtonIconBuilder: (_) => const Icon(Icons.close),
+  ),
+  (true, TargetPlatform.iOS) => ActionIconThemeData(
+    backButtonIconBuilder: (_) => const Icon(Icons.arrow_back_ios_new_rounded),
   ),
   _ => null,
 };
