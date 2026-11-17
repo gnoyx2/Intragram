@@ -60,4 +60,6 @@ for (const theme of ['light', 'dark', 'system', 'invalid']) {
   const link = shown.find(node => node?.tag === 'a');
   assert.deepEqual([link?.href, link?.target, link?.rel], ['https://example.test/Intragram/web/app/?lang=ko', '_blank', 'noopener noreferrer']);
 }
-console.log('web entry: local target, project paths, preference whitelist, secret stripping, loading first-frame lifecycle and frame refusal passed');
+// 앱 글자는 캔버스에 그려서 브라우저 번역이 바꿀 수 없음. 첫 lang="ko"만 보고 영어 화면에 번역을 권하지 않게 함
+assert.match(readFileSync(new URL('../web/index.html', import.meta.url), 'utf8'), /<html lang="ko" translate="no">/);
+console.log('web entry: local target, project paths, preference whitelist, secret stripping, loading first-frame lifecycle, frame refusal and no translation offer passed');
