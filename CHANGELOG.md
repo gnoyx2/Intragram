@@ -37,6 +37,15 @@ Added after `v1.0.0-rc.1` (app `1.0.0+11`; the v7 wire protocol is unchanged):
   other browsers. Web only; the native `1.0.0+11` builds are unchanged.
 - Fixed (web): iPhone browsers drew Flutter's web back arrow (←) on pushed
   screens; they now show the iOS chevron the iPhone app uses.
+- Added (Windows): an installer, `intragram-windows-x64-setup.exe` (Inno Setup,
+  `windows/installer/intragram.iss`), next to the portable zip. It installs for
+  the current user without admin rights into `%LOCALAPPDATA%\Programs\Intragram`,
+  adds a Start menu entry (desktop icon optional), shows Korean or English to
+  match Windows and is removed in Settings > Apps. Removal keeps the app's
+  settings and saved conversations in its AppData folders; erase saved data in
+  the app first to remove them. The release workflow installs it on the
+  runner, launches the installed app and uninstalls it before attaching the
+  file. Not Authenticode-signed, like the zip.
 
 - Phone browsers: the web app now covers what the phone apps get from the OS.
   The scan icon on Home and **Scan their code** in the security code dialog use

@@ -284,6 +284,13 @@ Both must be built on their own OS. A macOS compile says nothing about them.
   `build\windows\x64\runner\Release` folder (exe, DLLs, `data`). CI also copies
   the VC++ runtime DLLs next to the exe. Without a code-signing certificate
   SmartScreen warns; to sign: `signtool sign /fd SHA256 /tr <timestamp-url> /td SHA256 /a intragram.exe`.
+  CI packs the same folder twice: the portable zip and
+  `intragram-windows-x64-setup.exe`, built by Inno Setup 6.3+ from
+  `windows/installer/intragram.iss` (per-user install, no admin rights, removed
+  in Settings > Apps). Never change its `AppId`: installed copies would stop
+  updating and a second copy would appear. The `Test installer` step installs
+  it silently on the runner, launches the installed app and uninstalls it.
+  When signing, sign `intragram.exe` before packing and the setup exe after.
 - **Linux** (x64): build needs `clang cmake ninja-build pkg-config libgtk-3-dev`.
   Users need PulseAudio tools (`parecord`/`pacat`) or PipeWire tools
   (`pw-record`/`pw-play`, then `pw-cat` fallback) for voice messages; with

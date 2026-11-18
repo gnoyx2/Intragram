@@ -39,6 +39,7 @@ jobs:
       - run: dart format --output=none --set-exit-if-changed .
       - run: python3 tool/check_loc.py
       - run: python3 tool/release_workflow_test.py
+      - run: python3 tool/windows_installer_test.py
       - run: flutter analyze
       # 'large' 태그(1GiB·4GiB 전송 회귀)는 느리고 디스크를 수 GiB 써서 릴리즈 게이트에서도 제외함 (필요하면 별도 실행함)
       - run: flutter test --exclude-tags large
@@ -208,6 +209,45 @@ jobs:
             "flutter: $env:FLUTTER_VERSION, runner: windows-2022 x64"
             "windows signing: Authenticode status $($sig.Status) (NotSigned means SmartScreen will warn)"
           ) | Set-Content dist/SIGNING-windows.txt
+      # 설치형: 같은 Release 폴더(VC++ 런타임 포함)를 Inno Setup으로 묶음. 사용자 단위 설치라 관리자 권한 없이 깔림
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress }
+          $v = (Select-String -Path pubspec.yaml -Pattern '^version:\s*(\d+\.\d+\.\d+)\+(\d+)').Matches[0].Groups
+          & $iscc "/DSourceDir=$PWD\build\windows\x64\runner\Release" "/DAppVersion=$($v[1].Value)" `
+            "/DFileVersion=$($v[1].Value).$($v[2].Value)" "/O$PWD\dist" windows\installer\intragram.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $sig = Get-AuthenticodeSignature dist\intragram-windows-x64-setup.exe
+          Add-Content dist/SIGNING-windows.txt "windows installer signing: Authenticode status $($sig.Status)"
+      # 러너에 조용히 설치해 파일·시작 메뉴·앱 목록 항목을 보고, 깔린 앱을 띄운 뒤 제거까지 확인함
+      - name: Test installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $quiet = '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART'
+          $setup = Start-Process "$PWD\dist\intragram-windows-x64-setup.exe" -ArgumentList $quiet -Wait -PassThru
+          if ($setup.ExitCode -ne 0) { throw "setup exited with $($setup.ExitCode)" }
+          $app = "$env:LOCALAPPDATA\Programs\Intragram"
+          $link = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Intragram.lnk"
+          $key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{2EA84494-9B4A-48D2-93CC-3A08EED7E51A}_is1'
+          foreach ($file in 'intragram.exe', 'flutter_windows.dll', 'vcruntime140.dll', 'data\app.so', 'unins000.exe') {
+            if (-not (Test-Path "$app\$file")) { throw "installer did not place $file" }
+          }
+          if (-not (Test-Path $link)) { throw 'no Start menu shortcut' }
+          if ((Get-ItemProperty $key).DisplayName -ne 'Intragram') { throw 'no Settings > Apps entry' }
+          $run = Start-Process "$app\intragram.exe" -PassThru
+          Start-Sleep -Seconds 10
+          if ($run.HasExited) { throw "installed app exited with $($run.ExitCode)" }
+          Stop-Process -Id $run.Id -Force
+          $run.WaitForExit(10000) | Out-Null
+          Start-Process "$app\unins000.exe" -ArgumentList $quiet -Wait
+          # 제거 프로그램은 임시 사본으로 다시 떠서 바로 끝나므로 다 지워질 때까지 기다림
+          for ($i = 0; $i -lt 60 -and ((Test-Path "$app\intragram.exe") -or (Test-Path $key)); $i++) { Start-Sleep -Seconds 1 }
+          if (Test-Path "$app\intragram.exe") { throw 'uninstall left the app' }
+          if (Test-Path $link) { throw 'uninstall left the Start menu shortcut' }
+          if (Test-Path $key) { throw 'uninstall left the Settings > Apps entry' }
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: windows
@@ -330,7 +370,8 @@ jobs:
             - iOS `.ipa`: unsigned. It installs only after re-signing with your own Apple
               Developer profile.
             - macOS zip/dmg: ad-hoc signed, not notarized. Gatekeeper will warn.
-            - Windows zip: not Authenticode-signed. SmartScreen will warn.
+            - Windows installer (`-setup.exe`: installs for the current user without admin rights,
+              remove it in Settings > Apps) and portable zip: not Authenticode-signed. SmartScreen will warn.
             - Linux tarball: experimental, Linux runtime/dependencies not yet reviewed; no OS-level signing.
 
             Licenses: `LICENSE` (MIT), `THIRD_PARTY_NOTICES.md` and `WEBRTC_NOTICES.md` are attached.

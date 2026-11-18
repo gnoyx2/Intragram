@@ -80,7 +80,7 @@ iOS/macOS 디버그와 Windows·Linux 디버그), 태그 없는 `release`(`workf
 
 | ID | 절차 | 기대 결과 |
 | :-- | :-- | :-- |
-| I1 | 배포 산출물로 설치(Android `adb install`, iOS 서명 빌드, macOS zip/dmg, Windows zip 압축 해제 후 실행, Linux tar 해제 후 실행) | 크래시 없이 첫 화면. 서명 경고는 `SIGNING-*.txt`와 README 안내와 일치 |
+| I1 | 배포 산출물로 설치(Android `adb install`, iOS 서명 빌드, macOS zip/dmg, Windows zip 압축 해제 후 실행과 `-setup.exe` 설치·실행·설정 > 앱에서 제거, Linux tar 해제 후 실행) | 크래시 없이 첫 화면. 서명 경고는 `SIGNING-*.txt`와 README 안내와 일치 |
 | I2 | 권한 팝업 허용/거부 각각(로컬 네트워크, 마이크, 카메라, 알림, Android 17 로컬 네트워크(target SDK 37 이상)) | 거부해도 크래시 없음, 해당 기능만 안내와 함께 꺼짐. 마이크·카메라 거부 안내의 "설정 열기"가 그 앱의 설정(iOS·Android) 또는 개인정보 보호 항목(macOS·Windows)을 엶 |
 | I3 | 시스템 언어 한국어/영어 | 모든 문자열이 해당 언어 |
 
