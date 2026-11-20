@@ -41,7 +41,7 @@ The name is *intranet* plus *-gram*, and the mascot is a carrier pigeon: message
 
 **iPhone and iPad: [Intragram 1.0.0 is on the App Store](https://apps.apple.com/app/id6814277170)** (since 2026-11-20). The Mac app is in App Review and Android is in Google Play closed testing.
 
-Intragram is a release candidate (app 1.0.0, wire protocol 7). It builds for six platforms and includes a browser client, but no platform has passed the real-device checks in [DEVICE_QA.md](DEVICE_QA.md) yet, and the code has not had an independent security audit. Don't rely on it where a failure could put someone at risk.
+Intragram is a release candidate (app 1.0.1, wire protocol 7). It builds for six platforms and includes a browser client, but no platform has passed the real-device checks in [DEVICE_QA.md](DEVICE_QA.md) yet, and the code has not had an independent security audit. Don't rely on it where a failure could put someone at risk.
 
 | Platform | Minimum version | Release build | Signing | Device QA |
 | :--- | :--- | :--- | :--- | :--- |
@@ -119,26 +119,26 @@ It fits places where the internet is blocked, slow or unwanted: an internal netw
   <img src="docs/readme/04-install.png" alt="Carrier pigeon hugging an app download parcel box" width="151" height="160">
 </p>
 
-**[Open Downloads (GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**, select a version and expand **Assets**. [v1.0.0-rc.4](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.0-rc.4) is the current **testing pre-release** (v1.0.0-rc.1 stays listed). Automated tests and artifact verification passed, but **real-device QA has not been completed on any platform**. On iPhone and iPad, install from the [App Store](https://apps.apple.com/app/id6814277170) instead; Mac App Store and Google Play links will be added when those are live.
+**[Open Downloads (GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**, select a version and expand **Assets**. [v1.0.1](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.1) is the current **testing pre-release** (v1.0.0-rc.4 and v1.0.0-rc.1 stay listed). Automated tests and artifact verification passed, but **real-device QA has not been completed on any platform**. On iPhone and iPad, install from the [App Store](https://apps.apple.com/app/id6814277170) instead; Mac App Store and Google Play links will be added when those are live.
 
-The v1.0.0-rc.4 apps include the encrypted app–web connection, so they connect to the web app, and they use the same wire protocol (7) as v1.0.0-rc.1 apps. The older v1.0.0-rc.1 files predate that connection and cannot connect to the web app.
+v1.0.1 fixes device search on Android 17 (see [CHANGELOG.md](CHANGELOG.md)). The v1.0.1 and v1.0.0-rc.4 apps include the encrypted app–web connection, so they connect to the web app, and they use the same wire protocol (7) as v1.0.0-rc.1 apps. The older v1.0.0-rc.1 files predate that connection and cannot connect to the web app.
 
 | Device | File to download from Assets | Installation |
 | :--- | :--- | :--- |
-| Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-android.apk) | One APK for supported ARM and x64 devices. Open it on the phone and allow installation from that browser or file manager if prompted. |
+| Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-android.apk) | One APK for supported ARM and x64 devices. Open it on the phone and allow installation from that browser or file manager if prompted. |
 | iPhone, iPad | [App Store](https://apps.apple.com/app/id6814277170) | Install it from the App Store. |
-| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-macos.dmg) (or [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-macos.zip)) | Open the disk image or extract the ZIP, then copy the `.app` bundle to Applications. |
-| Windows x64 | [intragram-windows-x64.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-windows-x64.zip) | Extract the entire folder, then run `intragram.exe`. Keep its DLLs and `data` folder together. |
-| Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-linux-x64.tar.gz) | Extract it, then run `./intragram`; `./install.sh` adds a launcher. |
+| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-macos.dmg) (or [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-macos.zip)) | Open the disk image and drag Intragram to Applications, or extract the ZIP and copy the `.app` bundle there. |
+| Windows x64 | [intragram-windows-x64-setup.exe](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-windows-x64-setup.exe) (or the portable [intragram-windows-x64.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-windows-x64.zip)) | Run the installer: it installs for your account without admin rights, adds a Start menu entry and is removed in *Settings › Apps*. For the ZIP, extract the entire folder, then run `intragram.exe`; keep its DLLs and `data` folder together. |
+| Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-linux-x64.tar.gz) | Extract it, then run `./intragram`; `./install.sh` adds a launcher. |
 
-GitHub's **Source code (zip/tar.gz)** files are source code, not installed apps. `intragram.aab` is for Google Play submission, not direct installation. Android APK/AAB files are included only when CI has the project's release signing key; debug-signed test APKs are never published.
+GitHub's **Source code (zip/tar.gz)** files are source code, not installed apps. The Android APK is attached only when CI has the project's release signing key; debug-signed test APKs are never published. Published releases leave out the store-only files (the unsigned iOS `.ipa` and the Google Play `.aab`).
 
 Version tags create a **draft** release. Downloads become public only after the maintainer publishes it; early releases remain marked **Pre-release** until device QA passes. Each release includes `SHA256SUMS.txt` and a `SIGNING-<platform>.txt` per platform that records how each file was signed. Check a download with `shasum -a 256 -c --ignore-missing SHA256SUMS.txt` on macOS, `sha256sum -c --ignore-missing SHA256SUMS.txt` on Linux, or `Get-FileHash <file> -Algorithm SHA256` in PowerShell. The checksums only catch a broken download. `gh attestation verify <file> --repo gnoyx2/Intragram` checks that the release workflow built the file.
 
 Intragram only listens on and connects to private addresses, so allow firewall prompts for private networks only.
 
 - **macOS**: ad-hoc signed and not notarized, so Gatekeeper blocks the first launch. On macOS 15 and later, open the app once, then click *Open Anyway* in *System Settings › Privacy & Security*. On macOS 12 to 14, right-click the app and choose *Open*. Allow the Local Network prompt.
-- **Windows**: unzip the whole folder and run `intragram.exe`. SmartScreen warns about an unsigned app (*More info*, then *Run anyway*). With Smart App Control turned on, Windows blocks unsigned apps without an exception, so Intragram won't run on that PC until it is signed.
+- **Windows**: run `intragram-windows-x64-setup.exe`, or unzip the whole portable folder and run `intragram.exe`. SmartScreen warns about an unsigned app (*More info*, then *Run anyway*). With Smart App Control turned on, Windows blocks unsigned apps without an exception, so Intragram won't run on that PC until it is signed.
 - **Linux**: extract the archive and run `./intragram`. `./install.sh` adds it to the app menu with its icon (`./install.sh --uninstall` removes it; run it again if you move the folder). It needs `libgtk-3`, `avahi-daemon` for discovery, `xdg-desktop-portal` with a GTK, GNOME or KDE backend for file dialogs, PulseAudio tools (`parecord`, `pacat`) or PipeWire tools (`pw-record`, `pw-play`) for voice, and `xdg-utils` to open received files. Package names differ between distributions.
 - **iOS, iPadOS**: install from the [App Store](https://apps.apple.com/app/id6814277170). Building and signing your own IPA requires an Apple team and provisioning; see [RELEASING.md](RELEASING.md#4-ios-and-macos).
 - **Android**: install updates over the existing app using an APK signed by the same release key. Keep a copy of any data you need before removing an existing test installation.
@@ -428,7 +428,7 @@ Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰�
 
 **iPhone·iPad: [Intragram 1.0.0이 App Store에 나왔습니다](https://apps.apple.com/app/id6814277170)**(2026-11-20부터). Mac 앱은 App Store 심사 중이고, Android는 Google Play 비공개 테스트 중입니다.
 
-릴리스 후보 단계입니다(앱 1.0.0, 와이어 프로토콜 7). 여섯 개 플랫폼용으로 빌드되고 브라우저 클라이언트도 들어 있지만, [DEVICE_QA.md](DEVICE_QA.md)의 실기기 점검을 통과한 플랫폼은 아직 없고 외부 보안 감사도 받지 않았습니다. 문제가 생겼을 때 누군가 위험해질 수 있는 곳에서는 쓰지 마세요.
+릴리스 후보 단계입니다(앱 1.0.1, 와이어 프로토콜 7). 여섯 개 플랫폼용으로 빌드되고 브라우저 클라이언트도 들어 있지만, [DEVICE_QA.md](DEVICE_QA.md)의 실기기 점검을 통과한 플랫폼은 아직 없고 외부 보안 감사도 받지 않았습니다. 문제가 생겼을 때 누군가 위험해질 수 있는 곳에서는 쓰지 마세요.
 
 | 플랫폼 | 최소 버전 | 릴리스 빌드 | 서명 | 실기기 QA |
 | :--- | :--- | :--- | :--- | :--- |
@@ -506,26 +506,26 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
   <img src="docs/readme/04-install.png" alt="설치 패키지 상자를 안고 있는 전서구" width="151" height="160">
 </p>
 
-**[다운로드 페이지(GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**에서 버전을 고른 뒤 **Assets**를 펼치세요. [v1.0.0-rc.4](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.0-rc.4)를 현재 **테스트용 프리릴리스**로 제공합니다(v1.0.0-rc.1도 목록에 남아 있습니다). 자동 테스트와 빌드 파일 검증은 통과했지만, **모든 플랫폼의 실기기 QA는 아직 미완료**입니다. iPhone과 iPad는 [App Store](https://apps.apple.com/app/id6814277170)에서 받으세요. Mac App Store와 Google Play 링크는 공개되면 추가합니다.
+**[다운로드 페이지(GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**에서 버전을 고른 뒤 **Assets**를 펼치세요. [v1.0.1](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.1)을 현재 **테스트용 프리릴리스**로 제공합니다(v1.0.0-rc.4와 v1.0.0-rc.1도 목록에 남아 있습니다). 자동 테스트와 빌드 파일 검증은 통과했지만, **모든 플랫폼의 실기기 QA는 아직 미완료**입니다. iPhone과 iPad는 [App Store](https://apps.apple.com/app/id6814277170)에서 받으세요. Mac App Store와 Google Play 링크는 공개되면 추가합니다.
 
-v1.0.0-rc.4 앱에는 앱·웹 암호화 연결이 들어 있어 웹 앱과 연결할 수 있고, v1.0.0-rc.1 앱과 같은 통신 프로토콜(7)을 씁니다. 예전 v1.0.0-rc.1 파일은 그 연결이 생기기 전에 만든 것이라 웹 앱과 연결할 수 없습니다.
+v1.0.1은 Android 17에서 기기 찾기가 멈추던 문제를 고쳤습니다([CHANGELOG.md](CHANGELOG.md)). v1.0.1과 v1.0.0-rc.4 앱에는 앱·웹 암호화 연결이 들어 있어 웹 앱과 연결할 수 있고, v1.0.0-rc.1 앱과 같은 통신 프로토콜(7)을 씁니다. 예전 v1.0.0-rc.1 파일은 그 연결이 생기기 전에 만든 것이라 웹 앱과 연결할 수 없습니다.
 
 | 기기 | Assets에서 받을 파일 | 설치 방법 |
 | :--- | :--- | :--- |
-| Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-android.apk) | 지원하는 ARM·x64 기기용 통합 APK입니다. 폰에서 파일을 열고, 요청이 뜨면 해당 브라우저나 파일 관리자의 앱 설치를 허용하세요. |
+| Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-android.apk) | 지원하는 ARM·x64 기기용 통합 APK입니다. 폰에서 파일을 열고, 요청이 뜨면 해당 브라우저나 파일 관리자의 앱 설치를 허용하세요. |
 | iPhone, iPad | [App Store](https://apps.apple.com/app/id6814277170) | App Store에서 설치하세요. |
-| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-macos.dmg) (또는 [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-macos.zip)) | 디스크 이미지를 열거나 ZIP을 풀고 `.app` 파일을 응용 프로그램 폴더로 복사하세요. |
-| Windows x64 | [intragram-windows-x64.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-windows-x64.zip) | 폴더 전체의 압축을 풀고 `intragram.exe`를 실행하세요. DLL과 `data` 폴더를 함께 유지해야 합니다. |
-| Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.0-rc.4/intragram-linux-x64.tar.gz) | 압축을 풀고 `./intragram`을 실행하세요. `./install.sh`로 앱 메뉴에 등록합니다. |
+| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-macos.dmg) (또는 [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-macos.zip)) | 디스크 이미지를 열고 Intragram을 Applications 폴더로 끌어다 놓으세요. ZIP을 받았다면 압축을 풀고 `.app` 파일을 응용 프로그램 폴더로 복사하세요. |
+| Windows x64 | [intragram-windows-x64-setup.exe](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-windows-x64-setup.exe) (또는 포터블 [intragram-windows-x64.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-windows-x64.zip)) | 설치 파일을 실행하면 관리자 권한 없이 내 계정에 설치되고 시작 메뉴에 등록됩니다. 제거는 *설정 › 앱*에서 합니다. ZIP은 폴더 전체의 압축을 풀고 `intragram.exe`를 실행하세요. DLL과 `data` 폴더를 함께 유지해야 합니다. |
+| Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-linux-x64.tar.gz) | 압축을 풀고 `./intragram`을 실행하세요. `./install.sh`로 앱 메뉴에 등록합니다. |
 
-GitHub의 **Source code (zip/tar.gz)**는 설치 파일이 아닌 소스 코드입니다. `intragram.aab`는 Google Play 제출용으로, 직접 설치하는 파일이 아닙니다. Android APK와 AAB는 CI에 프로젝트 릴리스 서명 키가 설정된 경우에만 첨부하며, 디버그 키로 서명한 시험용 APK는 공개하지 않습니다.
+GitHub의 **Source code (zip/tar.gz)**는 설치 파일이 아닌 소스 코드입니다. Android APK는 CI에 프로젝트 릴리스 서명 키가 설정된 경우에만 첨부하며, 디버그 키로 서명한 시험용 APK는 공개하지 않습니다. 스토어 제출용 파일(서명 없는 iOS `.ipa`, Google Play용 `.aab`)은 공개한 릴리스에서 뺍니다.
 
 버전 태그를 올리면 먼저 **초안(Draft)** 릴리스가 만들어집니다. 관리자가 게시해야 사용자가 다운로드할 수 있고, 실기기 QA를 통과하기 전까지는 **Pre-release**로 표시합니다. 릴리스에는 `SHA256SUMS.txt`와 플랫폼별 실제 서명 상태를 기록한 `SIGNING-<platform>.txt`가 붙습니다. 내려받은 파일은 macOS에서 `shasum -a 256 -c --ignore-missing SHA256SUMS.txt`, Linux에서 `sha256sum -c --ignore-missing SHA256SUMS.txt`, Windows PowerShell에서 `Get-FileHash <파일> -Algorithm SHA256`으로 확인합니다. 체크섬은 깨진 다운로드만 잡아냅니다. 릴리스 워크플로가 직접 만든 파일인지는 `gh attestation verify <파일> --repo gnoyx2/Intragram`으로 확인합니다.
 
 Intragram은 사설 주소에서만 연결을 받고 겁니다. 방화벽 팝업은 개인 네트워크에서만 허용하세요.
 
 - **macOS**: ad-hoc 서명에 공증이 없어서 처음 실행할 때 Gatekeeper가 막습니다. macOS 15 이상은 앱을 한 번 연 뒤 *시스템 설정 › 개인정보 보호 및 보안*에서 *그래도 열기*를 누르고, macOS 12~14는 앱을 우클릭해서 *열기*를 고릅니다. 로컬 네트워크 접근 팝업은 허용합니다.
-- **Windows**: 폴더째 압축을 풀고 `intragram.exe`를 실행합니다. 서명이 없어 SmartScreen이 경고하면 *추가 정보*를 누른 뒤 *실행*을 누르세요. 스마트 앱 컨트롤이 켜진 PC는 서명 없는 앱을 예외 없이 막으므로, 서명하기 전까지는 그 PC에서 실행할 수 없습니다.
+- **Windows**: `intragram-windows-x64-setup.exe`를 실행하거나, 포터블 ZIP을 폴더째 풀고 `intragram.exe`를 실행합니다. 서명이 없어 SmartScreen이 경고하면 *추가 정보*를 누른 뒤 *실행*을 누르세요. 스마트 앱 컨트롤이 켜진 PC는 서명 없는 앱을 예외 없이 막으므로, 서명하기 전까지는 그 PC에서 실행할 수 없습니다.
 - **Linux**: 압축을 풀고 `./intragram`을 실행합니다. `./install.sh`는 아이콘과 함께 앱 메뉴에 등록합니다(`./install.sh --uninstall`로 제거, 폴더를 옮겼다면 다시 실행). 실행하려면 `libgtk-3`, 기기 탐색용 `avahi-daemon`, 파일 대화상자용 `xdg-desktop-portal`과 GTK·GNOME·KDE 백엔드 중 하나, 음성용 PulseAudio 도구(`parecord`, `pacat`)나 PipeWire 도구(`pw-record`, `pw-play`), 받은 파일을 열 `xdg-utils`가 필요합니다. 패키지 이름은 배포판마다 다릅니다.
 - **iOS, iPadOS**: [App Store](https://apps.apple.com/app/id6814277170)에서 설치하세요. 서명된 IPA를 빌드하고 배포하려면 해당 Apple 팀과 프로비저닝 설정이 필요합니다. [RELEASING.md](RELEASING.md#4-ios-and-macos)를 참고하세요.
 - **Android**: 업데이트할 때는 같은 릴리스 키로 서명된 APK를 기존 앱 위에 설치하세요. 기존 시험용 앱을 삭제해야 한다면 필요한 데이터를 먼저 따로 보관하세요.

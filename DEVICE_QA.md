@@ -327,6 +327,26 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | N3, F5, U15, 5a F8 | 브라우저 게스트 | — | 호스트 내장 웹(`7dc9a53fe02d`) | — | 2026-10-26 | NOT RUN | iOS QA 번들 게스트 접속 시 발견된 호스트 멈춤(`0x8BADF00D`)은 `7dc9a53`에서 수정 완료; Safari·Chrome·Firefox·Edge·iOS Safari·Android Chrome 실기기 수동 검증은 미실시 (헤드리스 자동 점검·CSP 응답만 확인) |
 
 
+### 2026-11-21 Android 17 기기 찾기 오류와 1.0.1
+
+Android 17 에뮬레이터(API 37, Pixel 9 프로필)에서 공개 빌드 `1.0.0+11`(rc.4 APK)이 홈에 "기기 검색이 예기치
+않게 멈췄어요"를 띄웠다. logcat에는 NSD 광고의 `SecurityException: Missing local network permission`이 찍혔고
+탐색은 오류 7로 시작하지 못했다. Android 17은 대상 SDK와 상관없이 `ACCESS_LOCAL_NETWORK`를 요구하는데, 앱은
+대상이 API 37일 때만 권한을 물었다. adb로 권한을 준 뒤에도 문구가 남았다. 새로고침이 스캔을 다시 켜도 홈이 스캔
+상태를 다시 읽지 않아서였고, iOS 시뮬레이터에서 본 같은 문구도 이 문제로 보인다. 둘 다 `6b49696`(1.0.1+12)에서
+고쳤다.
+
+| 대상 | 범위 | 결과 |
+| :-- | :-- | :-- |
+| Android 17 에뮬레이터, `1.0.0+11` | 첫 실행(권한 요청 없음) | FAIL: 검색 멈춤 문구, 광고 `SecurityException` |
+| Android 17 에뮬레이터, `6b49696` 릴리스 서명 APK | 첫 실행에 권한 창 → 허용 → "0개 찾음"(상대 없음)이 30초 넘게 유지, 보안 예외·치명 오류 0건 | PASS |
+| 같은 에뮬레이터, 권한만 고친 수정본 | 권한 창에서 거부 → 로컬 네트워크 꺼짐 안내와 설정 열기, 앱을 내리고 권한을 켠 뒤 복귀 → 검색 재개, 40초 동안 오류 문구 없음 | PASS |
+| 자동 테스트 | 스캔 오류 뒤 네이티브 탐색 정지·홈 알림, 다음 새로고침에서 오류 해제(`test/discovery_scan_test.dart`), 전체 1,593개, CI 검사 전부 | PASS |
+| 두 기기 Wi-Fi, 실제 Android 17 휴대폰, iOS 실기기 | 없음 | NOT RUN |
+
+스토어용 `1.0.1+12` 파일은 App Store IPA와 Mac App Store PKG를 이 Mac에서 서명해 만들었고(codesign·pkgutil 확인),
+Play AAB는 v1.0.1 릴리스 초안의 `intragram.aab`다. 스토어 올리기는 하지 않았다.
+
 ### 2026-11-17 저녁 Firefox Android·Edge 실행과 Firefox 뒤로 수정
 
 같은 Android 17 에뮬레이터에 Firefox for Android 160.0(Mozilla 서명 APK)을 설치해 공개 주소(`03972e8`)와
