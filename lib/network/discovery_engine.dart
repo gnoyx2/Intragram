@@ -136,6 +136,8 @@ class DiscoveryController extends Notifier<List<PeerDevice>> {
         await discovery?.stop();
       }
     }
+    // isRunning은 state 밖이라 목록을 다시 내보내야 홈이 '검색 멈춤' 문구를 다시 고름 (스캔이 살아나도 오류 문구가 남던 문제)
+    _publish();
   }
 
   // room=1·inRoom=1을 한 번에 갱신: 따로 부르면 광고 재시작이 두 번 겹쳐 Darwin mDNSResponder가 메인 스레드를 멈춤

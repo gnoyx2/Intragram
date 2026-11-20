@@ -90,6 +90,9 @@ void main() {
         expect(manifest, contains(change));
       }
       expect(activity, contains('Build.VERSION.SDK_INT >= 37'));
+      // Android 17 asks for the permission whatever the target SDK: without it
+      // NsdManager.registerService throws and discovery fails with error 7
+      expect(activity, isNot(contains('targetSdkVersion >= 37')));
       expect(activity, contains('"android.permission.ACCESS_LOCAL_NETWORK"'));
       expect(
         activity,

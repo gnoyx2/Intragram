@@ -4,6 +4,22 @@ Versions follow the app version in `pubspec.yaml`. The wire protocol version
 (`kProtocolVersion` in `lib/core/constants.dart`) is listed because apps on
 different protocol versions refuse to talk to each other.
 
+## 1.0.1 (app `1.0.1+12`)
+
+Protocol 7, unchanged: 1.0.1 and 1.0.0 talk to each other.
+
+- Fixed (Android 17): finding devices stopped with "Device search stopped
+  unexpectedly" and other phones could not see this one. Android 17 asks every
+  app for the local network permission (`ACCESS_LOCAL_NETWORK`), whatever SDK it
+  targets; the app asked only when it targeted API 37, so NSD advertising threw
+  a `SecurityException` and discovery failed with error 7. The app now asks on
+  Android 17 and points to Settings when the permission is denied.
+- Fixed: after a discovery error the home screen kept saying that search had
+  stopped even when the next refresh had already restarted the scan, because
+  the scan state was read only when something else redrew the screen. Seen in
+  the iOS Simulator. A failed scan now also stops its native browse instead of
+  leaving it running behind every refresh.
+
 ## Unreleased (1.0.0 release candidate)
 
 Protocol 7. Not a supported release yet: device QA is pending on every

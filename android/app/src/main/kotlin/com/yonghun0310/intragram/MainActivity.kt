@@ -147,9 +147,10 @@ class MainActivity : FlutterActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    // 문자열·정수만 써서 compileSdk 36에서도 빌드됨. target 36 이하는 OS가 LAN을 이미 허용함
+    // 문자열·정수만 써서 compileSdk 36에서도 빌드됨. Android 17(API 37)은 target과 상관없이 이 권한을 요구함:
+    // 없으면 NsdManager.registerService가 SecurityException을 내고 탐색은 오류 7로 실패해서 기기 찾기가 멈춤
     private fun localNetworkGranted(): Boolean =
-        if (Build.VERSION.SDK_INT >= 37 && applicationInfo.targetSdkVersion >= 37) {
+        if (Build.VERSION.SDK_INT >= 37) {
             checkSelfPermission(LOCAL_NETWORK_PERMISSION) == PackageManager.PERMISSION_GRANTED
         } else {
             true

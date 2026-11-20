@@ -16,11 +16,15 @@ extension _DiscoveryScan on DiscoveryController {
     }
   }
 
-  // eventStream이 나중에 오류를 방출할 수 있음 (같은 DefunctConnection). 처리하지 않으면 앱이 비정상 종료되므로 스캔을 중단함 (새로고침이나 다음 start가 복구함)
+  // eventStream이 나중에 오류를 방출할 수 있음 (같은 DefunctConnection). 처리하지 않으면 앱이 비정상 종료되므로 스캔을 중단함 (새로고침이나 다음 start가 복구함).
+  // Android는 해석·콜백 오류 뒤에도 NSD 탐색이 살아 있어 직접 멈춤 (안 그러면 새로고침마다 탐색이 쌓임). 이미 끝난 탐색이면 stop 실패는 무시
   void _onDiscoveryError() {
+    final discovery = _discovery;
     unawaited(_subscription?.cancel());
     _subscription = null;
     _discovery = null;
+    unawaited(discovery?.stop().catchError((Object _) {}));
+    _publish();
   }
 
   void _addResolved(BonsoirService service) {
