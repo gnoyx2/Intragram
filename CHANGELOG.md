@@ -46,6 +46,12 @@ Added after `v1.0.0-rc.1` (app `1.0.0+11`; the v7 wire protocol is unchanged):
   the app first to remove them. The release workflow installs it on the
   runner, launches the installed app and uninstalls it before attaching the
   file. Not Authenticode-signed, like the zip.
+- Added (macOS): the release DMG opens to an install window instead of a bare
+  app: a branded background with an arrow from the app to an Applications
+  shortcut, so installing is one drag. Built by dmgbuild 1.6.7 from
+  `macos/packaging/dmg_settings.py` and `dmg-background.png` (1x and 2x), which
+  writes the Finder layout without scripting Finder; the window is tall enough
+  to show the whole layout even when Finder's tab and path bars are turned on.
 
 - Phone browsers: the web app now covers what the phone apps get from the OS.
   The scan icon on Home and **Scan their code** in the security code dialog use

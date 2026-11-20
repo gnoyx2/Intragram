@@ -40,6 +40,7 @@ jobs:
       - run: python3 tool/check_loc.py
       - run: python3 tool/release_workflow_test.py
       - run: python3 tool/windows_installer_test.py
+      - run: python3 tool/macos_dmg_test.py
       - run: flutter analyze
       # 'large' 태그(1GiB·4GiB 전송 회귀)는 느리고 디스크를 수 GiB 써서 릴리즈 게이트에서도 제외함 (필요하면 별도 실행함)
       - run: flutter test --exclude-tags large
@@ -279,7 +280,12 @@ jobs:
           mkdir -p dist
           APP="build/macos/Build/Products/Release/Intragram.app"
           ditto -c -k --keepParent "$APP" dist/intragram-macos.zip
-          hdiutil create -volname Intragram -srcfolder "$APP" -ov -format UDZO dist/intragram-macos.dmg
+          # 설치 창: 1x·2x 배경을 한 TIFF로 묶고, dmgbuild가 Applications 바로가기와 아이콘 자리를 .DS_Store에 직접 씀
+          python3 -m venv "$RUNNER_TEMP/dmgenv"
+          "$RUNNER_TEMP/dmgenv/bin/pip" install --quiet dmgbuild==1.6.7
+          tiffutil -cathidpicheck macos/packaging/dmg-background.png macos/packaging/dmg-background@2x.png -out "$RUNNER_TEMP/dmg-background.tiff"
+          "$RUNNER_TEMP/dmgenv/bin/dmgbuild" -s macos/packaging/dmg_settings.py \
+            -D app="$APP" -D background="$RUNNER_TEMP/dmg-background.tiff" Intragram dist/intragram-macos.dmg
           {
             echo "commit: $GITHUB_SHA"
             echo "flutter: $FLUTTER_VERSION, runner: xcode-27, Xcode 27.1"
