@@ -41,7 +41,7 @@ extension _WebChatInboundControl on _WebRoom {
             hosting ? peer.id : hostId ?? peer.id,
           );
         } else {
-          store.setPeerVerified(id);
+          store.confirmPeerVerified(id);
         }
       }
       return;

@@ -107,6 +107,23 @@ Future<void> _handleLinkClosedIncoming(
       self._cleanupFailures[id] = e.failures;
     }
   }
+  // 끊긴 링크의 열린 수신 칸(받기 대기·받는 중)은 그대로 두면 수락 버튼이나 진행 표시가 멈춘 채 남음:
+  // 실패로 바꿔 다시 연결한 뒤 재시도(file_retry)로 보낸 쪽에 다시 요청하게 함
+  for (final transfer in self.store.transfers) {
+    if (transfer.conversationId != conversationId ||
+        transfer.direction != TransferDirection.incoming ||
+        (senderPeerId != null && transfer.senderPeerId != senderPeerId)) {
+      continue;
+    }
+    if (transfer.state == TransferState.offered ||
+        transfer.state == TransferState.accepted ||
+        transfer.state == TransferState.transferring) {
+      self.store.updateTransfer(
+        transfer.id,
+        (t) => t.copyWith(state: TransferState.failed, error: 'network'),
+      );
+    }
+  }
 }
 
 // 세션 정리: 입구를 닫고 → 다 취소 → I/O가 끝나길 기다림 → .part만 지움 (받은 파일·사용자 파일은 안 건드림). 실패는 모아서 던짐

@@ -78,6 +78,15 @@ void main() {
       registry.markVerified(id, expectedSas: '123456');
       peers.first.control({'k': 'verify', 'sas': '123456'});
       expect(store.conversation(id)!.verified, isTrue);
+      // 앱이 먼저 확인한 경우: 브라우저 확인이 '상대 확인 기다리는 중' 줄을 '서로 확인함'으로 닫아야 함
+      expect(
+        store
+            .messages(id)
+            .where(
+              (m) => m.systemEvent?.kind == SystemEventKind.mutuallyVerified,
+            ),
+        hasLength(1),
+      );
       registry.deleteMessageForEveryone(sent.id);
       await until(
         () => peers.first.controls.any(

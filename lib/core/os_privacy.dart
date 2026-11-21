@@ -180,6 +180,17 @@ abstract final class OsPrivacy {
     }
   }
 
+  // iOS 전용: 클립보드 이미지를 네이티브가 비동기로 받아 PNG로 줌 (원본 앱이 10초 안에 못 주면 null)
+  static Future<Uint8List?> clipboardImage() async {
+    try {
+      return await _channel.invokeMethod<Uint8List>('clipboardImage');
+    } on MissingPluginException {
+      return null;
+    } on PlatformException {
+      return null;
+    }
+  }
+
   static void clearDecodedImages() {
     _imageKeys.clear();
     final cache = PaintingBinding.instance.imageCache;

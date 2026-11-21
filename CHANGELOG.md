@@ -4,6 +4,27 @@ Versions follow the app version in `pubspec.yaml`. The wire protocol version
 (`kProtocolVersion` in `lib/core/constants.dart`) is listed because apps on
 different protocol versions refuse to talk to each other.
 
+## Unreleased (after 1.0.1)
+
+Protocol 7, unchanged. Found in a cross-platform run on one Mac (macOS app,
+iPhone and iPad simulators, Android 17 emulator) on 2026-11-21.
+
+- Fixed: a file or voice message still waiting for the other side when the
+  connection dropped (for example when an iPhone went to the background) stayed
+  on "Waiting for peer…" for the sender and kept Accept and Decline for the
+  receiver, and could not be sent again. Both sides now say that the connection
+  dropped and offer Retry, which sends it once the devices are reconnected.
+  Ending the conversation still releases the file right away.
+- Fixed (Android): Back with the keyboard open in a chat closed the keyboard and
+  the chat at once. The first Back now only closes the keyboard.
+- Fixed (iOS): "Send clipboard image" read the clipboard on the main thread, so
+  the app froze while the source (for example Universal Clipboard from a Mac)
+  delivered the image, and stayed frozen if it never did. The image is now read
+  in the background and given up after 10 seconds.
+- Fixed (app–web chats): when the app confirmed the 6-digit code before the
+  browser, the timeline kept "waiting for the peer" and never said that both
+  sides had confirmed.
+
 ## 1.0.1 (app `1.0.1+12`)
 
 Protocol 7, unchanged: 1.0.1 and 1.0.0 talk to each other.

@@ -55,13 +55,20 @@ class TransferCoordinator {
   final OutgoingTransfers outgoing;
   final IncomingTransfers incoming;
 
-  // 1:1 대화면 해당 대화의 전송을 모두 정리하고, 그룹 방 멤버 링크면 peerKey로 해당 멤버와 연관된 항목만 정리함. 진행 중인 I/O 완료 후 자원을 해제함
+  // 링크가 끊김: 1:1이면 그 대화 전체, 그룹 방 멤버 링크면 peerKey 멤버 몫만 실패로 둠. 수신 중인 I/O는 끝내고 .part를 지우며,
+  // 발신 소스는 다시 연결한 뒤 재시도용으로 남김
   Future<void> handleLinkClosed(
     String conversationId, {
     String? peerKey,
   }) async {
     await outgoing.handleLinkClosed(conversationId, recipientKey: peerKey);
     await incoming.handleLinkClosed(conversationId, senderPeerId: peerKey);
+  }
+
+  // 대화 종료: 재시도용으로 남긴 발신 소스까지 그 대화의 전송을 모두 정리함
+  Future<void> discardConversation(String conversationId) async {
+    await outgoing.discardConversation(conversationId);
+    await incoming.handleLinkClosed(conversationId);
   }
 
   // 세션 정리: 게이트부터 닫고 전송 전부를 도는 작업까지 기다려 잊음 (맵만 비우면 안 끝난 .part가 디스크에 남음)

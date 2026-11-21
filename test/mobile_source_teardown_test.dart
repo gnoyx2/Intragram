@@ -55,18 +55,28 @@ void main() {
     );
   });
 
-  test('a failing release on link close still releases the other sources and '
-      'is reported by teardown', () async {
-    await m.offer(count: 2);
-    m.fake.failRelease.add('s1');
+  test(
+    'a link close keeps the sources for retry; ending the conversation '
+    'releases them all and a failing release is reported by teardown',
+    () async {
+      await m.offer(count: 2);
+      m.fake.failRelease.add('s1');
 
-    await m.out.handleLinkClosed(m.roomId);
+      await m.out.handleLinkClosed(m.roomId);
+      expect(
+        m.fake.count('release'),
+        0,
+        reason: 'kept so Retry can resend after reconnecting',
+      );
 
-    expect(m.fake.count('release:s1'), 1);
-    expect(m.fake.count('release:s2'), 1);
-    await expectLater(
-      m.rig.registry.disposeAll(),
-      throwsA(isA<TransferCleanupException>()),
-    );
-  });
+      await m.out.discardConversation(m.roomId);
+
+      expect(m.fake.count('release:s1'), 1);
+      expect(m.fake.count('release:s2'), 1);
+      await expectLater(
+        m.rig.registry.disposeAll(),
+        throwsA(isA<TransferCleanupException>()),
+      );
+    },
+  );
 }

@@ -79,31 +79,50 @@ extension _OutgoingTransfersRetry on OutgoingTransfers {
   }
 }
 
+List<String> _conversationTransferIds(
+  OutgoingTransfers self,
+  String conversationId,
+) => self._outgoing.entries
+    .where((entry) => entry.value.conversationId == conversationId)
+    .map((entry) => entry.key)
+    .toList();
+
+// 링크가 끊김: recipientKey가 있으면(방 멤버) 그 수신자만, 없으면(1:1) 모든 열린 수신자를 실패로 둠.
+// 소스는 남겨서 다시 연결한 뒤 재시도로 이어 보냄 (예전엔 1:1에서 소스를 버려 칸이 '상대 기다리는 중'에 멈추고 재시도도 못 했음).
+// 남긴 소스는 대화 종료(discardConversation)나 세션 정리(clear)가 놓음
 Future<void> _handleLinkClosedOutgoing(
   OutgoingTransfers self,
   String conversationId,
   String? recipientKey,
 ) async {
-  final ids = self._outgoing.entries
-      .where((entry) => entry.value.conversationId == conversationId)
-      .map((entry) => entry.key)
-      .toList();
-  for (final id in ids) {
-    if (recipientKey == null) {
-      try {
-        await self.discard(id);
-      } on TransferCleanupException {
-        // 링크 콜백이라 실패는 _releaseFailures에만 남기고(clear가 던짐) 나머지 전송·수신 정리를 계속함
-      }
-      continue;
+  for (final id in _conversationTransferIds(self, conversationId)) {
+    final recipients = self._outgoing[id]?._recipients;
+    if (recipients == null) continue;
+    var changed = false;
+    for (final entry in recipients.entries) {
+      if (recipientKey != null && entry.key != recipientKey) continue;
+      if (entry.value.isTerminal) continue;
+      entry.value
+        ..stopActivity()
+        ..error = 'network'
+        ..phase = _RecipientPhase.failed;
+      changed = true;
     }
-    final recipient = self._outgoing[id]?._recipients[recipientKey];
-    if (recipient == null || recipient.isTerminal) continue;
-    recipient
-      ..stopActivity()
-      ..error = 'network'
-      ..phase = _RecipientPhase.failed;
-    self._syncTransfer(id);
+    if (changed) self._syncTransfer(id);
+  }
+}
+
+// 대화를 끝냄: 재시도용으로 남긴 것까지 그 대화의 발신 소스를 모두 놓음
+Future<void> _discardConversationOutgoing(
+  OutgoingTransfers self,
+  String conversationId,
+) async {
+  for (final id in _conversationTransferIds(self, conversationId)) {
+    try {
+      await self.discard(id);
+    } on TransferCleanupException {
+      // 실패는 _releaseFailures에만 남기고(clear가 던짐) 나머지 소스 정리를 계속함
+    }
   }
 }
 

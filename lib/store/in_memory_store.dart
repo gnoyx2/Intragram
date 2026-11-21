@@ -32,4 +32,14 @@ class InMemoryStore extends _InMemoryStoreState
         _StoreMutations,
         _StoreMessages,
         _StoreLifecycle,
-        _StorePersistence {}
+        _StorePersistence {
+  // 상대 확인을 반영하고, 이걸로 서로 확인이 끝나면 '서로 확인함' 줄을 남김 (웹 링크용:
+  // 앱이 먼저 확인한 대화가 '상대 확인 기다리는 중'에 머물렀음. LAN 링크는 넘겨받은 링크를 따로 걸러서 직접 처리함)
+  void confirmPeerVerified(String id) {
+    final wasMutual = conversation(id)?.verified ?? false;
+    setPeerVerified(id);
+    if (!wasMutual && (conversation(id)?.verified ?? false)) {
+      addSystemMessage(id, const SystemEvent(SystemEventKind.mutuallyVerified));
+    }
+  }
+}

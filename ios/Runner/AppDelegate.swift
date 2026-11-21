@@ -142,9 +142,28 @@ import UniformTypeIdentifiers
     case "clipboardKinds":
       // hasImages는 내용을 안 읽어서 붙여넣기 허용 창이 안 뜸 (파일 붙여넣기는 데스크톱만)
       result(["image": UIPasteboard.general.hasImages, "files": false])
+    case "clipboardImage":
+      readClipboardImage(result)
     default:
       result(FlutterMethodNotImplemented)
     }
+  }
+
+  // 클립보드 이미지를 비동기로 받아 PNG로 넘김. UIPasteboard.image는 원본 앱(Universal Clipboard면 Mac)이 데이터를
+  // 줄 때까지 메인 스레드를 막아서, 늦거나 응답이 없으면 앱이 멈췄음. 10초 안에 못 받으면 nil
+  private static func readClipboardImage(_ result: @escaping FlutterResult) {
+    guard let provider = UIPasteboard.general.itemProviders.first(where: {
+      $0.canLoadObject(ofClass: UIImage.self)
+    }) else {
+      result(nil)
+      return
+    }
+    let once = ClipboardImageReply(result)
+    provider.loadObject(ofClass: UIImage.self) { object, _ in
+      let png = (object as? UIImage)?.pngData()
+      DispatchQueue.main.async { once.send(png) }
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 10) { once.send(nil) }
   }
 
   @objc private func showPrivacyCover() {
@@ -287,5 +306,18 @@ import UniformTypeIdentifiers
 
   @objc private func userDidTakeScreenshot() {
     screenshotChannel?.invokeMethod("onScreenshot", arguments: nil)
+  }
+}
+
+// FlutterResult는 한 번만 불러야 해서 이미지와 시간 초과 중 먼저 온 쪽만 보냄 (메인 스레드에서만 부름)
+private final class ClipboardImageReply: @unchecked Sendable {
+  private var result: FlutterResult?
+
+  init(_ result: @escaping FlutterResult) { self.result = result }
+
+  func send(_ png: Data?) {
+    guard let result else { return }
+    self.result = nil
+    result(png.map { FlutterStandardTypedData(bytes: $0) })
   }
 }

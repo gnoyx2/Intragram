@@ -169,6 +169,8 @@ mixin _LinkRegistrySession
       }
     }
     await _links[conversationId]?.close();
+    // 링크가 끊기면 재시도용으로 남기는 발신 소스도 대화를 끝낼 땐 놓음
+    await _transfers.discardConversation(conversationId);
   }
 
   Future<void> disposeAll() async {

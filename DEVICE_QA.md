@@ -327,6 +327,31 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | N3, F5, U15, 5a F8 | 브라우저 게스트 | — | 호스트 내장 웹(`7dc9a53fe02d`) | — | 2026-10-26 | NOT RUN | iOS QA 번들 게스트 접속 시 발견된 호스트 멈춤(`0x8BADF00D`)은 `7dc9a53`에서 수정 완료; Safari·Chrome·Firefox·Edge·iOS Safari·Android Chrome 실기기 수동 검증은 미실시 (헤드리스 자동 점검·CSP 응답만 확인) |
 
 
+### 2026-11-21 플랫폼 간 호환성 점검 (에뮬레이터·시뮬레이터)
+
+Mac 한 대에서 macOS 앱(release), iPhone 18 Pro·iPad Pro 11(M5) 시뮬레이터(iOS 27.0, debug), Android 17
+에뮬레이터(release APK)를 같은 Wi-Fi(172.30.1.x)에 띄워 서로 붙였다. iOS는 XCUITest 원격 조작, Android는 adb,
+macOS는 접근성 API로 조작했다. 실제 휴대폰과 두 기기 Wi-Fi를 대체하지 않는다.
+
+| 조합 | 범위 | 결과 |
+| :-- | :-- | :-- |
+| macOS ↔ iPhone | 서로 찾기, 목록에서 연결, 한글·이모지 메시지 양방향, 읽음 표시, 6자리 코드가 양쪽 같음(461 794), 검증 | PASS |
+| iPhone ↔ iPad | 연결, 긴 한글 메시지 양방향, 클립보드 사진 전송, 백그라운드 뒤 끊김과 다시 연결(새 코드 안내) | PASS (사진은 아래 수정 뒤) |
+| macOS → iPad | IP로 연결, 한글 이름 파일(`테스트 문서 (호환성).txt`) 클립보드 전송, 받은 파일이 원본과 바이트 단위로 같음 | PASS |
+| Android 17 ↔ macOS·iPhone | 에뮬레이터가 mDNS로 Mac·iPhone·iPad를 찾음, 목록·IP로 연결, 메시지 양방향(Android 입력은 ASCII), 음성 녹음 전송 | 메시지 PASS. Android에서 보낸 파일·음성은 받는 쪽이 에뮬레이터 NAT 주소(10.0.2.16)에 닿지 않아 시험 불가 |
+| 수정 빌드 재확인 | 끊긴 전송이 양쪽에서 실패와 재시도로 바뀌고 다시 연결 뒤 재시도로 끝까지 받음(iPhone→iPad), Android 키보드 열린 채 뒤로, iOS 클립보드 사진 | PASS |
+| 실제 기기, Android에서 Apple로 파일·음성, VoiceOver·TalkBack | 없음 | NOT RUN |
+
+고친 것: 끊긴 1:1 링크의 열린 전송이 '상대 기다리는 중'이나 수락·거절에 멈추고 다시 보낼 수 없던 문제, Android
+대화에서 키보드가 열린 채 뒤로 한 번에 대화까지 닫히던 문제, iOS 클립보드 사진을 메인 스레드에서 읽어 원본이
+늦거나 응답하지 않으면 앱이 멈추던 문제(시험 도구가 원본일 때 영구히 멈춤을 재현), 앱이 먼저 코드를 확인한 앱·웹
+대화에 '서로 확인함'이 안 남던 문제. 테스트 `link_drop_transfer_test`, `chat_keyboard_back_test`,
+`ios_clipboard_image_test`, `web_chat_registry_test`.
+
+남는 것: 홈의 '이 네트워크에서' 목록은 대화 중인 기기와 IP가 같은 기기를 숨겨서, 한 컴퓨터에 띄운 여러 앱(시뮬레이터)은
+서로 가려진다(기기마다 IP가 다른 실제 망에선 거의 영향 없음). iOS는 받은 파일 위치를 앱 문서 폴더의 전체 경로로
+보여 준다.
+
 ### 2026-11-21 Android 17 기기 찾기 오류와 1.0.1
 
 Android 17 에뮬레이터(API 37, Pixel 9 프로필)에서 공개 빌드 `1.0.0+11`(rc.4 APK)이 홈에 "기기 검색이 예기치

@@ -79,6 +79,8 @@ mixin _ChatInputClipboard on _ChatInputStateBase {
       }
     }
     if (!kIsWeb && Platform.isWindows) return WindowsClipboard.readImage();
+    // iOS: 플러그인은 메인 스레드에서 UIPasteboard.image를 읽어 원본 앱이 늦으면 앱 전체가 멈춤
+    if (Platform.isIOS) return OsPrivacy.clipboardImage();
     try {
       return await Pasteboard.image;
     } on Object {

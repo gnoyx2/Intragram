@@ -201,12 +201,20 @@ class _ChatRoomScreenState extends _ChatRoomScreenStateBase
     );
   }
 
-  // 나갈 때 묻는 건 없음 (보관 여부는 메뉴의 '이 기기에 보관'). 검색 중 뒤로는 검색만 닫음
+  // 나갈 때 묻는 건 없음 (보관 여부는 메뉴의 '이 기기에 보관'). 검색 중 뒤로는 검색만 닫음.
+  // Android 앱은 키보드가 열려 있으면 뒤로가 키보드만 닫음: 홈의 창 Navigator가 IME보다 먼저 뒤로를 받아 대화까지 닫혔음
   Widget _popScopeScaffold(Widget body) {
+    final keyboardOpen =
+        !kIsWeb &&
+        defaultTargetPlatform == TargetPlatform.android &&
+        MediaQuery.viewInsetsOf(context).bottom > 0;
     return PopScope(
-      canPop: !_searching,
+      canPop: !_searching && !keyboardOpen,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _closeSearch();
+        if (didPop) return;
+        keyboardOpen
+            ? FocusManager.instance.primaryFocus?.unfocus()
+            : _closeSearch();
       },
       child: Scaffold(
         appBar: _ChatAppBarScope(

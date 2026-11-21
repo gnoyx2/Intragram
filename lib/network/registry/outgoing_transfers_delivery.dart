@@ -152,11 +152,15 @@ extension OutgoingTransfersDelivery on OutgoingTransfers {
   // 테스트·진단용
   OutgoingFileSource? source(String transferId) => _outgoing[transferId];
 
-  // 링크 연결이 종료됨. recipientKey가 지정된 경우(그룹 방 개별 멤버) 해당 수신자만 실패 처리하고, 없으면(1:1) 대화의 모든 발신을 정리함
+  // 링크 연결이 종료됨. recipientKey가 지정된 경우(그룹 방 개별 멤버) 해당 수신자만, 없으면(1:1) 열린 수신자 모두를 실패로 둠 (소스는 재시도용으로 남김)
   Future<void> handleLinkClosed(
     String conversationId, {
     String? recipientKey,
   }) => _handleLinkClosedOutgoing(this, conversationId, recipientKey);
+
+  // 대화 종료: 그 대화의 발신 소스를 모두 놓음
+  Future<void> discardConversation(String conversationId) =>
+      _discardConversationOutgoing(this, conversationId);
 
   Future<void> clear() => _clearOutgoing(this);
 }
