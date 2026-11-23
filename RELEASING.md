@@ -284,8 +284,8 @@ Both must be built on their own OS. A macOS compile says nothing about them.
   `build\windows\x64\runner\Release` folder (exe, DLLs, `data`). CI also copies
   the VC++ runtime DLLs next to the exe. Without a code-signing certificate
   SmartScreen warns; to sign: `signtool sign /fd SHA256 /tr <timestamp-url> /td SHA256 /a intragram.exe`.
-  CI packs the same folder twice: the portable zip and
-  `intragram-windows-x64-setup.exe`, built by Inno Setup 6.3+ from
+  CI packs the same folder twice: `intragram-windows-x64-portable.zip` (portable
+  zip) and `intragram-windows-x64-setup.exe`, built by Inno Setup 6.6+ from
   `windows/installer/intragram.iss` (per-user install, no admin rights, removed
   in Settings > Apps). Never change its `AppId`: installed copies would stop
   updating and a second copy would appear. The `Test installer` step installs

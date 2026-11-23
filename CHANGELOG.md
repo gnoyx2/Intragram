@@ -24,6 +24,11 @@ iPhone and iPad simulators, Android 17 emulator) on 2026-11-21.
 - Fixed (app–web chats): when the app confirmed the 6-digit code before the
   browser, the timeline kept "waiting for the peer" and never said that both
   sides had confirmed.
+- Changed (Windows): renamed the portable archive from
+  `intragram-windows-x64.zip` to `intragram-windows-x64-portable.zip` so it is
+  clearly distinguished from `intragram-windows-x64-setup.exe`, and added
+  branded Welcome, Installation Options, Installing and Finish screens to the
+  Windows installer (`windows/installer/intragram.iss`).
 
 ## 1.0.1 (app `1.0.1+12`)
 

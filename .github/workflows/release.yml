@@ -203,7 +203,7 @@ jobs:
             Copy-Item "$env:SystemRoot\System32\$dll" $rel
           }
           New-Item -ItemType Directory -Force dist
-          Compress-Archive -Path "$rel/*" -DestinationPath dist/intragram-windows-x64.zip
+          Compress-Archive -Path "$rel/*" -DestinationPath dist/intragram-windows-x64-portable.zip
           $sig = Get-AuthenticodeSignature "$rel/intragram.exe"
           @(
             "commit: $env:GITHUB_SHA"
@@ -377,7 +377,7 @@ jobs:
               Developer profile.
             - macOS zip/dmg: ad-hoc signed, not notarized. Gatekeeper will warn.
             - Windows installer (`-setup.exe`: installs for the current user without admin rights,
-              remove it in Settings > Apps) and portable zip: not Authenticode-signed. SmartScreen will warn.
+              remove it in Settings > Apps) and portable zip (`-portable.zip`): not Authenticode-signed. SmartScreen will warn.
             - Linux tarball: experimental, Linux runtime/dependencies not yet reviewed; no OS-level signing.
 
             Licenses: `LICENSE` (MIT), `THIRD_PARTY_NOTICES.md` and `WEBRTC_NOTICES.md` are attached.
