@@ -32,6 +32,9 @@ const Map<String, String> kStringsEnCommon = {
   'sys.becameRoom':
       'This conversation is now a room. Files sent here transfer directly '
       'between members.',
+  'sys.roomWaitsVerification':
+      'To add them to the room, check the 6-digit code with each other. '
+      'They join as soon as you both confirm.',
   'sys.memberJoined': '{alias} joined.',
   'sys.memberLeft': '{alias} left.',
   'sys.markedVerified': 'You confirmed the code matches. Waiting for peer.',

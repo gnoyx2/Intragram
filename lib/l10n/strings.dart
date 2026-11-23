@@ -147,6 +147,7 @@ extension SystemEventText on S {
       SystemEventKind.encryptedAgain => t('sys.encryptedAgain'),
       SystemEventKind.verifiedAgain => t('sys.verifiedAgain'),
       SystemEventKind.becameRoom => t('sys.becameRoom'),
+      SystemEventKind.roomWaitsVerification => t('sys.roomWaitsVerification'),
       SystemEventKind.markedVerified => t('sys.markedVerified'),
       SystemEventKind.mutuallyVerified => t('sys.mutuallyVerified'),
       SystemEventKind.joinedRoom => t('sys.joinedRoom', args),

@@ -107,26 +107,78 @@ mixin _LinkRegistryConnect
     final existing = _existingLinkFor(peer);
     if (existing != null && existing.value.isSecure) {
       final link = existing.value;
-      _joinAppRoom(link);
-      await _sendRoomJoin(link, _appRoomId!);
+      final epoch = _appRoomEpoch;
+      await _whenMemberWillAccept(link, () async {
+        if (epoch != _appRoomEpoch) return;
+        _joinAppRoom(link);
+        await _sendRoomJoin(link, _appRoomId!);
+      });
       return;
     }
+    // 이미 방에 있는 멤버(방을 만든 1:1 상대 포함)에게 또 다이얼하면 새 링크가 멀쩡한 방 링크를 대체하고 닫음
+    if (_isOpenRoomMember(peer.peerId)) return;
     final epoch = _appRoomEpoch;
     final conversationId = await connectToPeer(peer);
     final link = _links[conversationId];
     if (link == null) return;
-    void enter() {
-      // 증명을 기다리는 사이 방이 끝났으면 1:1 대화로만 남김
-      if (epoch != _appRoomEpoch) return;
-      _joinAppRoom(link);
-      _sendRoomJoin(link, _appRoomId!);
-    }
+    void enter() => unawaited(
+      _whenMemberWillAccept(link, () async {
+        // 증명을 기다리는 사이 방이 끝났으면 1:1 대화로만 남김
+        if (epoch != _appRoomEpoch) return;
+        _joinAppRoom(link);
+        await _sendRoomJoin(link, _appRoomId!);
+      }),
+    );
 
     if (link.isSecure) {
       enter();
     } else {
       link.onSecure = enter;
     }
+  }
+
+  bool _isOpenRoomMember(String peerId) {
+    final roomId = _appRoomId;
+    return roomId != null &&
+        _roomLinks.any(
+          (l) =>
+              l.conversationId == roomId &&
+              !l.isClosed &&
+              l.isSecure &&
+              l.remotePeerId == peerId,
+        );
+  }
+
+  // 상대는 1:1을 방으로 바꾸는 첫 room_join을 자기가 다이얼했거나 서로 코드를 확인한 링크에서만 받음 (_authorizeRoomControl).
+  // 내가 다이얼한(재연결 포함) 미확인 링크를 방에 넣으면 상대는 조용히 1:1로 남고 나만 멤버로 세서, 방 글이 내 1:1 글로 보임.
+  // 그래서 확인이 끝날 때까지 기다렸다 넣음. 내 verify 프레임이 room_join보다 먼저 나가서 상대도 그때는 확인된 상태임
+  bool _memberWillAcceptRoom(PeerLink link) =>
+      !link.dialledByUs ||
+      (store.conversation(link.conversationId)?.verified ?? false);
+
+  Future<void> _whenMemberWillAccept(
+    PeerLink link,
+    Future<void> Function() join,
+  ) async {
+    if (_memberWillAcceptRoom(link)) return join();
+    store.addSystemMessage(
+      link.conversationId,
+      const SystemEvent(SystemEventKind.roomWaitsVerification),
+    );
+    StreamSubscription<List<Conversation>>? sub;
+    var done = false;
+    sub = store.watchConversations().listen((_) {
+      if (done) return;
+      if (link.isClosed || _disposed) {
+        done = true;
+        unawaited(sub?.cancel());
+        return;
+      }
+      if (!_memberWillAcceptRoom(link)) return;
+      done = true;
+      unawaited(sub?.cancel());
+      unawaited(join());
+    });
   }
 
   // 다이얼 실패는 이유를 담아 올림. 사설 주소가 아니면 SecurityException 그대로
@@ -198,12 +250,15 @@ mixin _LinkRegistryConnect
   ) async {
     final link = _links[fromConversationId];
     if (link != null && link.isSecure) {
-      if (_appRoomId == null) {
-        _promoteToRoom(link);
-      } else {
-        _joinAppRoom(link);
-      }
-      await _sendRoomJoin(link, _appRoomId!);
+      await _whenMemberWillAccept(link, () async {
+        if (link.isClosed || _links[fromConversationId] != link) return;
+        if (_appRoomId == null) {
+          _promoteToRoom(link);
+        } else {
+          _joinAppRoom(link);
+        }
+        await _sendRoomJoin(link, _appRoomId!);
+      });
     }
     for (final peer in peers) {
       await inviteToRoom(peer);

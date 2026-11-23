@@ -203,6 +203,11 @@ void main() {
           addTearDown(duplicate.close);
           await duplicate.start();
           await r.until(() => registry.linkFor(id)?.isSecure ?? false);
+          // 호스트가 다이얼한 링크는 서로 코드를 확인해야 멤버가 room_join을 받음
+          r.rig.store.updateConversation(
+            id,
+            (c) => c.copyWith(localVerified: true, peerVerified: true),
+          );
 
           // 옛 링크의 offer write 바로 앞에서 새 링크를 방으로 승격해 경로를 인계하고,
           // 그 옛 write만 실패시킴. 비동기 결과가 돌아올 때 경로 객체가 바뀌면 실패한

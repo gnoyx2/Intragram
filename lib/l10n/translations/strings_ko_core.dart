@@ -16,6 +16,7 @@ const Map<String, String> kStringsKoCore = {
       '{alias}님의 방에 들어왔어요. 여기서 보내는 파일은 다른 멤버에게 바로 '
       '전송돼요.',
   'sys.becameRoom': '이 대화가 이제 방이에요. 여기서 보낸 파일은 멤버끼리 바로 전송돼요.',
+  'sys.roomWaitsVerification': '방에 넣으려면 서로 6자리 코드를 확인해야 해요. 둘 다 확인하면 바로 들어와요.',
   'sys.memberJoined': '{alias}님이 들어왔어요.',
   'sys.memberLeft': '{alias}님이 나갔어요.',
   'sys.markedVerified': '코드가 일치한다고 확인했어요. 상대 확인을 기다리는 중이에요.',

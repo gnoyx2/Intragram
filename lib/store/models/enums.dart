@@ -27,6 +27,8 @@ enum SystemEventKind {
   handshakeFailed,
   handshakeTimedOut,
   peerBlocked,
+  // 내가 다이얼한 미확인 링크: 서로 코드를 확인해야 상대가 방 초대를 받음
+  roomWaitsVerification,
 }
 
 // 소각 증적에 남기는 이유. replaced는 실패 버블을 같은 글의 새 메시지로 바꾼 것뿐이라 증적을 안 남김

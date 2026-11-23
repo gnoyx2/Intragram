@@ -50,9 +50,18 @@ class _AddPeopleSheetState extends ConsumerState<_AddPeopleSheet> {
     final members = ref.watch(
       conversationProvider(widget.conversationId).select((c) => c?.members),
     );
+    // 1:1이면 그 상대는 이 대화를 방으로 바꾸면 저절로 들어옴
+    final ownPeer = ref.watch(
+      conversationProvider(
+        widget.conversationId,
+      ).select((c) => (c?.isRoom ?? true) ? null : c?.peerId),
+    );
     final peers = ref
         .watch(discoveryControllerProvider)
-        .where((p) => !(members?.containsKey(p.peerId) ?? false))
+        .where(
+          (p) =>
+              p.peerId != ownPeer && !(members?.containsKey(p.peerId) ?? false),
+        )
         .toList();
     final registry = ref.read(linkRegistryProvider);
     final web = registry.isWebConversation(widget.conversationId);
