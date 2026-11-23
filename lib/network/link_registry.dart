@@ -35,6 +35,7 @@ part 'link_registry/room_broadcast.dart';
 part 'link_registry/room.dart';
 part 'link_registry/room_file_routing.dart';
 part 'link_registry/room_roster.dart';
+part 'link_registry/room_invite_gate.dart';
 part 'link_registry/file_wiring.dart';
 part 'link_registry/merge_duplicate.dart';
 part 'link_registry/session.dart';
