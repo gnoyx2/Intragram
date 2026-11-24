@@ -1,7 +1,9 @@
 // Shared Flutter web limits in a real browser: a file over the 64 GiB limit is refused with a
 // notice and nothing is offered, a file exactly at the limit is offered, a voice recording stops
 // by itself at two minutes and is sent, and in Unlimited mode a text over 64 MiB is refused while
-// a near-64 MiB text arrives intact. The big files are sparse: they use no disk space.
+// a near-64 MiB text arrives intact. Without OPFS and Web Locks a finished but unsaved received file
+// keeps its share of the 100 MiB in-memory budget, so more is refused with a notice until it is
+// removed from the list. The big files are sparse: they use no disk space.
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { mkdir, mkdtemp, open as openFile, readFile, rm, stat, writeFile } from 'node:fs/promises';
@@ -47,8 +49,13 @@ async function sparse(name, size) {
   assert.ok(info.blocks * 512 < 1024 * 1024, `${name} must stay sparse`);
   return file;
 }
-async function open(name) {
+async function open(name, { noOpfs = false } = {}) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: 'en-US', permissions: ['microphone', 'clipboard-read', 'clipboard-write'] });
+  // OPFS 쓰기나 Web Locks가 없는 브라우저 흉내: 받은 파일이 탭 메모리로 감
+  if (noOpfs) await context.addInitScript(() => {
+    for (const target of [StorageManager.prototype, navigator.storage]) Object.defineProperty(target, 'getDirectory', { value: undefined, configurable: true });
+    Object.defineProperty(Navigator.prototype, 'locks', { get: () => undefined, configurable: true });
+  });
   const page = await context.newPage();
   page.setDefaultTimeout(20000);
   page.on('pageerror', e => errors.push(`${name}: ${e.message}`));
@@ -179,7 +186,38 @@ try {
     `B: ${(heapBeforeB / 1048576).toFixed(1)} -> ${(heapAfterB / 1048576).toFixed(1)} MiB)`
   );
 
-  // 4. A hands-free recording stops by itself at two minutes and is sent. The security code is
+  // 4. W3: a finished, unsaved file received into memory still counts. 60 MiB + 50 MiB is refused
+  //    with a notice; after the first file is removed from the list the same offer is accepted.
+  const MiB = 1024 ** 2;
+  const sixty = await sparse('budget-sixty.bin', 60 * MiB), fifty = await sparse('budget-fifty.bin', 50 * MiB);
+  const c = await open('C'), d = await open('D', { noOpfs: true });
+  assert.deepEqual(await d.evaluate(() => [typeof navigator.storage.getDirectory, typeof navigator.locks]), ['undefined', 'undefined']);
+  await link(c, d);
+  await c.bringToFront();
+  await composer(c).waitFor();
+  const saveButton = name => tile(d, name).getByRole('button', { name: /^Save to device/ });
+  await attach(c, [sixty]);
+  await d.bringToFront();
+  await tile(d, 'budget-sixty.bin').getByRole('button', { name: 'Accept', exact: true }).click();
+  await saveButton('budget-sixty.bin').waitFor({ timeout: 120000 });
+  await attach(c, [fifty]);
+  await d.bringToFront();
+  await tile(d, 'budget-fifty.bin').getByRole('button', { name: 'Accept', exact: true }).click();
+  await d.getByText(/Received files kept here are limited to 100 MiB or 100 files/).first().waitFor();
+  await d.waitForTimeout(3000);
+  assert.equal(await saveButton('budget-fifty.bin').count(), 0, 'the 50 MiB file is not received over the budget');
+  await dump(d, 'receive-budget-refused');
+  await d.getByLabel(/budget-sixty\.bin/).first().focus();
+  await d.keyboard.press('Shift+F10');
+  await d.getByText('Delete for me', { exact: true }).click();
+  await tile(d, 'budget-sixty.bin').waitFor({ state: 'detached' });
+  await tile(d, 'budget-fifty.bin').getByRole('button', { name: 'Accept', exact: true }).click();
+  await saveButton('budget-fifty.bin').waitFor({ timeout: 120000 });
+  await c.context().close();
+  await d.context().close();
+  log('without OPFS an unsaved 60 MiB file keeps its budget share: 50 MiB more is refused with a notice, then accepted after removal');
+
+  // 5. A hands-free recording stops by itself at two minutes and is sent. The security code is
   //    confirmed first, as in the other voice checks (after the file steps, so nothing auto-accepts them).
   for (const p of [a, b]) {
     await p.bringToFront();

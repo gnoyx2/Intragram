@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart' show CupertinoDialogAction;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:intragram/widgets/adaptive_dialog_action.dart';
@@ -56,4 +58,78 @@ void main() {
       expect(tester.state(find.byType(EditableText)), same(field));
     },
   );
+
+  // macOS·iOS(외장 키보드)와 Apple 기기 브라우저의 웹 앱은 Cupertino 대화상자를 씀:
+  // 버튼에 Tab이 닿고 Enter·Space로 눌려야 키보드만으로 보안 코드 확인 등을 끝낼 수 있음
+  Future<List<String>> pumpCupertino(
+    WidgetTester tester,
+    TargetPlatform platform,
+  ) async {
+    final pressed = <String>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(platform: platform),
+        home: Builder(
+          builder: (context) {
+            final cupertino = isCupertinoDialog(context);
+            return Scaffold(
+              body: AppAlertDialog(
+                cupertino: cupertino,
+                title: const Text('Wipe everything?'),
+                actions: [
+                  for (final label in ['Cancel', 'Wipe'])
+                    AdaptiveDialogAction(
+                      cupertino: cupertino,
+                      label: label,
+                      onPressed: () => pressed.add(label),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(CupertinoDialogAction), findsNWidgets(2));
+    return pressed;
+  }
+
+  bool focused(WidgetTester tester, String label) =>
+      Focus.of(tester.element(find.text(label))).hasPrimaryFocus;
+
+  for (final platform in [TargetPlatform.macOS, TargetPlatform.iOS]) {
+    testWidgets('${platform.name} dialog buttons take Tab, Enter and Space', (
+      tester,
+    ) async {
+      final pressed = await pumpCupertino(tester, platform);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(focused(tester, 'Cancel'), isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(focused(tester, 'Wipe'), isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+      expect(pressed, ['Wipe']);
+
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
+      await tester.pump();
+      expect(focused(tester, 'Cancel'), isTrue);
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump();
+      expect(pressed, ['Wipe', 'Cancel']);
+    });
+
+    testWidgets('${platform.name} dialog buttons still answer one tap once', (
+      tester,
+    ) async {
+      final pressed = await pumpCupertino(tester, platform);
+      await tester.tap(find.text('Wipe'));
+      await tester.pumpAndSettle();
+      expect(pressed, ['Wipe']);
+    });
+  }
 }

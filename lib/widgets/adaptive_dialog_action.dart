@@ -107,15 +107,32 @@ class AdaptiveDialogAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (cupertino) {
-      return CupertinoDialogAction(
-        isDefaultAction: emphasis,
-        isDestructiveAction: destructive,
-        // 기본 빨강(#FF3B30)은 반투명 대화상자 바탕에서 대비 약 2:1이라 진한 빨강으로 바꿈 (다크는 밝은 빨강)
-        textStyle: destructive
-            ? TextStyle(color: _readableRed.resolveFrom(context))
-            : null,
-        onPressed: onPressed,
-        child: Text(label),
+      // CupertinoDialogAction엔 포커스와 ActivateIntent가 없어 Tab·Enter·Space로 못 누름 (macOS, 외장 키보드 iPad,
+      // Apple 기기 브라우저의 웹 앱). 포커스와 활성화만 덧대고 그리기·미끄럼 선택은 그대로 둠. 테두리는 FocusRingLayer가 그림
+      final press = onPressed;
+      Object? activate(Intent _) {
+        press?.call();
+        return null;
+      }
+
+      return FocusableActionDetector(
+        enabled: press != null,
+        actions: <Type, Action<Intent>>{
+          ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: activate),
+          ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
+            onInvoke: activate,
+          ),
+        },
+        child: CupertinoDialogAction(
+          isDefaultAction: emphasis,
+          isDestructiveAction: destructive,
+          // 기본 빨강(#FF3B30)은 반투명 대화상자 바탕에서 대비 약 2:1이라 진한 빨강으로 바꿈 (다크는 밝은 빨강)
+          textStyle: destructive
+              ? TextStyle(color: _readableRed.resolveFrom(context))
+              : null,
+          onPressed: press,
+          child: Text(label),
+        ),
       );
     }
     if (emphasis) {

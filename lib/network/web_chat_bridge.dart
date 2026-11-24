@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:collection/collection.dart';
 import 'package:intragram/core/app_identity.dart';
+import 'package:intragram/core/browser_received_files.dart';
 import 'package:intragram/core/constants.dart'
     show
         kFrameCeilingBytes,

@@ -297,6 +297,31 @@ function testViewportFitKeepsFoldHeight() {
   }
 }
 
+// iOS Safari는 키보드가 뜨면 입력칸을 보이려고 보이는 영역을 아래로 옮김(offsetTop): 몸통을 줄인 뒤 맨 위로
+// 되돌려야 헤더(상태·타이머)와 평문 고지가 남음. 확대 중 이동은 그대로 둠
+function testViewportFitUndoesIosPan() {
+  const ctx = makeAppContext(() => Promise.resolve({ ok: true }));
+  const handlers = {};
+  const scrolls = [];
+  ctx.window.visualViewport = { scale: 1, height: 760, offsetTop: 0, addEventListener: (type, fn) => { handlers[type] = fn; } };
+  ctx.window.scrollY = 0;
+  ctx.window.scrollTo = (x, y) => { scrolls.push([x, y]); ctx.window.scrollY = y; ctx.window.visualViewport.offsetTop = 0; };
+  vm.runInContext('fitToVisibleViewport()', ctx);
+  assert.deepEqual(scrolls, [], 'nothing to undo at load');
+  Object.assign(ctx.window.visualViewport, { height: 460, offsetTop: 224 });
+  ctx.window.scrollY = 224;
+  handlers.resize();
+  assert.equal(ctx.document.body.style.maxHeight, '460px');
+  assert.deepEqual(scrolls, [[0, 0]], 'the header and notice come back into view');
+  ctx.window.visualViewport.offsetTop = 120;
+  handlers.scroll();
+  assert.deepEqual(scrolls, [[0, 0], [0, 0]], 'a later pan while typing is undone too');
+  Object.assign(ctx.window.visualViewport, { scale: 2, offsetTop: 300 });
+  handlers.scroll();
+  assert.equal(ctx.document.body.style.maxHeight, '');
+  assert.equal(scrolls.length, 2, 'panning while zoomed is left alone');
+}
+
 // 앱과 같은 기준: 내 글은 상대 읽음이 와야, 받은 글은 탭이 보여야 읽음·카운트다운이 시작됨
 function testGuestBurnTiming() {
   const ctx = makeAppContext(() => Promise.resolve({ ok: true }));
@@ -880,6 +905,7 @@ function testNoRawNetworkCalls() {
     testConnectAndUrls,
     testEntryAcceptance,
     testViewportFitKeepsFoldHeight,
+    testViewportFitUndoesIosPan,
     testGuestBurnTiming,
     testGuestFileQueue,
     testPeerFetchOptions,

@@ -292,7 +292,7 @@ The native side is small. Dart talks to it over a few channels (`intragram/priva
 | :--- | :--- | :--- |
 | Android | `MainActivity.kt`, `ConnectionService.kt`, `MemoryFileSource.kt`, `VoicePlayerChannel.kt` | `FLAG_SECURE`, screenshot detection, the optional foreground service, sensitive clipboard, picked files and voice playback from memory |
 | iOS | `AppDelegate.swift`, `SceneDelegate.swift`, `DisplayRegions.swift`, `MemoryFileSource.swift`, `VoicePlayer.swift` | privacy cover, file protection for app data, fold regions on iOS 27.1, photo picker, voice playback |
-| macOS | `AppDelegate.swift`, `MainFlutterWindow.swift`, `VoicePlayer.swift` | menu bar, window sharing hint, screenshot detection, voice playback |
+| macOS | `AppDelegate.swift`, `MainFlutterWindow.swift`, `VoicePlayer.swift` | menu bar, window sharing hint, voice playback |
 | Windows | `flutter_window.cpp`, `win32_window.cpp`, `win32_window_proc.cpp` | taskbar flashing, capture exclusion, accessibility settings (the clipboard expiry is Dart FFI in `lib/core/windows_clipboard.dart`) |
 | Linux | `my_application.cc`, `native_privacy.cc`, `desktop_environment.h` | client or server-side decorations per desktop, XDG portal appearance settings, clipboard hints |
 
@@ -679,7 +679,7 @@ graph TD
 | :--- | :--- | :--- |
 | Android | `MainActivity.kt`, `ConnectionService.kt`, `MemoryFileSource.kt`, `VoicePlayerChannel.kt` | `FLAG_SECURE`, 스크린샷 감지, 선택형 포그라운드 서비스, 민감 클립보드, 고른 파일과 음성을 메모리에서 처리 |
 | iOS | `AppDelegate.swift`, `SceneDelegate.swift`, `DisplayRegions.swift`, `MemoryFileSource.swift`, `VoicePlayer.swift` | 개인정보 가림막, 앱 데이터 파일 보호, iOS 27.1의 접힘 영역, 사진 선택기, 음성 재생 |
-| macOS | `AppDelegate.swift`, `MainFlutterWindow.swift`, `VoicePlayer.swift` | 메뉴 막대, 창 공유 제한 힌트, 스크린샷 감지, 음성 재생 |
+| macOS | `AppDelegate.swift`, `MainFlutterWindow.swift`, `VoicePlayer.swift` | 메뉴 막대, 창 공유 제한 힌트, 음성 재생 |
 | Windows | `flutter_window.cpp`, `win32_window.cpp`, `win32_window_proc.cpp` | 작업 표시줄 깜빡임, 캡처 제외, 접근성 설정(클립보드 만료는 `lib/core/windows_clipboard.dart`의 Dart FFI) |
 | Linux | `my_application.cc`, `native_privacy.cc`, `desktop_environment.h` | 데스크톱별 창 장식(CSD/SSD), XDG 포털 외관 설정, 클립보드 힌트 |
 

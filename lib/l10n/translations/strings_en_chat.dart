@@ -53,6 +53,9 @@ const Map<String, String> kStringsEnChat = {
   'transfer.errorDiskFullDesktop':
       'not enough free space in that folder for {size} — retry to pick '
       'another folder',
+  'transfer.receiveBudget':
+      'Received files kept here are limited to 100 MiB or 100 files. Save '
+      'and remove one before accepting another.',
   'transfer.couldNotOpen': 'Could not open the file',
   'transfer.shareSave': 'Share or save',
   'transfer.open': 'Open',

@@ -283,7 +283,9 @@ See [the web guide](docs/WEB.md) for feature gaps and reproducible checks.
   and screen recordings. Windows requests capture exclusion
   (`WDA_EXCLUDEFROMCAPTURE`), which can fail or be ignored. macOS marks the
   window as not shareable, which
-  recent capture tools may ignore, and reports the screenshots it notices. iOS
+  recent capture tools may ignore, and does not report screenshots: a sandboxed
+  app cannot see the default Desktop location, and a search across the whole
+  computer would also flag captures saved by other apps. iOS
   detects screenshots after capture and obscures app switcher snapshots; it
   cannot prevent a screenshot. Linux has no such control, and nothing stops an
   external camera.

@@ -174,6 +174,12 @@ extension WebChatFiles on WebChatBridge {
     }
   }
 
+  // 다 받은 스트림의 예약을 풂. OPFS 없이 RAM으로 받은 파일은 목록에서 지울 때(discard)까지 탭 메모리에
+  // 남아 받기 예산을 계속 씀 (웹 비스트림 수신도 저장 뒤 예약을 유지함). 디스크·OPFS로 받은 것만 바로 풂
+  void _releaseReceived(String id, String path) {
+    if (!BrowserReceivedFiles.isInMemory(path)) _heldBytes.remove(id);
+  }
+
   // 세션이 수락을 못 받으면(이미 끝난 전송) 수락 표시로 남기지 않음
   void _failAccepted(String id) {
     if (store.transfer(id)?.state == TransferState.accepted) {

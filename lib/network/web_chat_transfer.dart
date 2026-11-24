@@ -121,7 +121,7 @@ extension _WebChatTransferEvents on _WebRoom {
         transfer.state == 'complete' &&
         transfer.localPath != null) {
       streamOffers.remove(transfer.id);
-      bridge._heldBytes.remove(transfer.id);
+      bridge._releaseReceived(transfer.id, transfer.localPath!);
       if (hosting && connected.length > 1 && relayingFiles.add(transfer.id)) {
         unawaited(relayFile(peer, transfer, voice: false));
       }

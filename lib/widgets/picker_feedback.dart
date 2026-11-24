@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intragram/core/qr_image.dart';
 import 'package:intragram/l10n/strings.dart';
 import 'package:intragram/network/registry/incoming_path_resolver.dart';
+import 'package:intragram/network/web_peer_protocol.dart';
 
 // 파일·폴더 대화상자를 못 띄웠을 때 원인을 안내함 (대부분 Linux에 xdg-desktop-portal 백엔드가 없는 경우임)
 void showPickerUnavailable(BuildContext context) {
@@ -32,15 +33,27 @@ VoidCallback fileTooLargeNotice(BuildContext context) {
   return () => messenger.showSnackBar(SnackBar(content: Text(message)));
 }
 
-// 수락은 저장 폴더를 물을 수 있어서 대화상자 실패를 화면에 알림 (나머지 실패는 타일 상태가 보여 줌)
+// 수락은 저장 폴더를 물을 수 있어서 대화상자 실패를 화면에 알림 (나머지 실패는 타일 상태가 보여 줌).
+// 웹 수신 예산(RAM 100 MiB·100개)이 차서 거절된 수락도 알림: 타일은 제안 그대로라 아무 일도 없어 보임
 void acceptWithPicker(BuildContext context, Future<void> Function() accept) {
   final messenger = ScaffoldMessenger.of(context);
-  final message = S.of(context).t('picker.unavailable');
+  final s = S.of(context);
+  final unavailable = s.t('picker.unavailable');
+  final budget = s.t('transfer.receiveBudget');
   unawaited(
     accept().catchError(
-      (Object _) =>
-          messenger.showSnackBar(SnackBar(content: Text(message))).closed,
-      test: (error) => error is PickerUnavailableException,
+      (Object error) => messenger
+          .showSnackBar(
+            SnackBar(
+              content: Text(
+                error is PickerUnavailableException ? unavailable : budget,
+              ),
+            ),
+          )
+          .closed,
+      test: (error) =>
+          error is PickerUnavailableException ||
+          error is WebPeerProblem && error.code == 'receive-budget',
     ),
   );
 }

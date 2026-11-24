@@ -24,6 +24,7 @@ abstract final class BrowserReceivedFiles {
       throw StateError('file no longer available');
 
   static bool contains(String path) => false;
+  static bool isInMemory(String path) => false;
   static bool save(String path, [String? name]) => false;
   static void download(String name, Uint8List bytes) =>
       throw UnsupportedError('Browser file store is unavailable');

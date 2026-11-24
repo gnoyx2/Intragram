@@ -50,16 +50,20 @@ function handleTyping(inner) {
   setStatus(inner.on ? (inner.from ? t("typingFrom", { from: inner.from }) : t("typing")) : t("online"), true);
 }
 
-// iOS Safari는 키보드가 떠도 레이아웃 높이를 안 줄여서 헤더가 밀려 사라짐: 보이는 높이에 몸통을 맞춤
+// iOS Safari는 키보드가 떠도 레이아웃 높이를 안 줄이고, 입력칸을 보이려고 보이는 영역을 아래로 옮김(offsetTop).
+// 보이는 높이에 몸통을 맞춘 뒤 문서를 맨 위로 되돌려야 헤더(상태·타이머)와 평문 고지가 남음
 // (Chrome은 viewport의 interactive-widget=resizes-content로 처리). 확대 중이면 건드리지 않음
 // CSS의 세그먼트 높이를 유지하면서 키보드가 가린 부분만 상한으로 잘라냄
 function fitToVisibleViewport() {
   var vv = window.visualViewport;
   if (!vv) return;
   var fit = function () {
-    document.body.style.maxHeight = vv.scale > 1.01 ? "" : vv.height + "px";
+    var zoomed = vv.scale > 1.01;
+    document.body.style.maxHeight = zoomed ? "" : vv.height + "px";
+    if (!zoomed && (vv.offsetTop > 0 || window.scrollY > 0)) window.scrollTo(0, 0);
   };
   vv.addEventListener("resize", fit);
+  vv.addEventListener("scroll", fit);
   fit();
 }
 

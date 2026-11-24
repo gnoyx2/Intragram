@@ -51,6 +51,8 @@ const Map<String, String> kStringsKoChat = {
   'transfer.errorDiskFull': '{size}를 받을 공간이 부족해요. 공간을 비운 뒤 다시 시도하세요',
   'transfer.errorDiskFullDesktop':
       '그 폴더에 {size}를 받을 공간이 부족해요. 다시 시도하면 다른 폴더를 고를 수 있어요',
+  'transfer.receiveBudget':
+      '여기에는 받은 파일을 100 MiB 또는 100개까지 둘 수 있어요. 기존 파일을 저장하고 목록에서 지운 뒤 받으세요',
   'transfer.couldNotOpen': '파일을 열 수 없어요',
   'transfer.shareSave': '공유·저장',
   'transfer.open': '열기',

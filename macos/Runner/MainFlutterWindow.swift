@@ -2,8 +2,6 @@ import Cocoa
 import FlutterMacOS
 
 class MainFlutterWindow: NSWindow {
-  private var screenshotChannel: FlutterMethodChannel?
-  private var screenshotQuery: NSMetadataQuery?
   private var voicePlayer: VoicePlayer?
   private var privacyChannel: FlutterMethodChannel?
   private var menuChannel: FlutterMethodChannel?
@@ -36,11 +34,9 @@ class MainFlutterWindow: NSWindow {
 
     RegisterGeneratedPlugins(registry: flutterViewController)
 
-    screenshotChannel = FlutterMethodChannel(
-      name: "intragram/screenshot",
-      binaryMessenger: flutterViewController.engine.binaryMessenger
-    )
-    startWatchingScreenshots()
+    // macOS는 스크린샷을 감지하지 않음 (intragram/screenshot 채널 없음). 샌드박스 앱은 기본 저장 위치인 바탕화면의
+    // Spotlight 결과를 못 받아 Cmd+Shift+3을 놓치고, 컴퓨터 전체 kMDItemIsScreenCapture 질의는 다른 앱이 저장한
+    // 화면 캡처 파일까지 잡아 상대에게 틀린 알림을 보냄. 창은 sharingType = .none으로만 보호함
     voicePlayer = VoicePlayer(messenger: flutterViewController.engine.binaryMessenger)
     privacyChannel = FlutterMethodChannel(
       name: "intragram/privacy",
@@ -100,7 +96,6 @@ class MainFlutterWindow: NSWindow {
   deinit {
     NSWorkspace.shared.notificationCenter.removeObserver(self)
     NotificationCenter.default.removeObserver(self)
-    screenshotQuery?.stop()
   }
 
   // 마지막 copySensitive 직후의 changeCount. 내용을 안 읽고 우리 복사본인지 비교함
@@ -165,30 +160,5 @@ class MainFlutterWindow: NSWindow {
     default:
       result(FlutterMethodNotImplemented)
     }
-  }
-
-  // macOS엔 iOS의 userDidTakeScreenshotNotification 같은 알림이 없어서, screencapture(Cmd+Shift+3/4/5)가 저장하는
-  // 파일마다 Spotlight가 붙이는 kMDItemIsScreenCapture 메타데이터를 NSMetadataQuery로 실시간 감시함.
-  // 샌드박스에서도 동작하는 표준 기법임 (파일 내용이 아니라 메타데이터 검색이라 files.user-selected 권한이 필요 없음)
-  private func startWatchingScreenshots() {
-    let query = NSMetadataQuery()
-    query.predicate = NSPredicate(format: "kMDItemIsScreenCapture = 1")
-    query.searchScopes = [NSMetadataQueryLocalComputerScope]
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(onScreenshotQueryUpdate(_:)),
-      name: .NSMetadataQueryDidUpdate,
-      object: query
-    )
-    query.start()
-    screenshotQuery = query
-  }
-
-  // DidUpdate는 새로 잡힌 파일뿐 아니라 전에 잡힌 파일이 바뀌거나 지워질 때도 옴: Added만 걸러서 앱이 도는 중에
-  // 방금 찍힌 스크린샷에만 반응함 (옛 스크린샷을 지우기만 해도 알림이 뜨는 오탐을 방지함)
-  @objc private func onScreenshotQueryUpdate(_ notification: Notification) {
-    let added = notification.userInfo?[NSMetadataQueryUpdateAddedItemsKey] as? [NSMetadataItem]
-    guard let added, !added.isEmpty else { return }
-    screenshotChannel?.invokeMethod("onScreenshot", arguments: nil)
   }
 }

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-// iOS 알림, macOS NSMetadataQuery(kMDItemIsScreenCapture), Android registerScreenCaptureCallback(API 34+)로 감지함.
-// iOS는 막을 순 없고 감지만 되며, Android 14 미만은 감지도 안 됨. 그 외 플랫폼은 동작하지 않음
+// iOS 알림, Android registerScreenCaptureCallback(API 34+)로 감지함. iOS는 막을 순 없고 감지만 되며,
+// Android 14 미만은 감지도 안 됨. macOS·Windows·Linux·웹은 감지하지 않음 (macOS 이유는 MainFlutterWindow.swift)
 class ScreenshotDetector {
   ScreenshotDetector({MethodChannel? channel})
     : _channel = channel ?? const MethodChannel('intragram/screenshot') {

@@ -13,6 +13,8 @@ typedef _BrowserFileEntry = ({
   Uint8List? bytes,
   web.Blob blob,
   void Function()? onRemove,
+  // OPFS 없이 받아 탭 RAM에 통째로 든 파일 (putBlob은 OPFS 파일을 가리킴)
+  bool inMemory,
 });
 
 extension type _SafeNavigator(JSObject _) implements JSObject {
@@ -49,7 +51,13 @@ abstract final class BrowserReceivedFiles {
       web.BlobPropertyBag(type: 'application/octet-stream'),
     );
     final url = web.URL.createObjectURL(blob);
-    _files[url] = (name: name, bytes: copy, blob: blob, onRemove: null);
+    _files[url] = (
+      name: name,
+      bytes: copy,
+      blob: blob,
+      onRemove: null,
+      inMemory: true,
+    );
     return url;
   }
 
@@ -69,6 +77,7 @@ abstract final class BrowserReceivedFiles {
       bytes: preview,
       blob: jsBlob,
       onRemove: onRemove,
+      inMemory: false,
     );
     return url;
   }
@@ -125,6 +134,9 @@ abstract final class BrowserReceivedFiles {
   }
 
   static bool contains(String path) => _files.containsKey(path);
+
+  // RAM에 든 받은 파일은 저장·목록 제거 전까지 받기 예산(100 MiB·100개)을 계속 차지함
+  static bool isInMemory(String path) => _files[path]?.inMemory ?? false;
 
   // 받은 파일 목록에 안 남는 일회성 다운로드 (음성 저장). 탭 메모리 사본은 다운로드가 시작된 뒤 지움
   static void download(String name, Uint8List bytes) {

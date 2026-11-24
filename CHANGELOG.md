@@ -7,8 +7,8 @@ different protocol versions refuse to talk to each other.
 ## Unreleased (after 1.0.1)
 
 Protocol 7, unchanged. Found in cross-platform runs on one Mac (macOS app,
-iPhone and iPad simulators, Android 17 emulator, browsers) on 2026-11-21 and
-2026-11-23.
+iPhone and iPad simulators, Android 17 emulator, browsers) on 2026-11-21,
+2026-11-23 and 2026-11-24.
 
 - Fixed: a file or voice message still waiting for the other side when the
   connection dropped (for example when an iPhone went to the background) stayed
@@ -33,6 +33,21 @@ iPhone and iPad simulators, Android 17 emulator, browsers) on 2026-11-21 and
 - Fixed (Android): changing the system 12/24-hour setting while the app was
   open kept the old format in messages and search results until the app
   restarted. The app now follows it when you come back to it.
+- Fixed (web app in browsers without OPFS or Web Locks): a received file kept in
+  the tab's memory stopped counting toward the 100 MiB or 100-file limit as soon
+  as it finished, so unsaved files could pile up past it. It now counts until
+  it is removed from the list, and accepting over the limit says how to make
+  room instead of doing nothing.
+- Fixed (keyboard on macOS, iPad with a keyboard, and the web app on Apple
+  devices): buttons in dialogs, such as "They match" for the security code,
+  could not be reached with Tab or pressed with Enter or Space.
+- Fixed (browser guest page on iOS Safari): opening the on-screen keyboard
+  pushed the header and the plaintext notice off the top of the screen. They
+  now stay in view.
+- Changed (macOS): the Mac no longer sends screenshot alerts. The sandboxed app
+  could not see screenshots saved to the Desktop (the default) and also reacted
+  to screen captures saved by other apps. The window is still marked as not
+  shareable.
 - Changed (Windows): renamed the portable archive from
   `intragram-windows-x64.zip` to `intragram-windows-x64-portable.zip` so it is
   clearly distinguished from `intragram-windows-x64-setup.exe`, and added
