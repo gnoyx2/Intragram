@@ -8,6 +8,7 @@ mixin _AppAccessibility on ConsumerState<IntragramApp> {
     OsPrivacy.reduceTransparency.addListener(_systemChanged);
     OsPrivacy.reduceMotion.addListener(_systemChanged);
     OsPrivacy.highContrast.addListener(_systemChanged);
+    OsPrivacy.use24HourFormat.addListener(_systemChanged);
     DisplayRegions.features.addListener(_systemChanged);
     unawaited(OsPrivacy.refreshAccessibility());
   }
@@ -16,6 +17,7 @@ mixin _AppAccessibility on ConsumerState<IntragramApp> {
     OsPrivacy.reduceTransparency.removeListener(_systemChanged);
     OsPrivacy.reduceMotion.removeListener(_systemChanged);
     OsPrivacy.highContrast.removeListener(_systemChanged);
+    OsPrivacy.use24HourFormat.removeListener(_systemChanged);
     DisplayRegions.features.removeListener(_systemChanged);
   }
 
@@ -46,6 +48,8 @@ mixin _AppAccessibility on ConsumerState<IntragramApp> {
         disableAnimations:
             media.disableAnimations || OsPrivacy.reduceMotion.value,
         highContrast: media.highContrast || OsPrivacy.highContrast.value,
+        alwaysUse24HourFormat:
+            OsPrivacy.use24HourFormat.value ?? media.alwaysUse24HourFormat,
         // iOS 27.1+ 접는 iPhone의 접힘선을 Android처럼 넣음: 2단 나누기·테이블탑·대화상자 힌지 피하기가 그대로 씀
         displayFeatures: regions == null
             ? null

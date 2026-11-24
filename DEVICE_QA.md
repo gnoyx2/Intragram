@@ -327,6 +327,25 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | N3, F5, U15, 5a F8 | 브라우저 게스트 | — | 호스트 내장 웹(`7dc9a53fe02d`) | — | 2026-10-26 | NOT RUN | iOS QA 번들 게스트 접속 시 발견된 호스트 멈춤(`0x8BADF00D`)은 `7dc9a53`에서 수정 완료; Safari·Chrome·Firefox·Edge·iOS Safari·Android Chrome 실기기 수동 검증은 미실시 (헤드리스 자동 점검·CSP 응답만 확인) |
 
 
+### 2026-11-24 키보드 Tab 순환과 Android 24시간제 재확인
+
+Mac 한 대에서 공통 웹 앱(`/web/app/`, Chrome for Testing, 1280x800 2단 화면)과 Android 17 에뮬레이터(release APK,
+상대는 iPhone 18 Pro 시뮬레이터 앱)로 확인했다. 실제 휴대폰, 실제 키보드 조작과 스크린 리더를 대체하지 않는다.
+
+| 항목 | 범위 | 결과 |
+| :-- | :-- | :-- |
+| W8·A2 중 홈 Tab (웹) | 시맨틱스 켬·끔에서 Tab 순방향, Shift+Tab 역방향. 메시지 검색, 앱·웹 연결, 더 보기, 신원 카드, QR, 본문 앱·웹 연결 버튼을 화면 순서대로 2px 테두리와 함께 모두 돌고 앱 안에 테두리 없는 칸이 없음 | PASS |
+| U11 (Android) | 앱을 켠 채 24시간제로 바꾸고 홈에 갔다 돌아오면 말풍선과 검색 결과 시각이 재시작 없이 `11:53`으로 바뀌고, 12시간제로 되돌리면 `11:53 AM`으로 돌아옴 | PASS |
+| macOS 앱 Tab, A2 나머지 흐름, 실제 Android 기기의 설정 앱 | 없음 | NOT RUN |
+
+고친 것: 화면 단축키를 받는 전체 화면 초점이 테두리 없는 Tab 칸이 되던 문제, 넓은 창의 빈 대화 칸 때문에 목록의 Tab
+순서가 x 좌표순으로 흐트러지고 그 칸에 Tab이 갇히던 문제, 대화를 닫은 뒤 초점이 홈 밖으로 빠져 Ctrl+Tab이 안 먹던
+문제, Android에서 바꾼 12/24시간제가 앱을 다시 켜야 반영되던 문제. 테스트 `keyboard_tab_order_test`,
+`android_24h_resume_test`.
+
+남는 것: 웹에서 마지막 버튼 다음 Tab은 Flutter 웹 설계대로 브라우저로 한 번 나갔다 돌아온다. 앱을 떠나지 않은 채
+설정값만 바뀌면(adb 등) 앱이 다시 앞으로 올 때 반영된다.
+
 ### 2026-11-21 플랫폼 간 호환성 점검 (에뮬레이터·시뮬레이터)
 
 Mac 한 대에서 macOS 앱(release), iPhone 18 Pro·iPad Pro 11(M5) 시뮬레이터(iOS 27.0, debug), Android 17

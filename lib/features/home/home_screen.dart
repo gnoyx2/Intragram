@@ -21,6 +21,7 @@ import 'package:intragram/features/settings/settings_screen.dart';
 import 'package:intragram/theme/tokens.dart';
 import 'package:intragram/theme/type_scale.dart';
 import 'package:intragram/widgets/illustration.dart';
+import 'package:intragram/widgets/keyboard_access.dart';
 import 'package:intragram/widgets/readable_list.dart';
 import 'home_actions.dart';
 import 'widgets/conversation_tile.dart';
@@ -120,7 +121,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   // ⌘/Ctrl+F·, 같은 단축키는 앱 루트(AppCommands)가 받음. 여긴 키 이벤트가 닿을 초점만 둠
   Widget _list(BuildContext context) =>
-      Focus(autofocus: true, child: _homeScaffold(context));
+      ShortcutFocus(child: _homeScaffold(context));
 
   // Ctrl+Tab / Ctrl+Shift+Tab: 목록 순서대로 다음·이전 대화를 대화 창에 띄움
   void _stepPane(int step) {

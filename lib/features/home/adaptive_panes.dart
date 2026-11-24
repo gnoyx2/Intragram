@@ -96,6 +96,7 @@ class AdaptivePanes extends StatelessWidget {
           right: 0,
           child: _Covered(
             covered: split == null && !chatOpen,
+            unfocusable: !chatOpen,
             // 창 안 경로의 모달 장벽(BlockSemantics)이 옆 목록까지 스크린 리더에서 지우지 않게 경계를 둠
             child: Semantics(
               container: true,
@@ -115,18 +116,28 @@ class AdaptivePanes extends StatelessWidget {
 
 // 덮였거나 비어서 안 쓰는 창: 손·키보드 초점·스크린 리더에서 빼되 그림은 그대로 둠
 // (애니메이션은 안 멈춤: 빈 대화 창에서도 닫히는 대화의 전환은 끝까지 돌아야 함)
+// Tab 순서는 창마다 따로 매김: 다른 창의 창 전체 높이 노드가 섞이면 읽기 순서가 x 좌표 순으로 무너짐
 class _Covered extends StatelessWidget {
-  const _Covered({required this.covered, required this.child});
+  const _Covered({
+    required this.covered,
+    required this.child,
+    this.unfocusable = false,
+  });
 
   final bool covered;
+  // 넓은 창의 빈 대화 칸: 보이고 읽히되 초점에선 뺌 (받을 초점이 없어 Tab이 그 안에 갇힘)
+  final bool unfocusable;
   final Widget child;
 
   @override
   Widget build(BuildContext context) => IgnorePointer(
     ignoring: covered,
     child: ExcludeFocus(
-      excluding: covered,
-      child: ExcludeSemantics(excluding: covered, child: child),
+      excluding: covered || unfocusable,
+      child: ExcludeSemantics(
+        excluding: covered,
+        child: FocusTraversalGroup(child: child),
+      ),
     ),
   );
 }

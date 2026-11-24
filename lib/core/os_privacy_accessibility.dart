@@ -31,8 +31,26 @@ abstract final class _PrivacyAccessibility {
     _listening = true;
   }
 
+  // Android 엔진은 실행 중 바뀐 12/24시간 설정을 다시 안 보냄: 복귀 때 OS 값을 읽어 MediaQuery를 덮음.
+  // null이면 엔진 값을 그대로 씀 (다른 플랫폼·조회 실패)
+  static final use24HourFormat = ValueNotifier<bool?>(null);
+
   static Future<void> refreshAll() async {
-    await Future.wait(_settings.keys.map(refresh));
+    await Future.wait([..._settings.keys.map(refresh), refresh24HourFormat()]);
+  }
+
+  static Future<void> refresh24HourFormat() async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return;
+    try {
+      final value = await OsPrivacy._channel.invokeMethod<bool>(
+        'alwaysUse24HourFormat',
+      );
+      if (value != null) use24HourFormat.value = value;
+    } on MissingPluginException {
+      // 채널이 없으면 엔진 값을 따름.
+    } on PlatformException {
+      // 조회 실패는 마지막 값을 유지함.
+    }
   }
 
   static Future<void> refresh(String key) async {

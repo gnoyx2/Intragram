@@ -6,8 +6,9 @@ different protocol versions refuse to talk to each other.
 
 ## Unreleased (after 1.0.1)
 
-Protocol 7, unchanged. Found in a cross-platform run on one Mac (macOS app,
-iPhone and iPad simulators, Android 17 emulator) on 2026-11-21.
+Protocol 7, unchanged. Found in cross-platform runs on one Mac (macOS app,
+iPhone and iPad simulators, Android 17 emulator, browsers) on 2026-11-21 and
+2026-11-23.
 
 - Fixed: a file or voice message still waiting for the other side when the
   connection dropped (for example when an iPhone went to the background) stayed
@@ -24,6 +25,14 @@ iPhone and iPad simulators, Android 17 emulator) on 2026-11-21.
 - Fixed (app–web chats): when the app confirmed the 6-digit code before the
   browser, the timeline kept "waiting for the peer" and never said that both
   sides had confirmed.
+- Fixed (keyboard, web and desktop): in a wide window Tab on the home screen
+  stopped on a spot with no focus ring, visited the list out of order and never
+  reached the "Encrypted app–web connection" button in the body; after a chat
+  closed, Ctrl+Tab did nothing until Tab was pressed. Tab now visits every
+  visible control in reading order with the focus ring.
+- Fixed (Android): changing the system 12/24-hour setting while the app was
+  open kept the old format in messages and search results until the app
+  restarted. The app now follows it when you come back to it.
 - Changed (Windows): renamed the portable archive from
   `intragram-windows-x64.zip` to `intragram-windows-x64-portable.zip` so it is
   clearly distinguished from `intragram-windows-x64-setup.exe`, and added

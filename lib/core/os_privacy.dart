@@ -17,6 +17,7 @@ abstract final class OsPrivacy {
   static final reduceTransparency = _PrivacyAccessibility.reduceTransparency;
   static final reduceMotion = _PrivacyAccessibility.reduceMotion;
   static final highContrast = _PrivacyAccessibility.highContrast;
+  static final use24HourFormat = _PrivacyAccessibility.use24HourFormat;
   static bool? cachedIsPad;
   static bool _localNetworkRequested = false;
   static Future<bool>? _localNetworkPending;

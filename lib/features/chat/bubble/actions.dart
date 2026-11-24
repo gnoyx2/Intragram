@@ -113,8 +113,7 @@ extension _MessageBubbleActions on MessageBubble {
             const SingleActivator(LogicalKeyboardKey.escape): () =>
                 Navigator.of(sheetContext).pop(),
           },
-          child: Focus(
-            autofocus: true,
+          child: ShortcutFocus(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.lg,

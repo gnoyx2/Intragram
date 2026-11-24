@@ -14,6 +14,18 @@ Map<ShortcutActivator, VoidCallback> menuKeyBindings(VoidCallback onMenu) => {
   const SingleActivator(LogicalKeyboardKey.f10, shift: true): onMenu,
 };
 
+// 화면 단축키(Esc·⌘F 등)가 닿을 초점만 잡고 Tab 순서에선 뺌: 화면 전체를 덮는 이 노드가 Tab 칸이 되면
+// 테두리 없는 칸이 생기고 읽기 순서가 어긋나 본문 버튼을 건너뜀
+class ShortcutFocus extends StatelessWidget {
+  const ShortcutFocus({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) =>
+      Focus(autofocus: true, skipTraversal: true, child: child);
+}
+
 // 키보드로 옮긴 포커스를 화면 어디서나 같은 2px primary 테두리로 그림. M3 기본 포커스 표시(옅은
 // 상태 레이어)는 배경 대비가 3:1이 안 나와 위치를 못 찾음 (WCAG 2.4.7, 1.4.11)
 // 입력창은 자체 포커스 테두리가 있어 건너뜀. 포인터·터치로 쓸 땐 안 그림

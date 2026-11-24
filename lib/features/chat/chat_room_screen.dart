@@ -196,7 +196,7 @@ class _ChatRoomScreenState extends _ChatRoomScreenStateBase
             onInvoke: (_) => _openSearch(),
           ),
         },
-        child: Focus(autofocus: true, child: _popScopeScaffold(body)),
+        child: ShortcutFocus(child: _popScopeScaffold(body)),
       ),
     );
   }

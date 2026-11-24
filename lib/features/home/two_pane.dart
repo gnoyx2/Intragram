@@ -65,6 +65,9 @@ class _ChatPaneState extends State<ChatPane> {
       child: ScaffoldMessenger(
         child: Navigator(
           key: _navigator,
+          // 빈 칸 경로가 초점을 먼저 잡으면 목록의 단축키 초점(autofocus)이 버려지고 대화를 닫은 뒤 초점이
+          // 홈 밖으로 빠짐 (Ctrl+Tab이 안 먹음): 대화가 열렸을 때만 경로가 초점을 가져감
+          requestFocus: id != null,
           transitionDelegate: widget.wide
               ? const _InstantTransitions()
               : const DefaultTransitionDelegate<void>(),

@@ -82,6 +82,9 @@ class MainActivity : FlutterActivity() {
                     result.success(null)
                 }
                 "clearIfOwn" -> result.success(clearIfOwn())
+                // 엔진은 실행 중 바뀐 12/24시간 설정을 다시 안 보냄: Dart가 앱 복귀 때 직접 읽음
+                "alwaysUse24HourFormat" ->
+                    result.success(android.text.format.DateFormat.is24HourFormat(this))
                 // 설명(MIME)만 봐서 Android 12+ 클립보드 접근 알림이 안 뜸 (파일 붙여넣기는 데스크톱만)
                 "clipboardKinds" -> {
                     val description = getSystemService(ClipboardManager::class.java)
