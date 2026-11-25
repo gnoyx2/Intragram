@@ -73,6 +73,14 @@ class MainFlutterWindow: NSWindow {
     menuChannel?.invokeMethod("textSize", arguments: 0)
   }
 
+  // 읽기 전용 말풍선 글 선택은 NSTextInputClient가 아니라서 창이 직접 편집 > 복사(⌘C) 활성 여부를 알려 줌
+  @objc func copy(_ sender: Any?) { menuChannel?.invokeMethod("copy", arguments: nil) }
+
+  override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+    if menuItem.action == #selector(copy(_:)) { return MainFlutterWindow.hasSelection }
+    return super.validateMenuItem(menuItem)
+  }
+
   @objc private func accessibilityChanged(_ notification: Notification) {
     let workspace = NSWorkspace.shared
     privacyChannel?.invokeMethod(
@@ -100,6 +108,7 @@ class MainFlutterWindow: NSWindow {
 
   // 마지막 copySensitive 직후의 changeCount. 내용을 안 읽고 우리 복사본인지 비교함
   private static var sensitiveChangeCount: Int?
+  private static var hasSelection = false
 
   // copySensitive: 이 Mac에서만(.currentHostOnly라 Universal Clipboard로 다른 기기에 안 넘어감), 클립보드
   // 관리자가 기록하지 않게 nspasteboard.org의 Concealed 표식을 같이 둠
@@ -121,6 +130,9 @@ class MainFlutterWindow: NSWindow {
     case "clearClipboard":
       board.clearContents()
       sensitiveChangeCount = nil
+      result(nil)
+    case "setSelectionActive":
+      hasSelection = (call.arguments as? Bool) ?? false
       result(nil)
     case "revealFile":
       // Finder에서 받은 파일을 선택 상태로 엶 (같은 프로세스 안이라 선택한 폴더의 샌드박스 권한이 유지됨)

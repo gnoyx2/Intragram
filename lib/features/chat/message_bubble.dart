@@ -34,6 +34,7 @@ part 'bubble/actions.dart';
 part 'bubble/action_run.dart';
 part 'bubble/bubble_shape.dart';
 part 'bubble/hover_actions.dart';
+part 'bubble/link_confirm.dart';
 part 'bubble/linkable_text.dart';
 part 'bubble/quoted_strip.dart';
 part 'bubble/reaction_chips.dart';

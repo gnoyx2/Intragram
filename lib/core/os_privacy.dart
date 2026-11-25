@@ -198,4 +198,32 @@ abstract final class OsPrivacy {
     cache.clear();
     cache.clearLiveImages();
   }
+
+  // macOS 메뉴 막대의 편집 > 복사(⌘C)는 입력칸 밖에서 비활성이라 선택 유무를 네이티브에 알리고 같은 복사 경로를 씀
+  static final Map<Object, VoidCallback> _selectionCopy = {};
+  static bool _reportedSelection = false;
+
+  static void setSelectionCopy(Object owner, VoidCallback? onCopy) {
+    if (onCopy == null) {
+      _selectionCopy.remove(owner);
+    } else {
+      _selectionCopy[owner] = onCopy;
+    }
+    final active = _selectionCopy.isNotEmpty;
+    if (active == _reportedSelection) return;
+    _reportedSelection = active;
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.macOS) return;
+    unawaited(
+      _channel
+          .invokeMethod<void>('setSelectionActive', active)
+          .catchError((Object _) {}),
+    );
+  }
+
+  static bool copyActiveSelection() {
+    final copy = _selectionCopy.values.lastOrNull;
+    if (copy == null) return false;
+    copy();
+    return true;
+  }
 }

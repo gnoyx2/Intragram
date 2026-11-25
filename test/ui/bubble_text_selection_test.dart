@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:intragram/app_commands.dart';
 import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/features/chat/message_bubble.dart';
 import 'package:intragram/store/models.dart';
@@ -16,6 +17,11 @@ import '_harness.dart';
 void main() {
   const privacy = MethodChannel('intragram/privacy');
   const text = 'hello 보낼게요 world';
+
+  Widget bubble(String id, String body) => MessageBubble(
+    message: msg(id: id, dir: MessageDirection.incoming, text: body),
+    onReply: (_) {},
+  );
 
   Future<List<String>> pump(WidgetTester tester) async {
     final copied = <String>[];
@@ -33,14 +39,7 @@ void main() {
         Scaffold(
           body: Align(
             alignment: Alignment.centerLeft,
-            child: MessageBubble(
-              message: msg(
-                id: 'm1',
-                dir: MessageDirection.incoming,
-                text: text,
-              ),
-              onReply: (_) {},
-            ),
+            child: bubble('m1', text),
           ),
         ),
       ),
@@ -132,4 +131,107 @@ void main() {
     await pump(tester);
     expect(find.byType(SelectionArea), findsNothing);
   });
+
+  testWidgets(
+    'macOS drag selection enables Edit > Copy and copies via menu channel',
+    (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        final copied = <String>[];
+        final activeStates = <bool>[];
+        final messenger = tester.binding.defaultBinaryMessenger;
+        messenger.setMockMethodCallHandler(privacy, (call) async {
+          switch (call.method) {
+            case 'copySensitive':
+              copied.add(call.arguments as String);
+            case 'setSelectionActive':
+              activeStates.add(call.arguments as bool);
+          }
+          return null;
+        });
+        addTearDown(() => messenger.setMockMethodCallHandler(privacy, null));
+
+        final navKey = GlobalKey<NavigatorState>();
+        final h = Harness();
+        addTearDown(h.dispose);
+        h.store.upsertConversation(conv('c1'));
+        await tester.pumpWidget(
+          h.wrap(
+            navigatorKey: navKey,
+            builder: (_, child) => AppCommands(
+              navigatorKey: navKey,
+              unlocked: true,
+              onNewConnection: (_) {},
+              child: child!,
+            ),
+            Scaffold(
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  bubble('m0', 'macos native partial selection verification'),
+                  bubble('m1', text),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        Offset caretIn(String needle, String ch) {
+          final p = tester
+              .renderObjectList<RenderParagraph>(find.byType(RichText))
+              .firstWhere((r) => r.text.toPlainText().contains(needle));
+          final off = p.text.toPlainText().indexOf(ch);
+          return p.localToGlobal(
+            p.getOffsetForCaret(TextPosition(offset: off), Rect.zero) +
+                const Offset(1, 8),
+          );
+        }
+
+        Future<void> dragBetween(Offset a, Offset b) async {
+          final g = await tester.startGesture(a, kind: PointerDeviceKind.mouse);
+          await tester.pump(const Duration(milliseconds: 20));
+          await g.moveTo(b);
+          await tester.pump(const Duration(milliseconds: 20));
+          await g.up();
+          await tester.pumpAndSettle();
+        }
+
+        Future<void> invokeMenuCopy() async {
+          await messenger.handlePlatformMessage(
+            'intragram/menu',
+            const StandardMethodCodec().encodeMethodCall(
+              const MethodCall('copy'),
+            ),
+            (_) {},
+          );
+          await tester.pump();
+        }
+
+        await dragBetween(caretIn('\u2060', '보'), caretIn('\u2060', 'world'));
+        expect(activeStates, [true]);
+        await invokeMenuCopy();
+        expect(copied.map((s) => s.trim()).toList(), ['보낼게요']);
+
+        // 빈 곳 클릭으로 선택이 풀리면 비활성화되고, 다른 말풍선을 끌면 다시 켜짐
+        await tester.tapAt(
+          const Offset(500, 20),
+          kind: PointerDeviceKind.mouse,
+        );
+        await tester.pumpAndSettle();
+        expect(activeStates, [true, false]);
+
+        await dragBetween(
+          caretIn('partial', 'native'),
+          caretIn('partial', 'verification'),
+        );
+        expect(activeStates, [true, false, true]);
+        await invokeMenuCopy();
+        expect(copied.last.trim(), 'native partial selection');
+        await tester.pump(OsPrivacy.clipboardLifetime);
+        await tester.pumpWidget(const SizedBox());
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    },
+  );
 }

@@ -8,7 +8,7 @@ different protocol versions refuse to talk to each other.
 
 Protocol 7, unchanged. Found in cross-platform runs on one Mac (macOS app,
 iPhone and iPad simulators, Android 17 emulator, browsers) on 2026-11-21,
-2026-11-23 and 2026-11-24.
+2026-11-23, 2026-11-24 and 2026-11-25.
 
 - Fixed: a file or voice message still waiting for the other side when the
   connection dropped (for example when an iPhone went to the background) stayed
@@ -44,6 +44,10 @@ iPhone and iPad simulators, Android 17 emulator, browsers) on 2026-11-21,
 - Fixed (browser guest page on iOS Safari): opening the on-screen keyboard
   pushed the header and the plaintext notice off the top of the screen. They
   now stay in view.
+- Fixed (macOS): selecting part of a message with the mouse left Edit > Copy
+  disabled, so Cmd+C did nothing even though the context menu could copy it.
+  Edit > Copy and Cmd+C now copy the selected text through the same private
+  clipboard path.
 - Changed (macOS): the Mac no longer sends screenshot alerts. The sandboxed app
   could not see screenshots saved to the Desktop (the default) and also reacted
   to screen captures saved by other apps. The window is still marked as not

@@ -340,17 +340,19 @@ Safari), macOS 앱, iPad Pro 11 시뮬레이터 앱으로 확인했다. 실제 �
 | A2·W8 (macOS 판정 브라우저) | 보안 코드 대화상자의 *They match*에 Tab으로 2px 테두리와 함께 닿고 Enter로 양쪽 확인, 비상 삭제 확인을 Tab과 Space로 취소 | PASS |
 | 8-WebGuest (iOS Safari 시뮬레이터) | 입력칸을 눌러 화면 키보드가 떠도 헤더(상태·자동 삭제)와 평문 고지가 위에 남고 입력칸은 키보드 위에 있음 | PASS |
 | F2·8-macOS | iPad와 대화 중 다른 앱이 화면 캡처 파일을 세 번 저장해도 상대에게 스크린샷 알림이 가지 않음 | PASS |
-| U19 말풍선 끌어 고르기·복사, iPad 외장 키보드 Esc·⌘F·⌘N, iOS 사진 저장 권한 | 없음 | NOT RUN |
+| U19 (macOS·웹) | 말풍선 글을 마우스로 끌어 일부 고르면 *편집 > 복사하기*가 켜지고 `⌘C`·메뉴 복사로 고른 부분만 민감 클립보드 경로(60초 소거·단어 결합 문자 제거)로 복사됨 | PASS |
+| 8-iOS·F9·L5 (iPad·iPhone 시뮬레이터) | 파일 선택기에서 두 파일 동시 선택 일괄 전송, *이미지 저장* 시 사진 보관함 추가 권한 표시 및 무종료 저장, 3인 그룹 방 동일 길이 1바이트 변조 거부 및 `.part` 0건 | PASS |
+| iPad 외장 키보드 Esc·⌘F·⌘N | 없음 | NOT RUN |
 
 고친 것: OPFS 없이 메모리로 받은 파일이 다 받는 순간 받기 예산에서 빠져 100 MiB를 넘게 받던 문제(이제 목록에서
 지울 때까지 예산을 씀)와 예산 초과 수락이 아무 표시 없이 끝나던 문제, macOS·iOS(Cupertino) 대화상자 버튼에 Tab이
 가지 않고 Enter·Space로 누를 수 없던 문제, iOS Safari 게스트 포털에서 화면 키보드가 헤더와 평문 고지를 화면 밖으로
-밀던 문제. macOS 스크린샷 감지는 뺐다(샌드박스 앱이 기본 위치인 바탕화면의 스크린샷을 보지 못하고, 다른 앱이 저장한
-화면 캡처에는 반응함). 테스트 `dialog_keyboard_focus_test`, `picker_feedback_test`, `tool/browser_guard_test.js`,
-`tool/shared_flutter_limits_qa_test.mjs`.
+밀던 문제, macOS에서 말풍선 글을 마우스로 골라도 메뉴 막대의 *편집 > 복사하기*가 비활성으로 남아 `⌘C`가 동작하지
+않던 문제. macOS 스크린샷 감지는 뺐다(샌드박스 앱이 기본 위치인 바탕화면의 스크린샷을 보지 못하고, 다른 앱이 저장한
+화면 캡처에는 반응함). 테스트 `dialog_keyboard_focus_test`, `picker_feedback_test`, `bubble_text_selection_test`,
+`tool/browser_guard_test.js`, `tool/shared_flutter_limits_qa_test.mjs`.
 
-남는 것: macOS는 스크린샷 알림을 보내지 않고 창 공유 제한만 둔다. U19는 자동 입력으로는 선택이 생기지 않아 실제
-마우스로 확인해야 한다.
+남는 것: macOS는 스크린샷 알림을 보내지 않고 창 공유 제한만 둔다.
 
 ### 2026-11-24 키보드 Tab 순환과 Android 24시간제 재확인
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/widgets/keyboard_access.dart';
 import 'package:flutter/services.dart';
 
@@ -56,6 +57,13 @@ class _AppCommandsState extends State<AppCommands> {
           _newConnection();
         case 'close':
           _close();
+        case 'copy':
+          if (!OsPrivacy.copyActiveSelection()) {
+            final context = primaryFocus?.context;
+            if (context != null) {
+              Actions.maybeInvoke(context, CopySelectionTextIntent.copy);
+            }
+          }
       }
     });
   }
