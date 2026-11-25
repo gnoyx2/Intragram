@@ -41,7 +41,7 @@ The name is *intranet* plus *-gram*, and the mascot is a carrier pigeon: message
 
 **iPhone and iPad: [Intragram 1.0.0 is on the App Store](https://apps.apple.com/app/id6814277170)** (since 2026-11-20). The Mac app is in App Review and Android is in Google Play closed testing.
 
-Intragram is a release candidate (app 1.0.1, wire protocol 7). Cross-platform runs on one Mac (macOS app, iPhone and iPad simulators, Android 17 emulator, browser guest portal, and the web app in Chromium, Edge, Firefox and Safari) passed all 92 of 98 [DEVICE_QA.md](DEVICE_QA.md) checks runnable on that machine with zero open failures (56 covered in full, 36 in their single-Mac or simulated portion, and 6 requiring hardware not on that Mac). However, no platform has completed multi-device real-hardware QA yet, and the code has not had an independent security audit. Don't rely on it where a failure could put someone at risk.
+Intragram is a release candidate (app 1.0.2, wire protocol 7). Cross-platform runs on one Mac (macOS app, iPhone and iPad simulators, Android 17 emulator, browser guest portal, and the web app in Chromium, Edge, Firefox and Safari) passed all 92 of 98 [DEVICE_QA.md](DEVICE_QA.md) checks runnable on that machine with zero open failures (56 covered in full, 36 in their single-Mac or simulated portion, and 6 requiring hardware not on that Mac). However, no platform has completed multi-device real-hardware QA yet, and the code has not had an independent security audit. Don't rely on it where a failure could put someone at risk.
 
 | Platform | Minimum version | Release build | Signing | Device QA |
 | :--- | :--- | :--- | :--- | :--- |
@@ -119,17 +119,17 @@ It fits places where the internet is blocked, slow or unwanted: an internal netw
   <img src="docs/readme/04-install.png" alt="Carrier pigeon hugging an app download parcel box" width="151" height="160">
 </p>
 
-**[Open Downloads (GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**, select a version and expand **Assets**. [v1.0.1](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.1) is the current **testing pre-release** (v1.0.0-rc.4 and v1.0.0-rc.1 stay listed). Automated tests and artifact verification passed, but **real-device QA has not been completed on any platform**. On iPhone and iPad, install from the [App Store](https://apps.apple.com/app/id6814277170) instead; Mac App Store and Google Play links will be added when those are live.
+**[Open Downloads (GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**, select a version and expand **Assets**. [v1.0.2](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.2) is the current **testing pre-release** (v1.0.1, v1.0.0-rc.4 and v1.0.0-rc.1 stay listed). Automated tests, single-Mac cross-platform checks and artifact verification passed, while **multi-device real-hardware QA is still pending**. On iPhone and iPad, install from the [App Store](https://apps.apple.com/app/id6814277170) instead; Mac App Store and Google Play links will be added when those are live.
 
-v1.0.1 fixes device search on Android 17 (see [CHANGELOG.md](CHANGELOG.md)). The v1.0.1 and v1.0.0-rc.4 apps include the encrypted app–web connection, so they connect to the web app, and they use the same wire protocol (7) as v1.0.0-rc.1 apps. The older v1.0.0-rc.1 files predate that connection and cannot connect to the web app.
+v1.0.2 includes all cross-platform fixes verified through 2026-11-25, including retryable interrupted transfers, keyboard dialog/list navigation, macOS partial-selection Cmd+C copy and branded Windows installer screens (see [CHANGELOG.md](CHANGELOG.md)). The v1.0.2, v1.0.1 and v1.0.0-rc.4 apps include the encrypted app–web connection, so they connect to the web app, and they use the same wire protocol (7) as v1.0.0-rc.1 apps. The older v1.0.0-rc.1 files predate that connection and cannot connect to the web app.
 
 | Device | File to download from Assets | Installation |
 | :--- | :--- | :--- |
-| Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-android.apk) | One APK for supported ARM and x64 devices. Open it on the phone and allow installation from that browser or file manager if prompted. |
+| Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-android.apk) | One APK for supported ARM and x64 devices. Open it on the phone and allow installation from that browser or file manager if prompted. |
 | iPhone, iPad | [App Store](https://apps.apple.com/app/id6814277170) | Install it from the App Store. |
-| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-macos.dmg) (or [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-macos.zip)) | Open the disk image and drag Intragram to Applications, or extract the ZIP and copy the `.app` bundle there. |
-| Windows x64 | [intragram-windows-x64-setup.exe](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-windows-x64-setup.exe) (or [intragram-windows-x64-portable.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-windows-x64-portable.zip)) | Run the installer: it installs for your account without admin rights, adds a Start menu entry and is removed in *Settings › Apps*. For the ZIP, extract the entire folder, then run `intragram.exe`; keep its DLLs and `data` folder together. |
-| Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-linux-x64.tar.gz) | Extract it, then run `./intragram`; `./install.sh` adds a launcher. |
+| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.dmg) (or [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.zip)) | Open the disk image and drag Intragram to Applications, or extract the ZIP and copy the `.app` bundle there. |
+| Windows x64 | [intragram-windows-x64-setup.exe](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-windows-x64-setup.exe) (or [intragram-windows-x64-portable.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-windows-x64-portable.zip)) | Run the installer: it installs for your account without admin rights, adds a Start menu entry and is removed in *Settings › Apps*. For the ZIP, extract the entire folder, then run `intragram.exe`; keep its DLLs and `data` folder together. |
+| Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-linux-x64.tar.gz) | Extract it, then run `./intragram`; `./install.sh` adds a launcher. |
 
 GitHub's **Source code (zip/tar.gz)** files are source code, not installed apps. The Android APK is attached only when CI has the project's release signing key; debug-signed test APKs are never published. Published releases leave out the store-only files (the unsigned iOS `.ipa` and the Google Play `.aab`).
 
@@ -428,7 +428,7 @@ Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰�
 
 **iPhone·iPad: [Intragram 1.0.0이 App Store에 나왔습니다](https://apps.apple.com/app/id6814277170)**(2026-11-20부터). Mac 앱은 App Store 심사 중이고, Android는 Google Play 비공개 테스트 중입니다.
 
-릴리스 후보 단계입니다(앱 1.0.1, 와이어 프로토콜 7). Mac 한 대에서 macOS 앱, iPhone·iPad 시뮬레이터, Android 17 에뮬레이터, 브라우저 게스트 포털, 웹 앱(Chromium·Edge·Firefox·Safari)을 띄워 수행한 교차 검증에서는 이 기기에서 실행 가능한 [DEVICE_QA.md](DEVICE_QA.md) 98개 항목 중 92개가 모두 실패 없이 통과했습니다(단일 기기·에뮬레이션 완전 범위 56개, 시뮬레이터·단일 Mac 부분 범위 36개, 해당 하드웨어가 없어 미실행 6개). 다만 서로 다른 여러 실기기와 실제 공유기 망에서의 점검, Windows·Linux 실기기 검증은 아직 남아 있고 외부 보안 감사도 받지 않았습니다. 문제가 생겼을 때 누군가 위험해질 수 있는 곳에서는 쓰지 마세요.
+릴리스 후보 단계입니다(앱 1.0.2, 와이어 프로토콜 7). Mac 한 대에서 macOS 앱, iPhone·iPad 시뮬레이터, Android 17 에뮬레이터, 브라우저 게스트 포털, 웹 앱(Chromium·Edge·Firefox·Safari)을 띄워 수행한 교차 검증에서는 이 기기에서 실행 가능한 [DEVICE_QA.md](DEVICE_QA.md) 98개 항목 중 92개가 모두 실패 없이 통과했습니다(단일 기기·에뮬레이션 완전 범위 56개, 시뮬레이터·단일 Mac 부분 범위 36개, 해당 하드웨어가 없어 미실행 6개). 다만 서로 다른 여러 실기기와 실제 공유기 망에서의 점검, Windows·Linux 실기기 검증은 아직 남아 있고 외부 보안 감사도 받지 않았습니다. 문제가 생겼을 때 누군가 위험해질 수 있는 곳에서는 쓰지 마세요.
 
 | 플랫폼 | 최소 버전 | 릴리스 빌드 | 서명 | 실기기 QA |
 | :--- | :--- | :--- | :--- | :--- |
@@ -506,17 +506,17 @@ CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티�
   <img src="docs/readme/04-install.png" alt="설치 패키지 상자를 안고 있는 전서구" width="151" height="160">
 </p>
 
-**[다운로드 페이지(GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**에서 버전을 고른 뒤 **Assets**를 펼치세요. [v1.0.1](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.1)을 현재 **테스트용 프리릴리스**로 제공합니다(v1.0.0-rc.4와 v1.0.0-rc.1도 목록에 남아 있습니다). 자동 테스트와 빌드 파일 검증은 통과했지만, **모든 플랫폼의 실기기 QA는 아직 미완료**입니다. iPhone과 iPad는 [App Store](https://apps.apple.com/app/id6814277170)에서 받으세요. Mac App Store와 Google Play 링크는 공개되면 추가합니다.
+**[다운로드 페이지(GitHub Releases)](https://github.com/gnoyx2/Intragram/releases)**에서 버전을 고른 뒤 **Assets**를 펼치세요. [v1.0.2](https://github.com/gnoyx2/Intragram/releases/tag/v1.0.2)를 현재 **테스트용 프리릴리스**로 제공합니다(v1.0.1, v1.0.0-rc.4, v1.0.0-rc.1도 목록에 남아 있습니다). 자동 테스트, 단일 Mac 교차 검증과 빌드 파일 검증은 통과했으며 **여러 실기기 간 현장 QA는 진행 중**입니다. iPhone과 iPad는 [App Store](https://apps.apple.com/app/id6814277170)에서 받으세요. Mac App Store와 Google Play 링크는 공개되면 추가합니다.
 
-v1.0.1은 Android 17에서 기기 찾기가 멈추던 문제를 고쳤습니다([CHANGELOG.md](CHANGELOG.md)). v1.0.1과 v1.0.0-rc.4 앱에는 앱·웹 암호화 연결이 들어 있어 웹 앱과 연결할 수 있고, v1.0.0-rc.1 앱과 같은 통신 프로토콜(7)을 씁니다. 예전 v1.0.0-rc.1 파일은 그 연결이 생기기 전에 만든 것이라 웹 앱과 연결할 수 없습니다.
+v1.0.2에는 연결 끊김 뒤 전송 재시도, 대화상자·2단 목록 키보드 조작, macOS 말풍선 부분 선택 `⌘C` 복사, Windows 설치 마법사 화면 개선 등 2026-11-25까지 검증된 수정이 모두 반영되어 있습니다([CHANGELOG.md](CHANGELOG.md)). v1.0.2·v1.0.1·v1.0.0-rc.4 앱에는 앱·웹 암호화 연결이 들어 있어 웹 앱과 연결할 수 있고, v1.0.0-rc.1 앱과 같은 통신 프로토콜(7)을 씁니다. 예전 v1.0.0-rc.1 파일은 그 연결이 생기기 전에 만든 것이라 웹 앱과 연결할 수 없습니다.
 
 | 기기 | Assets에서 받을 파일 | 설치 방법 |
 | :--- | :--- | :--- |
-| Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-android.apk) | 지원하는 ARM·x64 기기용 통합 APK입니다. 폰에서 파일을 열고, 요청이 뜨면 해당 브라우저나 파일 관리자의 앱 설치를 허용하세요. |
+| Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-android.apk) | 지원하는 ARM·x64 기기용 통합 APK입니다. 폰에서 파일을 열고, 요청이 뜨면 해당 브라우저나 파일 관리자의 앱 설치를 허용하세요. |
 | iPhone, iPad | [App Store](https://apps.apple.com/app/id6814277170) | App Store에서 설치하세요. |
-| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-macos.dmg) (또는 [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-macos.zip)) | 디스크 이미지를 열고 Intragram을 Applications 폴더로 끌어다 놓으세요. ZIP을 받았다면 압축을 풀고 `.app` 파일을 응용 프로그램 폴더로 복사하세요. |
-| Windows x64 | [intragram-windows-x64-setup.exe](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-windows-x64-setup.exe) (또는 [intragram-windows-x64-portable.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-windows-x64-portable.zip)) | 설치 파일을 실행하면 관리자 권한 없이 내 계정에 설치되고 시작 메뉴에 등록됩니다. 제거는 *설정 › 앱*에서 합니다. ZIP은 폴더 전체의 압축을 풀고 `intragram.exe`를 실행하세요. DLL과 `data` 폴더를 함께 유지해야 합니다. |
-| Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.1/intragram-linux-x64.tar.gz) | 압축을 풀고 `./intragram`을 실행하세요. `./install.sh`로 앱 메뉴에 등록합니다. |
+| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.dmg) (또는 [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.zip)) | 디스크 이미지를 열고 Intragram을 Applications 폴더로 끌어다 놓으세요. ZIP을 받았다면 압축을 풀고 `.app` 파일을 응용 프로그램 폴더로 복사하세요. |
+| Windows x64 | [intragram-windows-x64-setup.exe](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-windows-x64-setup.exe) (또는 [intragram-windows-x64-portable.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-windows-x64-portable.zip)) | 설치 파일을 실행하면 관리자 권한 없이 내 계정에 설치되고 시작 메뉴에 등록됩니다. 제거는 *설정 › 앱*에서 합니다. ZIP은 폴더 전체의 압축을 풀고 `intragram.exe`를 실행하세요. DLL과 `data` 폴더를 함께 유지해야 합니다. |
+| Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-linux-x64.tar.gz) | 압축을 풀고 `./intragram`을 실행하세요. `./install.sh`로 앱 메뉴에 등록합니다. |
 
 GitHub의 **Source code (zip/tar.gz)**는 설치 파일이 아닌 소스 코드입니다. Android APK는 CI에 프로젝트 릴리스 서명 키가 설정된 경우에만 첨부하며, 디버그 키로 서명한 시험용 APK는 공개하지 않습니다. 스토어 제출용 파일(서명 없는 iOS `.ipa`, Google Play용 `.aab`)은 공개한 릴리스에서 뺍니다.
 
