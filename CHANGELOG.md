@@ -4,11 +4,11 @@ Versions follow the app version in `pubspec.yaml`. The wire protocol version
 (`kProtocolVersion` in `lib/core/constants.dart`) is listed because apps on
 different protocol versions refuse to talk to each other.
 
-## Unreleased (after 1.0.1)
+## 1.0.2 (app `1.0.2+13`)
 
-Protocol 7, unchanged. Found in cross-platform runs on one Mac (macOS app,
-iPhone and iPad simulators, Android 17 emulator, browsers) on 2026-11-21,
-2026-11-23, 2026-11-24 and 2026-11-25.
+Protocol 7, unchanged: 1.0.2, 1.0.1 and 1.0.0 talk to each other. Found in
+cross-platform runs on one Mac (macOS app, iPhone and iPad simulators, Android
+17 emulator, browsers) on 2026-11-21, 2026-11-23, 2026-11-24 and 2026-11-25.
 
 - Fixed: a file or voice message still waiting for the other side when the
   connection dropped (for example when an iPhone went to the background) stayed
