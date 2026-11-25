@@ -1,8 +1,7 @@
 name: release
 
 # 버전 태그(예: v1.0.0)를 올리면 모든 플랫폼을 빌드해서 바이너리를 붙인 초안 GitHub Release를 엶.
-# 빌드 잡마다 만든 결과물의 서명 상태를 직접 재서 SIGNING-<플랫폼>.txt에 적고 릴리즈 노트는 그 파일을 가리킴
-# (작성된 설명 대신 해당 파일을 직접 확인해야 함)
+# 빌드 잡마다 서명 상태를 측정해 SIGNING-<플랫폼>.txt를 Actions 산출물에 남김
 #
 # 플랫폼별 서명 (전체 절차는 RELEASING.md)
 # - Android: ANDROID_KEYSTORE_* 시크릿이 있을 때만 릴리즈 키로 서명함. 없으면 APK가 debug 서명이라
@@ -117,7 +116,7 @@ jobs:
           if [ -f android/key.properties ]; then KEY=release; SUFFIX=""; else KEY=debug; SUFFIX="-debugsigned"; fi
           APK="dist/intragram-android${SUFFIX}.apk"
           cp build/app/outputs/flutter-apk/app-release.apk "$APK"
-          if [ "$KEY" = release ]; then cp build/app/outputs/bundle/release/app-release.aab dist/intragram.aab; fi
+          if [ "$KEY" = release ]; then cp build/app/outputs/bundle/release/app-release.aab dist/intragram-android.aab; fi
           {
             echo "commit: $GITHUB_SHA"
             echo "flutter: $FLUTTER_VERSION, runner: ubuntu-24.04 x64"
@@ -134,9 +133,9 @@ jobs:
               echo "::error::missing APK signer identity or digest for $APK" >&2
               exit 1
             fi
-            if [ -f dist/intragram.aab ]; then
-              echo "intragram.aab"
-              keytool -J-Duser.language=en -J-Duser.country=US -printcert -jarfile dist/intragram.aab | grep -E 'Owner|SHA256'
+            if [ -f dist/intragram-android.aab ]; then
+              echo "intragram-android.aab"
+              keytool -J-Duser.language=en -J-Duser.country=US -printcert -jarfile dist/intragram-android.aab | grep -E 'Owner|SHA256'
             fi
           } > dist/SIGNING-android.txt
           cat dist/SIGNING-android.txt
@@ -174,7 +173,7 @@ jobs:
           {
             echo "commit: $GITHUB_SHA"
             echo "flutter: $FLUTTER_VERSION, runner: ubuntu-24.04 x64"
-            echo "linux signing: none (no OS-level code signing; use SHA256SUMS.txt)"
+            echo "linux signing: none (no OS-level code signing; verify the GitHub asset digest)"
           } > dist/SIGNING-linux.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -275,11 +274,10 @@ jobs:
 
       - name: Build macOS
         run: flutter build macos --release
-      - name: Package macOS (zip + dmg)
+      - name: Package macOS DMG
         run: |
           mkdir -p dist
           APP="build/macos/Build/Products/Release/Intragram.app"
-          ditto -c -k --keepParent "$APP" dist/intragram-macos.zip
           # 설치 창: 1x·2x 배경을 한 TIFF로 묶고, dmgbuild가 Applications 바로가기와 아이콘 자리를 .DS_Store에 직접 씀
           python3 -m venv "$RUNNER_TEMP/dmgenv"
           "$RUNNER_TEMP/dmgenv/bin/pip" install --quiet dmgbuild==1.6.7
@@ -336,15 +334,14 @@ jobs:
       - name: Flatten
         run: |
           mkdir -p release
-          find artifacts -type f -exec cp {} release/ \;
-          # debug 서명 APK는 다른 debug 서명 빌드와 키가 같아 업데이트로 위장해 덮어쓸 수 있으므로 절대 올리지 않음
-          rm -f release/*-debugsigned.apk
-          cp LICENSE THIRD_PARTY_NOTICES.md assets/licenses/WEBRTC_NOTICES.md release/
+          # 공개 다운로드용 빌드만 복사함. 디버그 APK, 미서명 IPA와 서명 보고서는 Actions에 남김.
+          find artifacts -type f \( \
+            -name intragram-android.apk -o -name intragram-android.aab -o \
+            -name intragram-macos.dmg -o -name intragram-linux-x64.tar.gz -o \
+            -name intragram-windows-x64-setup.exe -o -name intragram-windows-x64-portable.zip \
+          \) -exec cp {} release/ \;
           ls -lh release
-      - name: Checksums
-        working-directory: release
-        run: sha256sum * > SHA256SUMS.txt
-      # 체크섬은 같은 페이지에 있어서 바꿔치기를 못 잡음: 이 워크플로가 만들었다는 증명을 따로 남김
+      # GitHub의 파일 체크섬과 별도로 이 워크플로가 만들었다는 증명을 남김
       # (gh attestation verify <file> --repo <owner>/Intragram). 공개 저장소에서만 됨
       - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
         if: ${{ !github.event.repository.private }}
@@ -362,25 +359,21 @@ jobs:
             Intragram ${{ github.ref_name }}, a LAN-only P2P messenger.
             Source commit `${{ github.sha }}`, built with Flutter ${{ env.FLUTTER_VERSION }}.
 
-            Verify a download: `shasum -a 256 -c --ignore-missing SHA256SUMS.txt` (macOS) or
-            `sha256sum -c --ignore-missing SHA256SUMS.txt` (Linux); on Windows compare
-            `Get-FileHash <file> -Algorithm SHA256`. The checksums catch a broken download, not a
-            tampered release; `gh attestation verify <file> --repo ${{ github.repository }}`
-            checks that this workflow built the file.
+            GitHub provides a SHA-256 digest beside each asset. To verify its build provenance,
+            run `gh attestation verify <file> --repo ${{ github.repository }}`.
 
-            Signing is measured during the build and attached as `SIGNING-<platform>.txt`.
-            Read those files, not this summary:
-            - Android: APK and AAB are attached only when `SIGNING-android.txt` says
-              `android key: release`. A debug-signed APK (public debug key) is never attached;
-              it stays a workflow-run artifact for testing.
-            - iOS `.ipa`: unsigned. It installs only after re-signing with your own Apple
-              Developer profile.
-            - macOS zip/dmg: ad-hoc signed, not notarized. Gatekeeper will warn.
+            Signing reports are available in the workflow-run artifacts.
+            - Android: the APK and Google Play AAB use the release signing key.
+            - iPhone and iPad: [App Store](https://apps.apple.com/app/id6814277170).
+            - macOS DMG: ad-hoc signed, not notarized. Gatekeeper will warn.
             - Windows installer (`-setup.exe`: installs for the current user without admin rights,
               remove it in Settings > Apps) and portable zip (`-portable.zip`): not Authenticode-signed. SmartScreen will warn.
             - Linux tarball: experimental, Linux runtime/dependencies not yet reviewed; no OS-level signing.
 
-            Licenses: `LICENSE` (MIT), `THIRD_PARTY_NOTICES.md` and `WEBRTC_NOTICES.md` are attached.
+            Licenses are bundled in the app under Settings › Open-source licenses and available in the source:
+            [MIT](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/LICENSE),
+            [third-party notices](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/THIRD_PARTY_NOTICES.md),
+            [WebRTC notices](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/assets/licenses/WEBRTC_NOTICES.md).
 
             Real-device test status and open items are in `README.md` (Status) and
             `DEVICE_QA.md`. Review the signing reports and device QA before publishing

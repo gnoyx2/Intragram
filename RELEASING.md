@@ -369,8 +369,7 @@ For `v1.0.0-rc.1` (2026-10-27) and `v1.0.0-rc.4` (2026-11-18) only, the maintain
   and `DEPS` on `branch-heads/7871`, commit
   `05e02da9d17f5844e84800fa524dd1eb57d7014c`, for M150) is bundled in
   `assets/licenses/WEBRTC_NOTICES.md`, registered in `lib/core/app_licenses.dart`
-  for Settings › Open-source licenses, and attached to GitHub Releases as
-  `WEBRTC_NOTICES.md`. Refresh `assets/licenses/WEBRTC_NOTICES.md` whenever
+  for Settings › Open-source licenses, and linked from the release notes. Refresh `assets/licenses/WEBRTC_NOTICES.md` whenever
   `flutter_webrtc` or its native WebRTC milestone is upgraded. The web app
   bundles no WebRTC code and is not affected.
 - [ ] **Store listing support contact.** Decided on 2026-11-14: the support
@@ -380,7 +379,7 @@ For `v1.0.0-rc.1` (2026-10-27) and `v1.0.0-rc.4` (2026-11-18) only, the maintain
   not kept in this repository.
 
 1. Before the first tag, run the `release` workflow by hand (Actions, Run
-   workflow) and read the `SIGNING-<platform>.txt` files it attaches. The
+   workflow) and read the `SIGNING-<platform>.txt` files in the Actions run artifacts. The
    `native` workflow (debug builds of iOS, macOS, Windows and Linux) runs on
    its own when those folders change; run it by hand too if it has not run on
    this commit. If a platform's job cannot pass, leave that platform out of
@@ -390,7 +389,7 @@ For `v1.0.0-rc.1` (2026-10-27) and `v1.0.0-rc.4` (2026-11-18) only, the maintain
    a GitHub pre-release until the repository variable `DEVICE_QA_PASSED` is
    set to `true` (Settings, Secrets and variables, Variables), which you do
    only after `DEVICE_QA.md` passes. Pushing the tag creates a **draft**
-   release with `SHA256SUMS.txt`.
+   release with the public builds. GitHub lists each asset’s SHA-256 digest.
 3. Check the draft against the README status table, inspect the files and
    signing reports, then choose **Publish release** in GitHub. A draft is
    invisible to ordinary users even though its build completed. Keep the

@@ -45,9 +45,9 @@ Intragram is a release candidate (app 1.0.2, wire protocol 7). Cross-platform ru
 
 | Platform | Minimum version | Release build | Signing | Device QA |
 | :--- | :--- | :--- | :--- | :--- |
-| Android | 7.0 (API 24) | universal `.apk`, store `.aab` | release key required; check `SIGNING-android.txt` | Android 17 emulator passed on one Mac; real phone and two-device Wi-Fi not run |
+| Android | 7.0 (API 24) | universal `.apk`, store `.aab` | release key required | Android 17 emulator passed on one Mac; real phone and two-device Wi-Fi not run |
 | iOS, iPadOS | 15.0 | [App Store](https://apps.apple.com/app/id6814277170) | signed by Apple (App Store) | iPhone and iPad simulators passed on one Mac; real device, camera QR and external keyboard not run |
-| macOS | 12.0 | universal app (`.zip`, `.dmg`) | ad-hoc, not notarized | local app and cross-platform runs passed on one Mac; two-device Wi-Fi not run |
+| macOS | 12.0 | universal DMG | ad-hoc, not notarized | local app and cross-platform runs passed on one Mac; two-device Wi-Fi not run |
 | Windows | 10, x64 | installer `.exe`, portable `.zip` | not signed | not run (CI build and installer smoke only) |
 | Linux | x64, GTK 3 | `.tar.gz` bundle (experimental) | none | not run (CI build only) |
 | Browser guest | current browsers | page served by the host app | n/a | Chromium and iOS Simulator Safari passed on one Mac; real phones not run |
@@ -127,13 +127,13 @@ v1.0.2 includes all cross-platform fixes verified through 2026-11-25, including 
 | :--- | :--- | :--- |
 | Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-android.apk) | One APK for supported ARM and x64 devices. Open it on the phone and allow installation from that browser or file manager if prompted. |
 | iPhone, iPad | [App Store](https://apps.apple.com/app/id6814277170) | Install it from the App Store. |
-| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.dmg) (or [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.zip)) | Open the disk image and drag Intragram to Applications, or extract the ZIP and copy the `.app` bundle there. |
+| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.dmg) | Open the disk image and drag Intragram to Applications. |
 | Windows x64 | [intragram-windows-x64-setup.exe](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-windows-x64-setup.exe) (or [intragram-windows-x64-portable.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-windows-x64-portable.zip)) | Run the installer: it installs for your account without admin rights, adds a Start menu entry and is removed in *Settings › Apps*. For the ZIP, extract the entire folder, then run `intragram.exe`; keep its DLLs and `data` folder together. |
 | Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-linux-x64.tar.gz) | Extract it, then run `./intragram`; `./install.sh` adds a launcher. |
 
-GitHub's **Source code (zip/tar.gz)** files are source code, not installed apps. The Android APK is attached only when CI has the project's release signing key; debug-signed test APKs are never published. Published releases leave out the store-only files (the unsigned iOS `.ipa` and the Google Play `.aab`).
+GitHub's **Source code (zip/tar.gz)** files are source code, not installed apps. The Android APK is attached only when CI has the project's release signing key; debug-signed test APKs are never published. The [Android App Bundle](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-android.aab) is for Google Play submission. The iPhone and iPad app is distributed through the App Store.
 
-Version tags create a **draft** release. Downloads become public only after the maintainer publishes it; early releases remain marked **Pre-release** until device QA passes. Each release includes `SHA256SUMS.txt` and a `SIGNING-<platform>.txt` per platform that records how each file was signed. Check a download with `shasum -a 256 -c --ignore-missing SHA256SUMS.txt` on macOS, `sha256sum -c --ignore-missing SHA256SUMS.txt` on Linux, or `Get-FileHash <file> -Algorithm SHA256` in PowerShell. The checksums only catch a broken download. `gh attestation verify <file> --repo gnoyx2/Intragram` checks that the release workflow built the file.
+Version tags create a **draft** release. Downloads become public only after the maintainer publishes it; early releases remain marked **Pre-release** until device QA passes. Compare the SHA-256 digest shown beside each GitHub release asset with `shasum -a 256 <file>` on macOS, `sha256sum <file>` on Linux, or `Get-FileHash <file> -Algorithm SHA256` in PowerShell. Signing reports are available in the GitHub Actions run artifacts. `gh attestation verify <file> --repo gnoyx2/Intragram` checks that the release workflow built the file.
 
 Intragram only listens on and connects to private addresses, so allow firewall prompts for private networks only.
 
@@ -332,7 +332,7 @@ Four workflows live in `.github/workflows/`. Third-party actions are pinned to c
 | `ci.yml` | every push and pull request | `verify` on Ubuntu runs the checks above; `android` builds a debug APK |
 | `pages.yml` | changes to the web app, the site or their build files on `main`, a pull request touching them, or a manual run | builds the Flutter web app for `/<repository>/web/app/` and, on `main`, deploys `docs/` with it to GitHub Pages; a pull request only builds |
 | `native.yml` | changes under `ios/`, `macos/`, `windows/`, `linux/` or in `pubspec`, or a manual run | debug builds of macOS and iOS (Xcode 27.1), Windows (`windows-2022`) and Linux (`ubuntu-24.04`), plus a C++ test of the Linux desktop helpers and a syntax check of `install.sh` |
-| `release.yml` | a `v*` tag, or a manual run | runs `verify` again, builds release files for every platform and writes `SIGNING-<platform>.txt` from the built files. On a tag it adds `SHA256SUMS.txt` and a build provenance attestation and opens a draft release, marked pre-release until the repository variable `DEVICE_QA_PASSED` is `true` |
+| `release.yml` | a `v*` tag, or a manual run | runs `verify` again, builds release files for every platform and writes `SIGNING-<platform>.txt` for the Actions run artifacts. On a tag it adds build provenance attestations and opens a draft release, marked pre-release until the repository variable `DEVICE_QA_PASSED` is `true` |
 
 A debug-signed Android APK is never attached to a release; it stays a workflow artifact for testing. The full release procedure is in [RELEASING.md](RELEASING.md).
 
@@ -432,9 +432,9 @@ Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰�
 
 | 플랫폼 | 최소 버전 | 릴리스 빌드 | 서명 | 실기기 QA |
 | :--- | :--- | :--- | :--- | :--- |
-| Android | 7.0 (API 24) | 통합 `.apk`, 스토어용 `.aab` | 릴리스 키 필요, `SIGNING-android.txt` 확인 | 단일 Mac의 Android 17 에뮬레이터 통과, 실기기와 두 기기 Wi-Fi 미실시 |
+| Android | 7.0 (API 24) | 통합 `.apk`, 스토어용 `.aab` | 릴리스 키 필요 | 단일 Mac의 Android 17 에뮬레이터 통과, 실기기와 두 기기 Wi-Fi 미실시 |
 | iOS, iPadOS | 15.0 | [App Store](https://apps.apple.com/app/id6814277170) | Apple 서명(App Store) | 단일 Mac의 iPhone·iPad 시뮬레이터 통과, 실기기·카메라 QR·외장 키보드 미실시 |
-| macOS | 12.0 | universal 앱 (`.zip`, `.dmg`) | ad-hoc 서명, 공증 없음 | 단일 Mac 앱 및 시뮬레이터·웹 교차 검사 통과, 두 기기 Wi-Fi 미실시 |
+| macOS | 12.0 | universal DMG | ad-hoc 서명, 공증 없음 | 단일 Mac 앱 및 시뮬레이터·웹 교차 검사 통과, 두 기기 Wi-Fi 미실시 |
 | Windows | 10, x64 | 설치 프로그램 `.exe`, 포터블 `.zip` | 서명 없음 | 미실시 (CI 빌드·설치 확인만) |
 | Linux | x64, GTK 3 | `.tar.gz` 번들 (실험 단계) | 없음 | 미실시 (CI 빌드만) |
 | 브라우저 게스트 | 최신 브라우저 | 호스트 앱이 내려주는 페이지 | 해당 없음 | 단일 Mac의 Chromium·iOS 시뮬레이터 Safari 통과, 실기기 미실시 |
@@ -514,13 +514,13 @@ v1.0.2에는 연결 끊김 뒤 전송 재시도, 대화상자·2단 목록 키�
 | :--- | :--- | :--- |
 | Android | [intragram-android.apk](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-android.apk) | 지원하는 ARM·x64 기기용 통합 APK입니다. 폰에서 파일을 열고, 요청이 뜨면 해당 브라우저나 파일 관리자의 앱 설치를 허용하세요. |
 | iPhone, iPad | [App Store](https://apps.apple.com/app/id6814277170) | App Store에서 설치하세요. |
-| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.dmg) (또는 [intragram-macos.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.zip)) | 디스크 이미지를 열고 Intragram을 Applications 폴더로 끌어다 놓으세요. ZIP을 받았다면 압축을 풀고 `.app` 파일을 응용 프로그램 폴더로 복사하세요. |
+| macOS | [intragram-macos.dmg](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-macos.dmg) | 디스크 이미지를 열고 Intragram을 Applications 폴더로 끌어다 놓으세요. |
 | Windows x64 | [intragram-windows-x64-setup.exe](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-windows-x64-setup.exe) (또는 [intragram-windows-x64-portable.zip](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-windows-x64-portable.zip)) | 설치 파일을 실행하면 관리자 권한 없이 내 계정에 설치되고 시작 메뉴에 등록됩니다. 제거는 *설정 › 앱*에서 합니다. ZIP은 폴더 전체의 압축을 풀고 `intragram.exe`를 실행하세요. DLL과 `data` 폴더를 함께 유지해야 합니다. |
 | Linux x64 | [intragram-linux-x64.tar.gz](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-linux-x64.tar.gz) | 압축을 풀고 `./intragram`을 실행하세요. `./install.sh`로 앱 메뉴에 등록합니다. |
 
-GitHub의 **Source code (zip/tar.gz)**는 설치 파일이 아닌 소스 코드입니다. Android APK는 CI에 프로젝트 릴리스 서명 키가 설정된 경우에만 첨부하며, 디버그 키로 서명한 시험용 APK는 공개하지 않습니다. 스토어 제출용 파일(서명 없는 iOS `.ipa`, Google Play용 `.aab`)은 공개한 릴리스에서 뺍니다.
+GitHub의 **Source code (zip/tar.gz)**는 설치 파일이 아닌 소스 코드입니다. Android APK는 CI에 프로젝트 릴리스 서명 키가 설정된 경우에만 첨부하며, 디버그 키로 서명한 시험용 APK는 공개하지 않습니다. [Android App Bundle](https://github.com/gnoyx2/Intragram/releases/download/v1.0.2/intragram-android.aab)은 Google Play 제출용입니다. iPhone·iPad 앱은 App Store에서 배포합니다.
 
-버전 태그를 올리면 먼저 **초안(Draft)** 릴리스가 만들어집니다. 관리자가 게시해야 사용자가 다운로드할 수 있고, 실기기 QA를 통과하기 전까지는 **Pre-release**로 표시합니다. 릴리스에는 `SHA256SUMS.txt`와 플랫폼별 실제 서명 상태를 기록한 `SIGNING-<platform>.txt`가 붙습니다. 내려받은 파일은 macOS에서 `shasum -a 256 -c --ignore-missing SHA256SUMS.txt`, Linux에서 `sha256sum -c --ignore-missing SHA256SUMS.txt`, Windows PowerShell에서 `Get-FileHash <파일> -Algorithm SHA256`으로 확인합니다. 체크섬은 깨진 다운로드만 잡아냅니다. 릴리스 워크플로가 직접 만든 파일인지는 `gh attestation verify <파일> --repo gnoyx2/Intragram`으로 확인합니다.
+버전 태그를 올리면 먼저 **초안(Draft)** 릴리스가 만들어집니다. 관리자가 게시해야 사용자가 다운로드할 수 있고, 실기기 QA를 통과하기 전까지는 **Pre-release**로 표시합니다. GitHub 릴리스의 각 파일 옆에 표시된 SHA-256 값을 macOS의 `shasum -a 256 <파일>`, Linux의 `sha256sum <파일>`, Windows PowerShell의 `Get-FileHash <파일> -Algorithm SHA256` 결과와 비교하세요. 서명 보고서는 GitHub Actions 실행 산출물에서 확인할 수 있습니다. 릴리스 워크플로가 직접 만든 파일인지는 `gh attestation verify <파일> --repo gnoyx2/Intragram`으로 확인합니다.
 
 Intragram은 사설 주소에서만 연결을 받고 겁니다. 방화벽 팝업은 개인 네트워크에서만 허용하세요.
 
@@ -719,7 +719,7 @@ git diff --check
 | `ci.yml` | 모든 push와 PR | `verify`는 Ubuntu에서 위 검사를 돌리고, `android`는 디버그 APK를 빌드 |
 | `pages.yml` | `main`에서 웹 앱·사이트·빌드 파일이 바뀔 때, 그 파일을 건드린 PR, 또는 수동 실행 | Flutter 웹 앱을 `/<저장소 이름>/web/app/` 경로로 빌드하고, `main`이면 `docs/`와 함께 GitHub Pages에 배포. PR에서는 빌드만 함 |
 | `native.yml` | `ios/`, `macos/`, `windows/`, `linux/`, `pubspec`이 바뀔 때, 또는 수동 실행 | macOS·iOS(Xcode 27.1), Windows(`windows-2022`), Linux(`ubuntu-24.04`) 디버그 빌드, Linux 데스크톱 보조 코드의 C++ 테스트와 `install.sh` 문법 검사 |
-| `release.yml` | `v*` 태그, 또는 수동 실행 | `verify`를 다시 돌리고, 모든 플랫폼의 릴리스 파일을 빌드해 빌드된 파일에서 `SIGNING-<platform>.txt`를 만듦. 태그일 때는 `SHA256SUMS.txt`와 빌드 출처 증명(attestation)을 더해 초안 릴리스를 열고, 저장소 변수 `DEVICE_QA_PASSED`가 `true`가 되기 전까지 프리릴리스로 표시 |
+| `release.yml` | `v*` 태그, 또는 수동 실행 | `verify`를 다시 돌리고, 모든 플랫폼의 릴리스 파일을 빌드해 `SIGNING-<platform>.txt`를 Actions 실행 산출물에 남김. 태그일 때는 빌드 출처 증명(attestation)을 더해 초안 릴리스를 열고, 저장소 변수 `DEVICE_QA_PASSED`가 `true`가 되기 전까지 프리릴리스로 표시 |
 
 디버그 서명 Android APK는 릴리스에 붙이지 않고 테스트용 워크플로 산출물로만 남깁니다. 전체 릴리스 절차는 [RELEASING.md](RELEASING.md)에 있습니다.
 

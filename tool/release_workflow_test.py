@@ -104,25 +104,32 @@ for case in cases:
             suffix = "-debugsigned" if case == "debug" else ""
             expected = {f"intragram-android{suffix}.apk", "SIGNING-android.txt"}
             if case == "release":
-                expected.add("intragram.aab")
+                expected.add("intragram-android.aab")
             assert {p.name for p in (root / "dist").iterdir()} == expected
             assert "old report" not in (root / "dist/SIGNING-android.txt").read_text()
 
 with tempfile.TemporaryDirectory() as directory:
     root = Path(directory)
     (root / "artifacts/android").mkdir(parents=True)
-    (root / "assets/licenses").mkdir(parents=True)
-    (root / "artifacts/android/intragram-android-debugsigned.apk").write_text("debug")
-    (root / "artifacts/android/SIGNING-android.txt").write_text("signing")
-    (root / "LICENSE").write_text("mit")
-    (root / "THIRD_PARTY_NOTICES.md").write_text("notices")
-    (root / "assets/licenses/WEBRTC_NOTICES.md").write_text("webrtc notices")
-    assert run(FLATTEN, root).returncode == 0
-    assert {p.name for p in (root / "release").iterdir()} == {
-        "SIGNING-android.txt",
-        "LICENSE",
-        "THIRD_PARTY_NOTICES.md",
-        "WEBRTC_NOTICES.md",
+    public_builds = {
+        "intragram-android.apk",
+        "intragram-android.aab",
+        "intragram-macos.dmg",
+        "intragram-linux-x64.tar.gz",
+        "intragram-windows-x64-setup.exe",
+        "intragram-windows-x64-portable.zip",
     }
+    internal_files = {
+        "intragram-android-debugsigned.apk",
+        "intragram-ios-unsigned.ipa",
+        "intragram-macos.zip",
+        "SIGNING-android.txt",
+        "SHA256SUMS.txt",
+        "THIRD_PARTY_NOTICES.md",
+    }
+    for filename in public_builds | internal_files:
+        (root / "artifacts/android" / filename).write_text("fixture")
+    assert run(FLATTEN, root).returncode == 0
+    assert {p.name for p in (root / "release").iterdir()} == public_builds
 
 print("Android release workflow: 24 signing and packaging cases passed.")

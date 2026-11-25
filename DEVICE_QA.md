@@ -57,8 +57,8 @@ SPM 미지원 플러그인 안내, `objective_c` 프레임워크 경고 등이 �
 
 ## 0. 준비
 
-- 대상 빌드: 커밋과 산출물의 SHA-256(`SHA256SUMS.txt`와 대조). 서명 상태는
-  `SIGNING-<platform>.txt` 기준.
+- 대상 빌드: 커밋과 산출물의 SHA-256(GitHub 릴리스 파일의 체크섬과 대조). 서명 상태는
+  Actions 실행 산출물의 `SIGNING-<platform>.txt` 기준.
 - 기기: 앱 3대 이상(호스트 1, 멤버 2) + 웹 게스트. 플랫폼은 출시를 표방하는 것만:
   Android, iPhone/iPad, macOS, Windows, Linux.
 - 웹 게스트 브라우저: 데스크톱 Chrome·Firefox·Safari·Edge, 모바일 iOS Safari·Android
@@ -74,7 +74,7 @@ SPM 미지원 플러그인 안내, `objective_c` 프레임워크 경고 등이 �
 
 | ID | 절차 | 기대 결과 |
 | :-- | :-- | :-- |
-| I1 | 배포 산출물로 설치(Android `adb install`, iOS 서명 빌드, macOS zip/dmg, Windows zip 압축 해제 후 실행과 `-setup.exe` 설치·실행·설정 > 앱에서 제거, Linux tar 해제 후 실행) | 크래시 없이 첫 화면. 서명 경고는 `SIGNING-*.txt`와 README 안내와 일치 |
+| I1 | 배포 산출물로 설치(Android `adb install`, iOS 서명 빌드, macOS DMG, Windows zip 압축 해제 후 실행과 `-setup.exe` 설치·실행·설정 > 앱에서 제거, Linux tar 해제 후 실행) | 크래시 없이 첫 화면. 서명 경고는 `SIGNING-*.txt`와 README 안내와 일치 |
 | I2 | 권한 팝업 허용/거부 각각(로컬 네트워크, 마이크, 카메라, 알림, Android 17 로컬 네트워크(target SDK 37 이상)) | 거부해도 크래시 없음, 해당 기능만 안내와 함께 꺼짐. 마이크·카메라 거부 안내의 "설정 열기"가 그 앱의 설정(iOS·Android) 또는 개인정보 보호 항목(macOS·Windows)을 엶 |
 | I3 | 시스템 언어 한국어/영어 | 모든 문자열이 해당 언어 |
 
