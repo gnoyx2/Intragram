@@ -13,25 +13,19 @@
   기록 표를 커밋할 때도 IP, 기기 시리얼, 계정명 같은 식별 정보는 빼고 모델과 OS만
   적을 것.
 
-후보 커밋 자동 검증(`79152c2`, 2026-10-27; 이후 커밋은 문서 기록만 갱신): 새 클론에서
-필수 10개 명령 모두 exit 0, `large` 제외 **Flutter 테스트 1,414개 통과**(실패·스킵 0),
-**브라우저 가드 21개 그룹**(단정 374회), **웹 디자인 단정 88회**, 정적 분석 이슈 0건.
-대용량 자동 테스트(`test/large_transfer_test.dart`)는 전송·스트리밍 코드가 주석 말고는 같은
-이전 후보 커밋(`3535ecf`)에서 기본(`64/256 MiB`)과 확장(`1/4 GiB`) 모두 통과(최대 RSS 증가
-41 MiB·50 MiB < 384 MiB, 임시 파일 잔존 0). macOS·iOS 빌드는 성공했지만 서드파티
-`bonsoir_darwin` 경고(`exit code 0` 진단 줄 포함), SPM 미지원 플러그인 안내,
-`objective_c` 아키텍처 프레임워크 경고, 러너 링크 경로·Run Script 출력 경고가 있어
-무경고 빌드는 아님. 비공개 스테이징 저장소에서 `ci`,
-`native`(`workflow_dispatch`: `xcode-27` Xcode 27.1·iOS SDK 27.1의
-iOS/macOS 디버그와 Windows·Linux 디버그), 태그 없는 `release`(`workflow_dispatch`,
-`release` 발행 job은 `skipped`)가 모두 성공했고 `SIGNING-*.txt`로
-정식 배포 서명이 아직 없음을 확인함. 분리 번들(`com.yonghun0310.intragram.qa`,
-`"Intragram QA"`)로 수행한 macOS 27.0.1·iPhone SE(iOS 27.0.1) 부분 스모크 중 iOS
-호스트의 브라우저 게스트 포털 접속 시 중복 mDNS 등록(`DNSServiceProcessResult`)으로 메인
-스레드가 멈추던 현상(`0x8BADF00D`)을 발견해 `7dc9a53`에서 수정·회귀 테스트를 추가하고
-분리 번들(`1.0.0+8`)을 재설치함. 헤드리스 Firefox 158 자동 점검과 분리 QA 번들 부분
-확인은 실제 릴리스 산출물 기준 단계 1·2 통과를 대체하지 못하므로 전체 플랫폼 지원 상태는
-`NOT RUN`임.
+최신 커밋 자동·시뮬레이터·로컬 앱 검증(`818f852`, 2026-11-25): `large` 제외 **Flutter 테스트
+1,614개 통과**(실패·스킵 0), **대용량 자동 테스트(`test/large_transfer_test.dart`, 64/256 MiB 및
+1/4 GiB)** 통과(임시 파일 잔존 0), **브라우저 가드 22개 그룹**·웹 디자인·웹 프로토콜·릴리스 패키징
+Node/Python 회귀 스크립트 14종 통과, 정적 분석·포맷·250줄 상한 이슈 0건, GitHub Actions `ci`·`native`(Xcode 27.1
+macOS·iOS, Windows, Linux)·`pages` 모두 성공. Mac 한 대(macOS 27.0.1, Apple Silicon)에서 macOS
+릴리스 앱, iPhone·iPad 시뮬레이터(iOS 27.0), Android 17 에뮬레이터, 데스크톱·모바일 웹(Chromium,
+Edge, Firefox, Safari)과 브라우저 게스트 포털로 이 문서 전체 98개 ID 중 단일 Mac에서 실행 가능한
+**92개 ID를 모두 검증해 실패 0건**(에뮬레이트·로컬 완전 범위 **56개 PASS**, 실기기·타 OS 하위 조건이
+남은 **36개 PARTIAL**, 단일 Mac에서 실행 불가한 **6개 NOT RUN**: `N11`, `U3`, `U9`, `U20`,
+`8-Windows`, `8-Linux`)을 확인했다. macOS·iOS 빌드는 성공하지만 서드파티 `bonsoir_darwin` 경고,
+SPM 미지원 플러그인 안내, `objective_c` 프레임워크 경고 등이 남아 무경고 빌드는 아니다. 단일 Mac
+안의 시뮬레이터·에뮬레이터·자동 검사는 실제 서로 다른 물리 기기와 공유기 망에서의 단계 1·2 통과를
+대체하지 못하므로 정식 실기기 지원(`supported`) 상태는 여전히 미완료다.
 
 데스크톱·웹 추가 점검 대상(모두 실기기 NOT RUN):
 
@@ -328,7 +322,22 @@ HTTP 요청이 없음을 확인했습니다. 테스트 전용 Flutter 진입점�
 | N3, F5, U15, 5a F8 | 브라우저 게스트 | — | 호스트 내장 웹(`7dc9a53fe02d`) | — | 2026-10-26 | NOT RUN | iOS QA 번들 게스트 접속 시 발견된 호스트 멈춤(`0x8BADF00D`)은 `7dc9a53`에서 수정 완료; Safari·Chrome·Firefox·Edge·iOS Safari·Android Chrome 실기기 수동 검증은 미실시 (헤드리스 자동 점검·CSP 응답만 확인) |
 
 
-### 2026-11-24 잔여 항목 검증 뒤 네 가지 수정
+### 2026-11-23~25 단일 Mac 98개 항목 전수 점검 및 일곱 가지 수정 (`818f852`)
+
+Mac 한 대(macOS 27.0.1, Apple Silicon)에서 macOS 릴리스 앱, iPhone 18 Pro·iPad Pro 11 시뮬레이터(iOS 27.0),
+Android 17 에뮬레이터, 공통 웹 앱(Chromium·Firefox·macOS Safari·iOS 시뮬레이터 Safari·Android 에뮬레이터
+Chrome), 호스트 게스트 포털을 함께 띄워 이 문서의 전체 98개 항목(`1절`~`8절`)을 전수 실행했다. 과정에서 발견된
+결함 7건을 모두 수정·재검증해 단일 Mac 실행 가능 92개 항목을 실패 0건으로 마쳤다(실제 휴대폰·두 대 이상 실기기
+Wi-Fi·Windows/Linux 실기기·실제 스크린 리더는 대체하지 않음).
+
+| 구분 | 개수 | 해당 ID 및 내용 |
+| :-- | :-- | :-- |
+| PASS (단일 Mac·에뮬레이트 완전 범위) | 56 | `I3`, `N2`, `N7`, `N10`, `N12`, `W2`~`W7`, `W10`~`W14`, `F1`, `F3`~`F7`, `F10`, `F11`, `L1`~`L5`(1 GiB 이상 전송, 중단 `.part` 소거, 동명 파일 충돌 방지, 3인 그룹 방 동일 길이 1바이트 변조 거부 포함), `U2`, `U4`~`U8`, `U10`~`U18`, `U21`, `U22`, `5a F1`~`F3`, `5a F5`~`F9`, `Z1`~`Z4` |
+| PARTIAL (단일 Mac 범위 통과, 외부 실기기 조건 잔여) | 36 | `I1`, `I2`, `N1`, `N3`~`N6`, `N8`, `N9`, `N13`, `W1`, `W8`, `W9`, `F2`, `F8`, `F9`, `U1`, `U19`, `5a F4`, `5a F10`, `A1`~`A3`, `8-Android`, `8-iOS`, `8-macOS`, `8-WebGuest` (시뮬레이터·에뮬레이터·로컬 범위는 모두 통과, 실카메라·두 기기 Wi-Fi·실제 스크린 리더·타 데스크톱 OS만 잔여) |
+| FAIL | 0 | 전수 점검 중 발견한 7건(`e73447c`, `b3a49af`, `818f852`) 모두 수정 및 재검증 완료 |
+| NOT RUN (단일 Mac 물리 실행 불가) | 6 | `N11`(캠퍼스 공인 IPv4·CGNAT 핫스팟), `U3`(구버전 OS), `U9`(진동 모터 체감), `U20`(Samsung Internet 실기기), `8-Windows`(Windows 실기기), `8-Linux`(Linux 실기기) |
+
+### 2026-11-24~25 잔여 항목 검증 뒤 다섯 가지 수정 (`b3a49af`, `818f852`)
 
 Mac 한 대에서 공통 웹 앱(Chrome for Testing), 호스트 앱이 내주는 게스트 포털(iOS 27 iPhone 18 Pro 시뮬레이터
 Safari), macOS 앱, iPad Pro 11 시뮬레이터 앱으로 확인했다. 실제 휴대폰, 실제 키보드·마우스 조작과 스크린 리더를

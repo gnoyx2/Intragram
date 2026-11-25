@@ -41,17 +41,17 @@ The name is *intranet* plus *-gram*, and the mascot is a carrier pigeon: message
 
 **iPhone and iPad: [Intragram 1.0.0 is on the App Store](https://apps.apple.com/app/id6814277170)** (since 2026-11-20). The Mac app is in App Review and Android is in Google Play closed testing.
 
-Intragram is a release candidate (app 1.0.1, wire protocol 7). It builds for six platforms and includes a browser client, but no platform has passed the real-device checks in [DEVICE_QA.md](DEVICE_QA.md) yet, and the code has not had an independent security audit. Don't rely on it where a failure could put someone at risk.
+Intragram is a release candidate (app 1.0.1, wire protocol 7). Cross-platform runs on one Mac (macOS app, iPhone and iPad simulators, Android 17 emulator, browser guest portal, and the web app in Chromium, Edge, Firefox and Safari) passed all 92 of 98 [DEVICE_QA.md](DEVICE_QA.md) checks runnable on that machine with zero open failures (56 covered in full, 36 in their single-Mac or simulated portion, and 6 requiring hardware not on that Mac). However, no platform has completed multi-device real-hardware QA yet, and the code has not had an independent security audit. Don't rely on it where a failure could put someone at risk.
 
 | Platform | Minimum version | Release build | Signing | Device QA |
 | :--- | :--- | :--- | :--- | :--- |
-| Android | 7.0 (API 24) | universal `.apk`, store `.aab` | release key required; check `SIGNING-android.txt` | not run |
-| iOS, iPadOS | 15.0 | [App Store](https://apps.apple.com/app/id6814277170) | signed by Apple (App Store) | not run |
-| macOS | 12.0 | universal app (`.zip`, `.dmg`) | ad-hoc, not notarized | not run |
-| Windows | 10, x64 | portable `.zip` | not signed | not run |
-| Linux | x64, GTK 3 | `.tar.gz` bundle (experimental) | none | not run |
-| Browser guest | current browsers | page served by the host app | n/a | not run |
-| Web app (preview, beta) | current Chromium, Edge and Firefox, and Safari on macOS; phone browsers checked in emulation, the Android Emulator and the iOS Simulator only | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), the same Flutter app (`lib/main_web.dart`) | n/a | automated browser runs on one computer only, see [DEVICE_QA.md](DEVICE_QA.md) |
+| Android | 7.0 (API 24) | universal `.apk`, store `.aab` | release key required; check `SIGNING-android.txt` | Android 17 emulator passed on one Mac; real phone and two-device Wi-Fi not run |
+| iOS, iPadOS | 15.0 | [App Store](https://apps.apple.com/app/id6814277170) | signed by Apple (App Store) | iPhone and iPad simulators passed on one Mac; real device, camera QR and external keyboard not run |
+| macOS | 12.0 | universal app (`.zip`, `.dmg`) | ad-hoc, not notarized | local app and cross-platform runs passed on one Mac; two-device Wi-Fi not run |
+| Windows | 10, x64 | installer `.exe`, portable `.zip` | not signed | not run (CI build and installer smoke only) |
+| Linux | x64, GTK 3 | `.tar.gz` bundle (experimental) | none | not run (CI build only) |
+| Browser guest | current browsers | page served by the host app | n/a | Chromium and iOS Simulator Safari passed on one Mac; real phones not run |
+| Web app (preview, beta) | current Chromium, Edge and Firefox, and Safari on macOS; phone browsers checked in emulation, the Android Emulator and the iOS Simulator | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), the same Flutter app (`lib/main_web.dart`) | n/a | Chromium, Edge, Firefox, macOS Safari, Android Emulator and iOS Simulator passed on one Mac; real phones and two-device Wi-Fi not run, see [DEVICE_QA.md](DEVICE_QA.md) |
 
 CI runs the test suite and an Android debug build on every push, and builds the Apple, Windows and Linux apps whenever their native code changes (see [Development and CI](#development-and-ci)). Automated tests do not replace a run on real devices and a real network.
 
@@ -428,17 +428,17 @@ Intragram은 같은 Wi-Fi나 LAN에 있는 폰, 태블릿, 컴퓨터끼리 쓰�
 
 **iPhone·iPad: [Intragram 1.0.0이 App Store에 나왔습니다](https://apps.apple.com/app/id6814277170)**(2026-11-20부터). Mac 앱은 App Store 심사 중이고, Android는 Google Play 비공개 테스트 중입니다.
 
-릴리스 후보 단계입니다(앱 1.0.1, 와이어 프로토콜 7). 여섯 개 플랫폼용으로 빌드되고 브라우저 클라이언트도 들어 있지만, [DEVICE_QA.md](DEVICE_QA.md)의 실기기 점검을 통과한 플랫폼은 아직 없고 외부 보안 감사도 받지 않았습니다. 문제가 생겼을 때 누군가 위험해질 수 있는 곳에서는 쓰지 마세요.
+릴리스 후보 단계입니다(앱 1.0.1, 와이어 프로토콜 7). Mac 한 대에서 macOS 앱, iPhone·iPad 시뮬레이터, Android 17 에뮬레이터, 브라우저 게스트 포털, 웹 앱(Chromium·Edge·Firefox·Safari)을 띄워 수행한 교차 검증에서는 이 기기에서 실행 가능한 [DEVICE_QA.md](DEVICE_QA.md) 98개 항목 중 92개가 모두 실패 없이 통과했습니다(단일 기기·에뮬레이션 완전 범위 56개, 시뮬레이터·단일 Mac 부분 범위 36개, 해당 하드웨어가 없어 미실행 6개). 다만 서로 다른 여러 실기기와 실제 공유기 망에서의 점검, Windows·Linux 실기기 검증은 아직 남아 있고 외부 보안 감사도 받지 않았습니다. 문제가 생겼을 때 누군가 위험해질 수 있는 곳에서는 쓰지 마세요.
 
 | 플랫폼 | 최소 버전 | 릴리스 빌드 | 서명 | 실기기 QA |
 | :--- | :--- | :--- | :--- | :--- |
-| Android | 7.0 (API 24) | 통합 `.apk`, 스토어용 `.aab` | 릴리스 키 필요, `SIGNING-android.txt` 확인 | 미실시 |
-| iOS, iPadOS | 15.0 | [App Store](https://apps.apple.com/app/id6814277170) | Apple 서명(App Store) | 미실시 |
-| macOS | 12.0 | universal 앱 (`.zip`, `.dmg`) | ad-hoc 서명, 공증 없음 | 미실시 |
-| Windows | 10, x64 | 포터블 `.zip` | 서명 없음 | 미실시 |
-| Linux | x64, GTK 3 | `.tar.gz` 번들 (실험 단계) | 없음 | 미실시 |
-| 브라우저 게스트 | 최신 브라우저 | 호스트 앱이 내려주는 페이지 | 해당 없음 | 미실시 |
-| 웹 앱 (미리보기, beta) | 최신 Chromium·Edge·Firefox와 macOS Safari. 휴대폰 브라우저는 에뮬레이션, Android 에뮬레이터, iOS 시뮬레이터에서만 확인 | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), 같은 Flutter 앱(`lib/main_web.dart`) | 해당 없음 | 컴퓨터 한 대의 자동 브라우저 검사만, [DEVICE_QA.md](DEVICE_QA.md) 참고 |
+| Android | 7.0 (API 24) | 통합 `.apk`, 스토어용 `.aab` | 릴리스 키 필요, `SIGNING-android.txt` 확인 | 단일 Mac의 Android 17 에뮬레이터 통과, 실기기와 두 기기 Wi-Fi 미실시 |
+| iOS, iPadOS | 15.0 | [App Store](https://apps.apple.com/app/id6814277170) | Apple 서명(App Store) | 단일 Mac의 iPhone·iPad 시뮬레이터 통과, 실기기·카메라 QR·외장 키보드 미실시 |
+| macOS | 12.0 | universal 앱 (`.zip`, `.dmg`) | ad-hoc 서명, 공증 없음 | 단일 Mac 앱 및 시뮬레이터·웹 교차 검사 통과, 두 기기 Wi-Fi 미실시 |
+| Windows | 10, x64 | 설치 프로그램 `.exe`, 포터블 `.zip` | 서명 없음 | 미실시 (CI 빌드·설치 확인만) |
+| Linux | x64, GTK 3 | `.tar.gz` 번들 (실험 단계) | 없음 | 미실시 (CI 빌드만) |
+| 브라우저 게스트 | 최신 브라우저 | 호스트 앱이 내려주는 페이지 | 해당 없음 | 단일 Mac의 Chromium·iOS 시뮬레이터 Safari 통과, 실기기 미실시 |
+| 웹 앱 (미리보기, beta) | 최신 Chromium·Edge·Firefox와 macOS Safari, 휴대폰 브라우저는 에뮬레이션·Android 에뮬레이터·iOS 시뮬레이터에서 확인 | [gnoyx2.github.io/Intragram/web/](https://gnoyx2.github.io/Intragram/web/), 같은 Flutter 앱(`lib/main_web.dart`) | 해당 없음 | 단일 Mac의 Chromium·Edge·Firefox·macOS Safari 및 Android 에뮬레이터·iOS 시뮬레이터 통과, 실기기와 두 기기 Wi-Fi 미실시 ([DEVICE_QA.md](DEVICE_QA.md) 참고) |
 
 CI는 push마다 테스트와 Android 디버그 빌드를 돌리고, 네이티브 코드가 바뀌면 Apple, Windows, Linux 앱도 빌드합니다([개발과 CI](#개발과-ci) 참고). 자동 테스트가 실기기와 실제 네트워크에서 돌려 보는 일을 대신하지는 않습니다.
 
