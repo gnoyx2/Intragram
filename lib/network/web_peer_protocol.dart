@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'room_integrity/author_event.dart';
 import 'package:intragram/audit/attestation.dart';
+import 'package:intragram/core/path_safety.dart' show safeBasename;
 import 'package:intragram/core/constants.dart'
     show kFrameCeilingBytes, kMaxConcurrentTransfers, kMaxWebGuests;
 import 'package:intragram/network/org_auth.dart';
@@ -198,3 +199,8 @@ RTCSessionDescription webPeerDecodeCode(String raw, [String? expectedType]) {
     throw const WebPeerProblem('invalid-code');
   }
 }
+
+// 브라우저 File.name엔 경로가 없어서 / \는 구분자가 아니라 글자임 (macOS·Linux 이름에 들어감).
+// 프레임 검사에 막히지 않게 _로 바꾸고 나머지는 받는 쪽과 같은 규칙으로 정리함
+String webPeerOutgoingName(String name) =>
+    safeBasename(name.replaceAll(RegExp(r'[/\\]'), '_'));

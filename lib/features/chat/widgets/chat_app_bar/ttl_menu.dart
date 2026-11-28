@@ -20,7 +20,7 @@ class TtlMenu extends StatelessWidget {
       icon: Icon(
         active ? Icons.timer : Icons.timer_outlined,
         color: active ? context.chat.burn : null,
-        semanticLabel: macOSAppName(s.t('chat.burnTimer')),
+        semanticLabel: tooltipLabel(s.t('chat.burnTimer')),
       ),
       initialValue: conversation.outgoingTtlSeconds,
       onSelected: (seconds) => registry.setBurnTimer(conversation.id, seconds),

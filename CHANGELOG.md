@@ -4,6 +4,49 @@ Versions follow the app version in `pubspec.yaml`. The wire protocol version
 (`kProtocolVersion` in `lib/core/constants.dart`) is listed because apps on
 different protocol versions refuse to talk to each other.
 
+## Unreleased
+
+Protocol 7, unchanged. Found in a real-device run on a Mac, a Windows 11 PC and
+a Linux Mint PC on the same Wi-Fi on 2026-11-28 and 2026-11-29.
+
+- Fixed (Windows): the browser guest portal hosted by the Windows app never
+  connected and stayed on "connecting…". The Windows build carried the portal
+  page with CRLF line endings, so the browser rejected the hashes of its inline
+  script and style. The page is now normalized to LF before it is hashed, and
+  the web assets are pinned to LF in git.
+- Fixed (Linux): device discovery stopped after about 40 minutes ("Device search
+  stopped"), because every 20-second refresh opened a new system D-Bus
+  connection that the Linux mDNS plugin never closed. The periodic refresh now
+  keeps a working scan on Linux; Refresh still restarts it.
+- Fixed (Windows): with a wired and a Wi-Fi connection on the same network,
+  other devices could see the PC at its Wi-Fi address while the app listened
+  only on the wired one, so connecting from that entry failed. The app now also
+  listens on the private addresses of the other physical adapters.
+- Added (Windows): a warning on the home screen when Windows Firewall blocks
+  incoming connections on the current network (the firewall prompt was
+  cancelled, or Intragram was allowed only on public networks and the network
+  is now private), with a button that opens the firewall settings.
+- Fixed (Windows, Korean): the Wi-Fi details window left channel, speed and
+  security blank. The netsh output was read in the wrong code page and the
+  Korean label for the radio type had changed.
+- Fixed: reconnecting to a checked chat from the home list or with Connect by IP
+  instead of the banner's Reconnect created a second, unchecked chat on the
+  dialing device. Both ways now return to the existing chat.
+- Fixed (Windows, Linux): after switching between 12- and 24-hour time in the
+  OS, message and search times now follow when the app comes back to the front,
+  without a restart.
+- Fixed (Linux): screen readers announced the icon buttons (search, connect,
+  portal, more, attach, send and others) without a name. They now use their
+  tooltip as the accessible name, as on macOS.
+- Fixed (encrypted web connections, including app–web chats): when the other
+  tab closed or the network dropped during a transfer, the transfer stayed in
+  progress forever and Cancel did nothing. It now ends as failed.
+- Fixed (web): a picked file whose name contains a slash or a backslash (both
+  allowed on macOS and Linux) was left out of a send without a word. It is now
+  sent with that character replaced by "_".
+- Fixed (encrypted web connections): the side that created the invitation never
+  showed the other side's organization credential.
+
 ## 1.0.2 (app `1.0.2+13`)
 
 Protocol 7, unchanged: 1.0.2, 1.0.1 and 1.0.0 talk to each other. Found in

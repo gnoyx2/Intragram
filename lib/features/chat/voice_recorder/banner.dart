@@ -180,7 +180,7 @@ class _BannerButton extends StatelessWidget {
               icon,
               color: Colors.white,
               size: 18,
-              semanticLabel: macOSAppName(tooltip),
+              semanticLabel: tooltipLabel(tooltip),
             ),
           ),
         ),

@@ -47,7 +47,7 @@ mixin _ChatRoomScaffold
               IconButton(
                 icon: Icon(
                   Icons.keyboard_arrow_up,
-                  semanticLabel: macOSAppName(
+                  semanticLabel: tooltipLabel(
                     S.of(context).t('search.previousHit'),
                   ),
                 ),
@@ -57,7 +57,7 @@ mixin _ChatRoomScaffold
               IconButton(
                 icon: Icon(
                   Icons.keyboard_arrow_down,
-                  semanticLabel: macOSAppName(
+                  semanticLabel: tooltipLabel(
                     S.of(context).t('search.nextHit'),
                   ),
                 ),
@@ -67,7 +67,7 @@ mixin _ChatRoomScaffold
               IconButton(
                 icon: Icon(
                   Icons.close,
-                  semanticLabel: macOSAppName(S.of(context).t('search.close')),
+                  semanticLabel: tooltipLabel(S.of(context).t('search.close')),
                 ),
                 tooltip: S.of(context).t('search.close'),
                 onPressed: _closeSearch,

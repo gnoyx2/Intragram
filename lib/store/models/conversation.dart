@@ -94,6 +94,7 @@ class Conversation {
   Conversation copyWith({
     String? peerAlias,
     String? peerPlatform,
+    String? peerHost,
     int? peerPort,
     String? peerId,
     bool? online,
@@ -120,7 +121,7 @@ class Conversation {
       peerPlatform: peerPlatform ?? this.peerPlatform,
       transport: transport,
       startedAt: startedAt,
-      peerHost: peerHost,
+      peerHost: peerHost ?? this.peerHost,
       peerPort: peerPort ?? this.peerPort,
       peerId: peerId ?? this.peerId,
       online: online ?? this.online,

@@ -68,7 +68,7 @@ class ConversationTile extends StatelessWidget {
                     Icons.hub_outlined,
                     size: 15,
                     color: _membersVerified ? chat.online : chat.burn,
-                    semanticLabel: macOSAppName(status),
+                    semanticLabel: tooltipLabel(status),
                   ),
                 ),
               ] else if (conversation.secure) ...[
@@ -79,7 +79,7 @@ class ConversationTile extends StatelessWidget {
                     conversation.verified ? Icons.gpp_good : Icons.gpp_maybe,
                     size: 15,
                     color: conversation.verified ? chat.online : chat.burn,
-                    semanticLabel: macOSAppName(status),
+                    semanticLabel: tooltipLabel(status),
                   ),
                 ),
               ],

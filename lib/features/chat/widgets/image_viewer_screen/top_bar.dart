@@ -16,7 +16,7 @@ class _ViewerTopBar extends StatelessWidget {
           icon: Icon(
             Icons.close,
             color: Colors.white,
-            semanticLabel: macOSAppName(s.t('viewer.close')),
+            semanticLabel: tooltipLabel(s.t('viewer.close')),
           ),
           tooltip: s.t('viewer.close'),
           onPressed: () => Navigator.of(context).pop(),
@@ -28,7 +28,7 @@ class _ViewerTopBar extends StatelessWidget {
               icon: Icon(
                 Icons.share_outlined,
                 color: Colors.white,
-                semanticLabel: macOSAppName(s.t('viewer.share')),
+                semanticLabel: tooltipLabel(s.t('viewer.share')),
               ),
               tooltip: s.t('viewer.share'),
               onPressed: () {

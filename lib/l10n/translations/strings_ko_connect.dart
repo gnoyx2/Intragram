@@ -35,6 +35,10 @@ const Map<String, String> kStringsKoConnect = {
       '이 Wi-Fi의 기기를 찾고 연결하려면 로컬 네트워크 접근이 필요해요. '
       '앱 설정에서 허용한 뒤 돌아오면 다시 시도해요.',
   'server.failed': '다시 시도해 보고, 계속 안 되면 앱을 다시 시작하세요.',
+  'server.firewallTitle': 'Windows 방화벽이 들어오는 연결을 막고 있어요',
+  'server.firewall':
+      '이 네트워크에서는 다른 기기가 이 PC에 연결할 수 없어요. Windows 보안의 방화벽 '
+      '설정에서 지금 네트워크(개인·공용)에 Intragram을 허용하세요.',
   'discoveryHelp.title': '상대 기기가 안 보이나요?',
   'discoveryHelp.sameWifi': '두 기기가 같은 Wi-Fi에 있고, 게스트 네트워크가 아니에요.',
   'discoveryHelp.appOpen': '상대 기기에서 Intragram이 열려 있어요.',

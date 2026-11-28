@@ -182,6 +182,34 @@ final class NetworkGuard {
     return lan.first.$2;
   }
 
+  // 유선·Wi-Fi가 같은 망에 같이 붙은 PC는 mDNS가 두 주소를 다 광고함: 다른 물리 NIC의 RFC 1918 주소도 같은 포트로 받아야
+  // 광고된 어느 주소로 붙어도 닿음. VPN·VM·링크로컬은 뺌
+  @visibleForTesting
+  static List<InternetAddress> pickExtraBindAddresses(
+    Iterable<(String, InternetAddress)> candidates,
+    InternetAddress primary,
+  ) => [
+    for (final (name, addr) in candidates)
+      if (addr.address != primary.address &&
+          isRfc1918(addr.address) &&
+          _interfaceClass(name) == 0)
+        addr,
+  ];
+
+  static Future<List<InternetAddress>> extraBindAddresses(
+    InternetAddress primary,
+  ) async {
+    if (primary.type != InternetAddressType.IPv4) return const [];
+    final interfaces = await NetworkInterface.list(
+      type: InternetAddressType.IPv4,
+      includeLoopback: false,
+    );
+    return pickExtraBindAddresses([
+      for (final iface in interfaces)
+        for (final addr in iface.addresses) (iface.name, addr),
+    ], primary);
+  }
+
   static final RegExp _physicalInterface = RegExp(
     r'^(en\d|eth|wlan|wlp|enp|eno|ens|wi-?fi|ethernet|이더넷|local area)',
     caseSensitive: false,

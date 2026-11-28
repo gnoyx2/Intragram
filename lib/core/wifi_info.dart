@@ -69,11 +69,30 @@ Future<WifiInfo?> _macWifiInfo() async {
 }
 
 // wlanapi.dll을 직접 안 부름: Windows 11 24H2부터 현재 연결 조회에 위치 권한 창이 뜸 (위치 권한 안 쓰는 설계와 충돌).
-// System32의 netsh는 창을 안 띄우고, 위치가 꺼져 있으면 안내문만 내서 null이 됨. Windows 실기기 검증은 아직 거치지 않음
+// System32의 netsh는 창을 안 띄우고, 위치가 꺼져 있으면 안내문만 내서 null이 됨
 Future<WifiInfo?> _windowsWifiInfo() async {
-  final result = await Process.run('netsh', ['wlan', 'show', 'interfaces']);
+  final result = await Process.run('netsh', [
+    'wlan',
+    'show',
+    'interfaces',
+  ], stdoutEncoding: null);
   if (result.exitCode != 0) return null;
-  return parseNetshInterfaces(result.stdout as String);
+  return parseNetshInterfaces(decodeNetshOutput(result.stdout as List<int>));
+}
+
+// Windows 11 netsh는 파이프로 내보낼 때 UTF-8을 씀. 시스템 코드 페이지(한국어 949)로 읽으면 라벨이 깨짐.
+// UTF-8이 아니면 예전 빌드의 OEM 코드 페이지로 보고 시스템 인코딩으로 다시 읽음
+@visibleForTesting
+String decodeNetshOutput(List<int> bytes) {
+  try {
+    return utf8.decode(bytes);
+  } on FormatException {
+    try {
+      return systemEncoding.decode(bytes);
+    } on FormatException {
+      return utf8.decode(bytes, allowMalformed: true);
+    }
+  }
 }
 
 final _whitespace = RegExp(r'\s');
@@ -81,7 +100,7 @@ final _signalValue = RegExp(r'^\d{1,3}%$');
 // 값 전체가 규격 이름일 때만: '802.11n USB Wireless LAN Card' 같은 어댑터 설명은 안 걸림
 final _radioTypeValue = RegExp(r'^802\.11[a-z]{1,2}$');
 
-// netsh 라벨은 Windows 표시 언어를 따름. 영어·한국어 라벨만 알고(한국어는 실기기 확인 전, DEVICE_QA),
+// netsh 라벨은 Windows 표시 언어를 따름. 영어·한국어 라벨만 알고(한국어 Windows 11 출력으로 확인),
 // 모르는 언어면 신호(99%)·무선 종류(802.11ax)는 값 모양으로 찾고 채널·속도·인증은 비워 둠
 @visibleForTesting
 WifiInfo? parseNetshInterfaces(String output) {
@@ -105,7 +124,8 @@ WifiInfo? parseNetshInterfaces(String output) {
   return WifiInfo(
     ssid: ssid,
     channel: labeled(['channel', '채널']),
-    phyMode: labeled(['radiotype', '라디오종류']) ?? shaped(_radioTypeValue),
+    phyMode:
+        labeled(['radiotype', '송수신장치종류', '라디오종류']) ?? shaped(_radioTypeValue),
     linkRate: labeled(['receiverate(mbps)', '수신속도(mbps)']),
     signal: labeled(['signal', '신호']) ?? shaped(_signalValue),
     security: labeled(['authentication', '인증']),

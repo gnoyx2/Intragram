@@ -24,6 +24,7 @@ import 'package:intragram/widgets/illustration.dart';
 import 'package:intragram/widgets/keyboard_access.dart';
 import 'package:intragram/widgets/readable_list.dart';
 import 'home_actions.dart';
+import 'widgets/firewall_banner.dart';
 import 'widgets/conversation_tile.dart';
 import 'widgets/web_connection_card.dart';
 import 'widgets/discovery_help.dart';
@@ -183,6 +184,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     onRetry: () =>
                         ref.read(serverControllerProvider.notifier).start(),
                   )
+                : server.inboundBlocked
+                ? const FirewallBanner()
                 : const SizedBox.shrink(),
           ),
           SectionHeader(

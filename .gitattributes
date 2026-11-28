@@ -1,0 +1,2 @@
+# 게스트 포털 자산은 CSP 해시를 계산하므로 줄바꿈을 LF로 고정함 (Windows 체크아웃의 CRLF 변환 방지)
+assets/web/** text eol=lf

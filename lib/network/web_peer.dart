@@ -216,12 +216,12 @@ class WebPeerSession {
     _pc = null;
     verificationCode = '';
     sessionBinding = '';
+    for (final transfer in [..._inbound.values, ..._outbound.values]) {
+      if (_active.contains(transfer.state)) _finish(transfer, 'failed');
+    }
     _state('closed');
     for (final cancel in _waiters.toList()) {
       cancel();
-    }
-    for (final transfer in [..._inbound.values, ..._outbound.values]) {
-      if (_active.contains(transfer.state)) _finish(transfer, 'failed');
     }
     _clearParts();
     _seen.clear();

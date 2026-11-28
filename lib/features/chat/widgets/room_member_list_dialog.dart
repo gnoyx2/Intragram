@@ -159,7 +159,7 @@ class _MemberRow extends StatelessWidget {
           child: Icon(
             icon,
             color: color,
-            semanticLabel: macOSAppName(statusLabel),
+            semanticLabel: tooltipLabel(statusLabel),
           ),
         ),
         onTap: onTap,

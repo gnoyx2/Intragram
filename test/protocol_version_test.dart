@@ -60,11 +60,13 @@ void main() {
     final wire = StreamChannelController<dynamic>();
     wire.foreign.stream.listen((_) {});
     registry.debugDial = (_) async => wire.local;
-    final id = await registry.connectManual(host: '192.168.1.20', port: 7890);
+    // IP만 친 연결은 상대 hello로 끝나므로(이번엔 버전이 달라 닫힘) 기다리기 전에 응답함
+    final pending = registry.connectManual(host: '192.168.1.20', port: 7890);
     await pumpEventQueue(times: 30);
     wire.foreign.sink.add(
       jsonEncode(<String, Object?>{...hello('hello', '6'), 'cmt': null}),
     );
+    final id = await pending;
     await pumpEventQueue(times: 60);
 
     // 안내 줄이 '연결 끊김'을 대신함 (두 줄 겹치지 않음)

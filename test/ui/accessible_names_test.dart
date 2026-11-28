@@ -73,7 +73,11 @@ void main() {
     handle.dispose();
   });
 
-  for (final platform in [TargetPlatform.macOS, TargetPlatform.windows]) {
+  for (final platform in [
+    TargetPlatform.macOS,
+    TargetPlatform.linux,
+    TargetPlatform.windows,
+  ]) {
     testWidgets(
       '${platform.name} home buttons each have one name',
       (tester) async {
@@ -86,11 +90,11 @@ void main() {
         final icons = _buttons(tester).where((b) => b.tooltip.isNotEmpty);
         expect(icons.length, greaterThanOrEqualTo(4));
         for (final button in icons) {
-          // macOS 앱 브리지는 tooltip을 버림: 같은 문구가 label이어야 VoiceOver가 읽음.
+          // macOS·Linux 앱 브리지는 tooltip을 버림: 같은 문구가 label이어야 스크린 리더가 읽음.
           // 다른 플랫폼은 tooltip이 이름이라 label까지 붙이면 두 번 읽힘
           expect(
             button.label,
-            platform == TargetPlatform.macOS ? button.tooltip : isEmpty,
+            platform == TargetPlatform.windows ? isEmpty : button.tooltip,
             reason: button.tooltip,
           );
         }
@@ -101,27 +105,30 @@ void main() {
     );
   }
 
-  test('icon buttons, menus and status tooltips name themselves on macOS', () {
-    final call = RegExp(
-      r'(?<![A-Za-z.])(?:IconButton(?:\.\w+)?|PopupMenuButton<[^>]*>|'
-      r'FloatingActionButton(?:\.\w+)?|Tooltip)\(',
-    );
-    var checked = 0;
-    for (final file in Directory('lib').listSync(recursive: true)) {
-      if (file is! File || !file.path.endsWith('.dart')) continue;
-      final src = file.readAsStringSync();
-      for (final m in call.allMatches(src)) {
-        if (src.startsWith('IconButton.styleFrom', m.start)) continue;
-        final args = src.substring(m.end, _close(src, m.end - 1));
-        final named = m[0] == 'Tooltip(' || args.contains('tooltip:');
-        if (!named || args.contains('excludeFromSemantics: true')) continue;
-        checked++;
-        final line = '\n'.allMatches(src.substring(0, m.start)).length + 1;
-        expect(args, contains('macOSAppName('), reason: '${file.path}:$line');
+  test(
+    'icon buttons, menus and status tooltips name themselves on macOS and Linux',
+    () {
+      final call = RegExp(
+        r'(?<![A-Za-z.])(?:IconButton(?:\.\w+)?|PopupMenuButton<[^>]*>|'
+        r'FloatingActionButton(?:\.\w+)?|Tooltip)\(',
+      );
+      var checked = 0;
+      for (final file in Directory('lib').listSync(recursive: true)) {
+        if (file is! File || !file.path.endsWith('.dart')) continue;
+        final src = file.readAsStringSync();
+        for (final m in call.allMatches(src)) {
+          if (src.startsWith('IconButton.styleFrom', m.start)) continue;
+          final args = src.substring(m.end, _close(src, m.end - 1));
+          final named = m[0] == 'Tooltip(' || args.contains('tooltip:');
+          if (!named || args.contains('excludeFromSemantics: true')) continue;
+          checked++;
+          final line = '\n'.allMatches(src.substring(0, m.start)).length + 1;
+          expect(args, contains('tooltipLabel('), reason: '${file.path}:$line');
+        }
       }
-    }
-    expect(checked, greaterThan(30));
-  });
+      expect(checked, greaterThan(30));
+    },
+  );
 
   test(
     'hint-only text fields sit inside FieldName or a labelled Semantics',

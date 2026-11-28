@@ -17,6 +17,7 @@ mixin _LinkRegistrySession
     String? expectedPeerId,
     String? Function()? requiredWebToken,
     _InboundSlot? slot,
+    bool mergeAfterHello = false,
   }) async {
     if (_disposed) {
       _abandonRegistration(conversationId, channel, dialledByUs);
@@ -59,8 +60,8 @@ mixin _LinkRegistrySession
     link.onClosed = _onLinkClosed;
     link.refusePeer = (peerId) =>
         _refusal(peerId, dialledByUs: link.dialledByUs);
-    // 다이얼한 쪽은 connectToPeer가 이미 거름. 인바운드만 hello 뒤에 중복을 봄
-    if (!dialledByUs) {
+    // 다이얼한 쪽은 connectToPeer가 이미 거름. 인바운드와 IP만 친 연결(mergeAfterHello)은 hello 뒤에 중복을 봄
+    if (!dialledByUs || mergeAfterHello) {
       link.onAppPeerIdentified = () => _mergeDuplicateHost(link);
     }
     _adoptLink(conversationId, link);

@@ -128,7 +128,7 @@ class _AuditBundleExchangeState extends State<AuditBundleExchange> {
                       onPressed: () => Navigator.pop(context),
                       icon: Icon(
                         Icons.close,
-                        semanticLabel: macOSAppName(s.t('common.close')),
+                        semanticLabel: tooltipLabel(s.t('common.close')),
                       ),
                     ),
                   ],

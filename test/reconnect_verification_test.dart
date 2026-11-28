@@ -181,8 +181,10 @@ void main() {
       }
 
       var listener = await listenAs('b');
-      final id = await registry.connectManual(host: '192.168.1.20', port: 7890);
+      // IP만 친 연결은 상대 hello를 받은 뒤에야 끝나서 기다리기 전에 응답함
+      final dialling = registry.connectManual(host: '192.168.1.20', port: 7890);
       await answer(listener);
+      final id = await dialling;
       store
         ..setLocalVerified(id)
         ..setPeerVerified(id);

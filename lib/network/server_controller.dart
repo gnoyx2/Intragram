@@ -9,6 +9,7 @@ import 'package:intragram/core/constants.dart';
 import 'package:intragram/core/network_guard.dart';
 import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/core/secure_bytes.dart' show generateSecureToken;
+import 'package:intragram/core/windows_firewall.dart';
 import 'discovery_engine.dart';
 import 'local_server.dart';
 
@@ -56,9 +57,25 @@ class ServerController extends Notifier<ServerState> {
     }
     // iOS는 정지된 앱의 리스닝 소켓을 거둘 수 있어서(TN2277) 복귀할 때만 내 포트가 살아 있는지 봄
     unawaited(refreshNetwork(probeListener: !kIsWeb && Platform.isIOS));
+    unawaited(_checkFirewall());
     _networkCheckTimer ??= Timer.periodic(kDiscoveryRefresh, (_) {
       unawaited(refreshNetwork());
     });
+  }
+
+  DateTime? _firewallCheckedAt;
+
+  // Windows는 서버가 떠도 방화벽이 수신을 막을 수 있음: 홈에 알림. 복귀할 때마다 PowerShell을 띄우지 않게 30초에 한 번
+  Future<void> _checkFirewall({bool force = false}) async {
+    if (kIsWeb || !Platform.isWindows || !state.running) return;
+    final last = _firewallCheckedAt;
+    final now = DateTime.now();
+    if (!force && last != null && now.difference(last).inSeconds < 30) return;
+    _firewallCheckedAt = now;
+    final generation = _generation;
+    final blocked = await windowsInboundBlocked();
+    if (!ref.mounted || generation != _generation || blocked == null) return;
+    if (state.running) state = state.copyWith(inboundBlocked: blocked);
   }
 
   Future<void> start() {
@@ -125,6 +142,7 @@ class ServerController extends Notifier<ServerState> {
       _server = server;
       // 포털은 옵트인: 서버가 떠도 토큰은 setPortalEnabled가 켤 때만 뽑음
       state = ServerState(running: true, host: bound.host, port: bound.port);
+      unawaited(_checkFirewall(force: true));
       // 그룹 방 멤버가 이 기기에서 파일 바이트를 직접 당길 주소
       registry.localEndpoint = (host: bound.host, port: bound.port);
       await ref

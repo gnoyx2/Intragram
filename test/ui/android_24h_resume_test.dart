@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:intragram/app.dart';
 import 'package:intragram/app_providers.dart';
+import 'package:intragram/core/desktop_time_format.dart';
 import 'package:intragram/core/os_privacy.dart';
 import 'package:intragram/features/settings/pin_gate_screen.dart';
 import 'package:intragram/network/server_controller.dart';
@@ -75,6 +76,30 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     },
     variant: TargetPlatformVariant.only(TargetPlatform.android),
+  );
+
+  testWidgets(
+    'Windows and Linux read the OS clock format when the app comes back',
+    (tester) async {
+      var desktop24h = true;
+      OsPrivacy.debugDesktop24HourReader = () async => desktop24h;
+      addTearDown(
+        () => OsPrivacy.debugDesktop24HourReader = desktop24HourFormat,
+      );
+      await pumpAppUses24h(tester);
+      await OsPrivacy.refreshAccessibility();
+      await tester.pump();
+      expect(shown(tester), isTrue);
+      desktop24h = false;
+      await OsPrivacy.refreshAccessibility();
+      await tester.pump();
+      expect(shown(tester), isFalse);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+    variant: TargetPlatformVariant({
+      TargetPlatform.windows,
+      TargetPlatform.linux,
+    }),
   );
 
   testWidgets(

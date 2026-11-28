@@ -102,7 +102,7 @@ extension _MessageListView on _MessageListState {
                     },
                     child: Icon(
                       Icons.keyboard_arrow_down,
-                      semanticLabel: macOSAppName(
+                      semanticLabel: tooltipLabel(
                         S.of(context).t('a11y.jumpToLatest'),
                       ),
                     ),

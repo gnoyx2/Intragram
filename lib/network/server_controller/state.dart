@@ -23,6 +23,7 @@ class ServerState {
     this.error,
     this.portalEnabled = false,
     this.portalToken,
+    this.inboundBlocked = false,
   });
 
   final bool running;
@@ -36,6 +37,9 @@ class ServerState {
 
   // true일 때만 토큰이 있고 웹 게스트가 들어옴
   final bool portalEnabled;
+
+  // Windows 방화벽이 지금 망에서 들어오는 연결을 막음 (서버는 떠 있음). 홈 경고만 띄움
+  final bool inboundBlocked;
 
   // 켤 때만 뽑는 256비트 입장 토큰 (RAM). 서버나 포털을 끄면 바로 사라지고 보관소·로그엔 안 감
   final String? portalToken;
@@ -55,11 +59,13 @@ class ServerState {
     int? port,
     bool? portalEnabled,
     String? portalToken,
+    bool? inboundBlocked,
   }) => ServerState(
     running: running ?? this.running,
     host: host ?? this.host,
     port: port ?? this.port,
     portalEnabled: portalEnabled ?? this.portalEnabled,
     portalToken: portalToken ?? this.portalToken,
+    inboundBlocked: inboundBlocked ?? this.inboundBlocked,
   );
 }

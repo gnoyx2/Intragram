@@ -20,21 +20,7 @@ extension LocalServerWebClient on LocalServer {
         'assets/web/js/file_transfer.js',
         'assets/web/app.js',
       ]);
-      final html = shell
-          .replaceFirst('/*__APP_CSS__*/', css)
-          .replaceFirst('/*__APP_JS__*/', js);
-      // CSP는 실제 인라인 블록의 해시만 허용함
-      final directives = <String>[];
-      for (final tag in ['script', 'style']) {
-        final hashes = <String>[];
-        for (final match in RegExp(
-          '<$tag>([\\s\\S]*?)</$tag>',
-        ).allMatches(html)) {
-          final hash = await Sha256().hash(utf8.encode(match.group(1)!));
-          hashes.add("'sha256-${base64Encode(hash.bytes)}'");
-        }
-        directives.add("$tag-src ${hashes.join(' ')}");
-      }
+      final page = await buildPortalPage(shell: shell, css: css, js: js);
       // 옛 WebKit(iOS 15대 Safari)은 connect-src 'self'를 ws:에 안 맞춰서 웹소켓이 막힘: 주소를 명시함
       final wsOrigin =
           'ws://${NetworkGuard.hostForUri(boundHost ?? '')}:$boundPort';
@@ -42,8 +28,8 @@ extension LocalServerWebClient on LocalServer {
         "connect-src 'self'",
         "connect-src 'self' $wsOrigin",
       );
-      _webClientPolicy = '$policy; ${directives.join('; ')}';
-      _webClientCache = html;
+      _webClientPolicy = '$policy; ${page.directives.join('; ')}';
+      _webClientCache = page.html;
     }
     return Response.ok(
       _webClientCache,

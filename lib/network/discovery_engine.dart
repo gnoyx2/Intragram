@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:bonsoir/bonsoir.dart';
-import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb, visibleForTesting;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:intragram/core/app_identity.dart';
@@ -94,9 +95,16 @@ class DiscoveryController extends Notifier<List<PeerDevice>> {
     if (ref.mounted) state = const <PeerDevice>[];
   }
 
+  // Linux bonsoir는 스캔 인스턴스마다 시스템 D-Bus 연결을 열고 stop에서 안 닫음: 주기 새로고침마다 새로 만들면 40분쯤 뒤
+  // 사용자 연결 상한에 닿아 검색이 멈춤. avahi 탐색은 계속 이어져서 Linux는 살아 있는 스캔을 주기로 안 갈아끼움
+  @visibleForTesting
+  static bool Function() keepsLiveScan = () =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.linux;
+
   // 스캔만 다시 시작함 (광고·목록은 그대로 둠): mDNS 리스폰더가 스캔을 놓쳤을 때 사용함 (중단된 스캐너도 새로고침이 되살려야 함)
-  Future<void> refresh() async {
+  Future<void> refresh({bool periodic = false}) async {
     if (_identity == null) return;
+    if (periodic && _discovery != null && keepsLiveScan()) return;
     await _restartScan(_generation);
   }
 

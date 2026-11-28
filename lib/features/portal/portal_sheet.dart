@@ -93,7 +93,7 @@ class PortalSheet extends ConsumerWidget {
             IconButton(
               icon: Icon(
                 Icons.copy,
-                semanticLabel: macOSAppName(s.t('portal.copyUrl')),
+                semanticLabel: tooltipLabel(s.t('portal.copyUrl')),
               ),
               tooltip: s.t('portal.copyUrl'),
               onPressed: () async {

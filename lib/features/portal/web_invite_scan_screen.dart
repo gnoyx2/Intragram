@@ -44,7 +44,7 @@ class _WebInviteScanScreenState extends State<WebInviteScanScreen> {
           IconButton(
             icon: Icon(
               Icons.image_outlined,
-              semanticLabel: macOSAppName(s.t('secureWeb.readQrImage')),
+              semanticLabel: tooltipLabel(s.t('secureWeb.readQrImage')),
             ),
             tooltip: s.t('secureWeb.readQrImage'),
             onPressed: _fromImage,

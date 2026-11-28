@@ -19,7 +19,7 @@ extension _MessageBubbleHover on MessageBubble {
       void Function(BuildContext button) onPressed,
     ) => Builder(
       builder: (buttonContext) => IconButton(
-        icon: Icon(icon, size: 18, semanticLabel: macOSAppName(tooltip)),
+        icon: Icon(icon, size: 18, semanticLabel: tooltipLabel(tooltip)),
         tooltip: tooltip,
         visualDensity: VisualDensity.compact,
         onPressed: () => onPressed(buttonContext),

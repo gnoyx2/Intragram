@@ -42,7 +42,7 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
           IconButton(
             icon: Icon(
               Icons.search,
-              semanticLabel: macOSAppName(
+              semanticLabel: tooltipLabel(
                 S.of(context).t('home.searchMessages'),
               ),
             ),
@@ -52,7 +52,7 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
           IconButton(
             icon: Icon(
               Icons.add_link,
-              semanticLabel: macOSAppName(
+              semanticLabel: tooltipLabel(
                 S.of(context).t(kIsWeb ? 'secureWeb.open' : 'home.connectByIp'),
               ),
             ),
@@ -67,7 +67,7 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
             IconButton(
               icon: Icon(
                 Icons.qr_code_scanner,
-                semanticLabel: macOSAppName(S.of(context).t(_scanLabel)),
+                semanticLabel: tooltipLabel(S.of(context).t(_scanLabel)),
               ),
               tooltip: S.of(context).t(_scanLabel),
               onPressed: () => scanConnect(context, ref),
@@ -77,7 +77,7 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
             IconButton(
               icon: Icon(
                 Icons.qr_code_2,
-                semanticLabel: macOSAppName(
+                semanticLabel: tooltipLabel(
                   S.of(context).t('home.guestPortal'),
                 ),
               ),
@@ -88,7 +88,7 @@ mixin _HomeScreenAppBar on ConsumerState<HomeScreen> {
         PopupMenuButton<String>(
           icon: Icon(
             Icons.more_vert,
-            semanticLabel: macOSAppName(S.of(context).t('chat.more')),
+            semanticLabel: tooltipLabel(S.of(context).t('chat.more')),
           ),
           tooltip: S.of(context).t('chat.more'),
           onSelected: (value) {

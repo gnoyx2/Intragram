@@ -43,6 +43,11 @@ const Map<String, String> kStringsEnConnect = {
       'Intragram needs Local Network access to find and connect to devices '
       'on this Wi-Fi. Allow it in app settings, then return to retry.',
   'server.failed': 'Retry, and restart the app if it keeps failing.',
+  'server.firewallTitle': 'Windows Firewall is blocking incoming connections',
+  'server.firewall':
+      'Other devices can\'t connect to this PC on this network. In Windows '
+      'Security firewall settings, allow Intragram on the current network '
+      '(private or public).',
   'discoveryHelp.title': "Can't find the other device?",
   'discoveryHelp.sameWifi':
       "Both devices are on the same Wi-Fi, and it isn't a guest network.",

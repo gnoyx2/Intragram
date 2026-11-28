@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 
+import 'desktop_time_format.dart';
 import 'display_regions.dart';
 import 'windows_clipboard.dart';
 
@@ -18,6 +19,9 @@ abstract final class OsPrivacy {
   static final reduceMotion = _PrivacyAccessibility.reduceMotion;
   static final highContrast = _PrivacyAccessibility.highContrast;
   static final use24HourFormat = _PrivacyAccessibility.use24HourFormat;
+  @visibleForTesting
+  static set debugDesktop24HourReader(Future<bool?> Function() read) =>
+      _PrivacyAccessibility.desktopReader = read;
   static bool? cachedIsPad;
   static bool _localNetworkRequested = false;
   static Future<bool>? _localNetworkPending;

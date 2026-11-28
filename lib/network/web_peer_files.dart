@@ -171,6 +171,7 @@ extension _WebPeerFiles on WebPeerSession {
   }) async {
     _checkOutgoingRoom(batch);
     id ??= webPeerNewId();
+    name = webPeerOutgoingName(name);
     final frame = {
       'kind': 'file-offer',
       'id': id,

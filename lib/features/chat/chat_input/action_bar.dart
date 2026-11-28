@@ -47,7 +47,7 @@ mixin _ChatInputActionBar
             icon: Icon(
               Icons.close,
               size: 18,
-              semanticLabel: macOSAppName(s.t('a11y.cancelReply')),
+              semanticLabel: tooltipLabel(s.t('a11y.cancelReply')),
             ),
             tooltip: s.t('a11y.cancelReply'),
             onPressed: widget.onCancelReply,
@@ -74,7 +74,7 @@ mixin _ChatInputActionBar
             onPressed: widget.enabled ? _openFoldedAttachMenu : null,
             icon: Icon(
               Icons.content_paste,
-              semanticLabel: macOSAppName(s.t('input.sendClipText')),
+              semanticLabel: tooltipLabel(s.t('input.sendClipText')),
             ),
             tooltip: s.t('input.sendClipText'),
           )
@@ -83,7 +83,7 @@ mixin _ChatInputActionBar
             onPressed: widget.enabled ? _pasteFiles : null,
             icon: Icon(
               Icons.file_present_outlined,
-              semanticLabel: macOSAppName(s.t('input.sendClipFiles')),
+              semanticLabel: tooltipLabel(s.t('input.sendClipFiles')),
             ),
             tooltip: s.t('input.sendClipFiles'),
           )
@@ -92,7 +92,7 @@ mixin _ChatInputActionBar
             onPressed: widget.enabled ? _pasteImage : null,
             icon: Icon(
               Icons.image_outlined,
-              semanticLabel: macOSAppName(s.t('input.sendClipImage')),
+              semanticLabel: tooltipLabel(s.t('input.sendClipImage')),
             ),
             tooltip: s.t('input.sendClipImage'),
           )
@@ -101,7 +101,7 @@ mixin _ChatInputActionBar
             onPressed: widget.enabled ? _pasteAndSend : null,
             icon: Icon(
               Icons.content_paste,
-              semanticLabel: macOSAppName(s.t('input.sendClipText')),
+              semanticLabel: tooltipLabel(s.t('input.sendClipText')),
             ),
             tooltip: s.t('input.sendClipText'),
           ),
@@ -120,7 +120,7 @@ mixin _ChatInputActionBar
                 : null,
             icon: Icon(
               Icons.attach_file,
-              semanticLabel: macOSAppName(s.t('input.sendFile')),
+              semanticLabel: tooltipLabel(s.t('input.sendFile')),
             ),
             tooltip: s.t('input.sendFile'),
           ),
@@ -193,7 +193,7 @@ mixin _ChatInputActionBar
             icon: Icon(
               Icons.send_rounded,
               size: 20,
-              semanticLabel: macOSAppName(s.t('input.send')),
+              semanticLabel: tooltipLabel(s.t('input.send')),
             ),
             tooltip: s.t('input.send'),
           ),

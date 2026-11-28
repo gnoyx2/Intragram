@@ -45,7 +45,7 @@ class _PlayButton extends StatelessWidget {
           tapTargetSize: MaterialTapTargetSize.padded,
         ),
         icon: Semantics(
-          label: macOSAppName(
+          label: tooltipLabel(
             S.of(context).t(playing ? 'transfer.pause' : 'transfer.play'),
           ),
           child: AnimatedSwitcher(

@@ -8,12 +8,16 @@ import 'package:intragram/store/models.dart';
 
 class _SpyDiscovery extends DiscoveryController {
   int refreshCalls = 0;
+  final periodic = <bool>[];
 
   @override
   List<PeerDevice> build() => const <PeerDevice>[];
 
   @override
-  Future<void> refresh() async => refreshCalls++;
+  Future<void> refresh({bool periodic = false}) async {
+    refreshCalls++;
+    this.periodic.add(periodic);
+  }
 }
 
 void main() {
@@ -39,6 +43,8 @@ void main() {
     // 애니메이션 완료는 주기가 지난 뒤 첫 프레임에서야 알려짐
     await tester.pump(const Duration(milliseconds: 1));
     expect(spy.refreshCalls, 1);
+    // 주기 새로고침은 periodic으로 알려서 Linux가 살아 있는 스캔을 안 갈아끼우게 함
+    expect(spy.periodic, [true]);
   });
   testWidgets('shows a countdown and refresh button, tapping calls refresh', (
     tester,

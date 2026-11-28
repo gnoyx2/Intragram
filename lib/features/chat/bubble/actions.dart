@@ -135,7 +135,7 @@ extension _MessageBubbleActions on MessageBubble {
                       IconButton(
                         icon: Icon(
                           Icons.close,
-                          semanticLabel: macOSAppName(
+                          semanticLabel: tooltipLabel(
                             S.of(sheetContext).t('viewer.close'),
                           ),
                         ),

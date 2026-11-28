@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intragram/core/wifi_info.dart';
 
@@ -29,26 +31,30 @@ There is 1 interface on the system:
     Hosted network status  : Not available
 ''';
 
-// 실제 캡처가 아님: 공개된 netsh 파서들이 쓰는 한국어 라벨로 만든 것 (실기기 확인은 DEVICE_QA)
+// 한국어 Windows 11 26H2 출력의 라벨 그대로 (이름·주소 값만 바꿈)
 const _korean = '''
 
 시스템에 1 인터페이스가 있습니다.
 
     이름                   : Wi-Fi
-    설명                   : Intel(R) Wi-Fi 6 AX201 160MHz
+    설명                   : Broadcom 802.11ac Network Adapter
+    GUID                   : 00000000-0000-0000-0000-000000000000
     물리적 주소            : aa:bb:cc:dd:ee:ff
+    인터페이스 유형        : 기본
     상태                   : 연결됨
     SSID                   : 우리집
-    BSSID                  : 11:22:33:44:55:66
+    AP BSSID               : 11:22:33:44:55:66
+    밴드                   : 5GHz
+    채널                   : 149
     네트워크 종류          : 인프라
-    라디오 종류            : 802.11ax
+    송수신 장치 종류       : 802.11ax
     인증                   : WPA2-개인
     암호                   : CCMP
-    연결 모드              : 자동 연결
-    채널                   : 149
-    수신 속도 (Mbps)       : 1201
-    전송 속도 (Mbps)       : 960
+    연결 모드              : 프로필
+    수신 속도(Mbps)        : 1201
+    전송 속도(Mbps)        : 960
     신호                   : 87%
+    Rssi                   : -36
     프로필                 : 우리집
 ''';
 
@@ -96,6 +102,15 @@ void main() {
     expect(info?.linkRate, '1201');
     expect(info?.signal, '87%');
     expect(info?.security, 'WPA2-개인');
+  });
+
+  test('reads Korean netsh bytes as UTF-8 instead of the system code page', () {
+    final info = parseNetshInterfaces(decodeNetshOutput(utf8.encode(_korean)));
+
+    expect(info?.channel, '149');
+    expect(info?.phyMode, '802.11ax');
+    expect(info?.security, 'WPA2-개인');
+    expect(decodeNetshOutput([0xC3, 0x28]), isA<String>());
   });
 
   test('finds signal and radio type by value in an unknown language', () {

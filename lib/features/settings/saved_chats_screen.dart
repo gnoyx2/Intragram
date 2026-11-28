@@ -130,7 +130,7 @@ class _SavedChatsScreenState extends ConsumerState<SavedChatsScreen> {
                       trailing: IconButton(
                         icon: Icon(
                           Icons.delete_outline,
-                          semanticLabel: macOSAppName(s.t('savedChats.delete')),
+                          semanticLabel: tooltipLabel(s.t('savedChats.delete')),
                         ),
                         tooltip: s.t('savedChats.delete'),
                         onPressed: () => _delete(c),

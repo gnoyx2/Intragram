@@ -63,7 +63,7 @@ class OrgCredentialButton extends ConsumerWidget {
           icon: Icon(
             verified ? Icons.domain_verification : Icons.business_outlined,
             color: verified ? Theme.of(context).colorScheme.tertiary : null,
-            semanticLabel: macOSAppName(
+            semanticLabel: tooltipLabel(
               conversation.isRoom
                   ? s.t('org.title')
                   : orgStatusLabel(s, status),

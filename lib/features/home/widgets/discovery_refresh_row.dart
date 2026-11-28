@@ -33,7 +33,7 @@ class _DiscoveryRefreshRowState extends ConsumerState<DiscoveryRefreshRow>
             animationBehavior: AnimationBehavior.preserve,
           )
           ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) _refresh();
+            if (status == AnimationStatus.completed) _refresh(periodic: true);
           })
           ..forward();
   }
@@ -44,8 +44,8 @@ class _DiscoveryRefreshRowState extends ConsumerState<DiscoveryRefreshRow>
     super.dispose();
   }
 
-  void _refresh() {
-    ref.read(discoveryControllerProvider.notifier).refresh();
+  void _refresh({bool periodic = false}) {
+    ref.read(discoveryControllerProvider.notifier).refresh(periodic: periodic);
     _controller.forward(from: 0);
   }
 
@@ -84,7 +84,7 @@ class _DiscoveryRefreshRowState extends ConsumerState<DiscoveryRefreshRow>
             Icons.refresh,
             size: 18,
             color: color,
-            semanticLabel: macOSAppName(s.t('home.refreshDevices')),
+            semanticLabel: tooltipLabel(s.t('home.refreshDevices')),
           ),
           tooltip: s.t('home.refreshDevices'),
           onPressed: _manualRefresh,

@@ -86,7 +86,7 @@ class IdentityCard extends ConsumerWidget {
                   .t(kIsWeb ? 'secureWeb.open' : 'deviceCode.tooltip'),
               icon: Icon(
                 Icons.qr_code_2_rounded,
-                semanticLabel: macOSAppName(
+                semanticLabel: tooltipLabel(
                   S
                       .of(context)
                       .t(kIsWeb ? 'secureWeb.open' : 'deviceCode.tooltip'),
@@ -109,7 +109,7 @@ class IdentityCard extends ConsumerWidget {
                       ? Icons.wifi_tethering
                       : Icons.wifi_tethering_off,
                   color: server.running ? chat.online : null,
-                  semanticLabel: macOSAppName(
+                  semanticLabel: tooltipLabel(
                     S.of(context).t('wifiInfo.title'),
                   ),
                 ),

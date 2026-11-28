@@ -65,6 +65,15 @@ void main() {
       expect(notifier.isRunning, isTrue);
       expect(notified, greaterThan(before));
 
+      // Linux는 살아 있는 스캔을 주기 새로고침으로 갈아끼우지 않음 (bonsoir가 매번 D-Bus 연결을 새로 엶)
+      final keeps = DiscoveryController.keepsLiveScan;
+      DiscoveryController.keepsLiveScan = () => true;
+      addTearDown(() => DiscoveryController.keepsLiveScan = keeps);
+      unawaited(notifier.refresh(periodic: true));
+      async.elapse(const Duration(seconds: 1));
+      expect(platform.discoveries, hasLength(2));
+      expect(platform.discoveries.last.stopped, isFalse);
+
       unawaited(notifier.stop());
       async.elapse(const Duration(milliseconds: 200));
     });

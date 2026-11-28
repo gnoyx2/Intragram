@@ -45,9 +45,11 @@ void main() {
       testIdentity('b', alias: 'listener'),
       wire.foreign,
     );
-    final id = await connect();
+    // IP만 친 연결은 상대 hello를 받은 뒤에야 끝나서(같은 상대의 끊긴 대화로 합칠지 정함) 기다리기 전에 응답함
+    final pending = connect();
     await pumpEventQueue(times: 30);
     listener.sendHello(signature: await listener.proof(asDialer: false));
+    final id = await pending;
     await pumpEventQueue(times: 80);
     return store.conversation(id)!;
   }

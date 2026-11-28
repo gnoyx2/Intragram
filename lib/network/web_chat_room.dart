@@ -145,19 +145,21 @@ extension _WebRoomConnections on _WebRoom {
       }
       if (hosting) nativeRoster();
     }
+    recordOrganization(peer);
+  }
+
+  // 화면은 1:1이면 상대 신원(conversation.peerId)으로, 방이면 멤버 슬롯 id로 찾음: 호스트 1:1도 신원 키로 둠
+  void recordOrganization(_WebChatPeer peer) {
     final org = peer.proof.organization;
-    if (org != null) {
-      mirrorOrganization(
-        () => store.orgCredentials.record(
-          hosting ? peer.id : remote?.peerId ?? peer.id,
-          org,
-          owner: peer,
-        ),
-      );
-      peer.organizationPeerId = hosting ? peer.id : remote?.peerId ?? peer.id;
-    } else {
-      forgetOrganization(peer);
-    }
+    if (org == null) return forgetOrganization(peer);
+    final key = hosting && store.conversation(id)?.isRoom == true
+        ? peer.id
+        : peer.proof.peerIdentity?.peerId ?? peer.id;
+    if (peer.organizationPeerId != key) forgetOrganization(peer);
+    mirrorOrganization(
+      () => store.orgCredentials.record(key, org, owner: peer),
+    );
+    peer.organizationPeerId = key;
   }
 
   void forgetOrganization(_WebChatPeer peer) {
@@ -192,6 +194,7 @@ extension _WebRoomConnections on _WebRoom {
     if (!hosting || closing) return;
     final online = connected.toList();
     final group = online.length > 1;
+    final wasRoom = store.conversation(id)?.isRoom == true;
     members = {
       selfId: identity.alias,
       for (final peer in online) peer.id: peer.alias,
@@ -227,6 +230,8 @@ extension _WebRoomConnections on _WebRoom {
       ),
     );
     nativeRoster();
+    // 1:1이 방이 되면 자격 키가 신원에서 멤버 슬롯으로 바뀜
+    if (group && !wasRoom) online.forEach(recordOrganization);
     for (final peer in online) {
       sendTo(peer, {
         'k': 'room-state',

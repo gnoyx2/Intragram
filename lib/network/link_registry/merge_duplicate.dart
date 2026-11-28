@@ -9,10 +9,12 @@ mixin _LinkRegistryDuplicates on _LinkRegistryState, _LinkRegistryRoom {
     final host = link.remoteHost;
     final linkPeerId = link.remotePeerId;
     if (host == null || linkPeerId == null) return;
+    // IP로 다이얼한 링크는 상대가 이 peerId의 신원 키를 증명했으니 주소가 바뀌었어도 같은 상대임 (끊긴 대화로만 합침)
     final dup = store.conversations.firstWhereOrNull(
       (c) =>
           c.id != provisional &&
-          c.peerHost == host &&
+          (c.peerHost == host ||
+              link.dialledByUs && (_links[c.id]?.isClosed ?? true)) &&
           !c.isRoom &&
           c.peerId == linkPeerId,
     );
@@ -39,5 +41,29 @@ mixin _LinkRegistryDuplicates on _LinkRegistryState, _LinkRegistryRoom {
       // 끊긴 사이 인원이 바뀌었을 수 있어서 바로 알려 줌
       unawaited(_sendRoomJoin(link, roomId));
     }
+  }
+
+  // 같은 상대(검증된 peerId)의 끊긴 앱 1:1. 홈 타일·기기 코드로 다시 붙을 때 새 대화 대신 이 대화로 다시 검
+  Conversation? _offlineChatWith(String peerId) =>
+      store.conversations.firstWhereOrNull(
+        (c) =>
+            !c.isRoom &&
+            c.transport == PeerTransport.app &&
+            c.peerId == peerId &&
+            (_links[c.id]?.isClosed ?? true),
+      );
+
+  // IP만 친 연결은 hello로 누군지 안 뒤 같은 상대의 끊긴 1:1로 옮겨 탐(_mergeDuplicateHost, 안 그러면 미검증 대화가 하나 더 생김).
+  // 화면이 옮긴 대화를 열도록 확인이 끝날 때까지(최대 핸드셰이크 시간) 기다렸다가 최종 id를 돌려줌
+  Future<String> _settleManualDial(String provisional) async {
+    final link = _links[provisional];
+    if (link == null) return provisional;
+    final deadline = DateTime.now().add(kHandshakeTimeout);
+    while (link.remotePeerId == null &&
+        !link.isClosed &&
+        DateTime.now().isBefore(deadline)) {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
+    return link.conversationId;
   }
 }

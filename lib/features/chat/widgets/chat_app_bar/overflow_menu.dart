@@ -32,7 +32,7 @@ class ChatOverflowMenu extends StatelessWidget {
       tooltip: s.t('chat.more'),
       icon: Icon(
         Icons.adaptive.more,
-        semanticLabel: macOSAppName(s.t('chat.more')),
+        semanticLabel: tooltipLabel(s.t('chat.more')),
       ),
       onSelected: (value) {
         if (value == 'audit') {

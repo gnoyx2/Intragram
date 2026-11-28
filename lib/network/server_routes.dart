@@ -1,13 +1,11 @@
 part of 'local_server.dart';
 
 extension LocalServerRoutes on LocalServer {
-  // 모든 응답에 no-store와 보안 헤더를 설정함. Host 헤더가 바인드 주소와 다르면 421을 반환함 (DNS 리바인딩으로 외부 출처가 로컬 서버를 호출하는 공격을 차단함)
+  // 모든 응답에 no-store와 보안 헤더를 설정함. Host 헤더가 바인드한 주소들과 다르면 421을 반환함 (DNS 리바인딩으로 외부 출처가 로컬 서버를 호출하는 공격을 차단함)
   Middleware _noStore() => (Handler inner) {
     return (Request request) async {
-      final expected = boundHost == null
-          ? null
-          : '${NetworkGuard.hostForUri(boundHost!)}:$boundPort';
-      if (expected == null || request.headers['host'] != expected) {
+      final expected = request.headers['host'];
+      if (expected == null || !_authorities.contains(expected)) {
         return Response(
           421,
           body: 'Misdirected Request',
@@ -116,12 +114,8 @@ extension LocalServerRoutes on LocalServer {
   }
 
   // 브라우저 WebSocket은 이 서버가 제공한 동일 origin만 허용함
-  bool _isOwnOrigin(String origin) {
-    final host = boundHost;
-    final port = boundPort;
-    if (host == null || port == null) return false;
-    return origin == 'http://${NetworkGuard.hostForUri(host)}:$port';
-  }
+  bool _isOwnOrigin(String origin) =>
+      _authorities.any((authority) => origin == 'http://$authority');
 
   // 헤더가 다 있고 형식이 맞아야 registry로 감 (아니면 400이고 슬롯은 안 건드림). 검증과 소비는 registry가 함
   Future<Response> _receiveFile(Request request) async {

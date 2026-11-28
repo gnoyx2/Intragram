@@ -232,7 +232,7 @@ class _VoicePlayerState extends State<_VoicePlayer> {
                 icon: Icon(
                   Icons.download_outlined,
                   size: 20,
-                  semanticLabel: macOSAppName(
+                  semanticLabel: tooltipLabel(
                     S.of(context).t('transfer.saveToDevice'),
                   ),
                 ),

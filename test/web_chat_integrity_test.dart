@@ -188,20 +188,32 @@ void main() {
         role: 'Test',
       );
       first.store.orgCredentials.activate(credential);
+      // 호스트 1:1 화면은 상대 신원으로 찾음
       await webPeerUntil(
-        () => host.store.orgCredentials.statusOf(memberId)?.verified == true,
+        () =>
+            host.store.orgCredentials
+                .statusOf(first.identity.peerId)
+                ?.verified ==
+            true,
+      );
+      expect(
+        host.store.conversation(host.room!)!.peerId,
+        first.identity.peerId,
       );
       final count = first.connections.single.channel.sent.length;
       await Future<void>.delayed(const Duration(milliseconds: 30));
       expect(first.connections.single.channel.sent.length, count);
       first.store.orgCredentials.deactivate();
       await webPeerUntil(
-        () => host.store.orgCredentials.statusOf(memberId) == null,
+        () => host.store.orgCredentials.statusOf(first.identity.peerId) == null,
       );
       first.store.orgCredentials.activate(credential);
+      // 방이 되면 멤버 목록이 슬롯 id로 찾음
+      await host.connect(second);
       await webPeerUntil(
         () => host.store.orgCredentials.statusOf(memberId)?.verified == true,
       );
+      expect(host.store.orgCredentials.statusOf(first.identity.peerId), isNull);
       await host.bridge.closeRoom(host.room!);
       expect(host.store.orgCredentials.statusOf(memberId), isNull);
     },

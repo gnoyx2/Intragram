@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:mime/mime.dart';
-import 'package:cryptography/cryptography.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 
@@ -13,6 +12,7 @@ import 'package:intragram/core/app_identity.dart';
 import 'package:intragram/core/constants.dart';
 import 'package:intragram/core/network_guard.dart';
 import 'link_registry.dart';
+import 'portal_page.dart';
 import 'capped_socket.dart';
 import 'ws_upgrade.dart';
 
@@ -56,6 +56,13 @@ class LocalServer {
   // 포털이 켜진 동안만 있는 256비트 입장 토큰 (RAM). 링크엔 값 대신 조회 콜백을 줘서 포털을 끈 직후 대기 링크도 거부됨
   String? portalToken;
 
+  // 같은 포트로 더 받는 다른 물리 NIC 주소 (NetworkGuard.extraBindAddresses). QR·표시는 기본 주소만 씀
+  final _extraServers = <HttpServer>[];
+  Set<String> get _authorities => {
+    for (final server in [?_server, ..._extraServers])
+      '${NetworkGuard.hostForUri(server.address.address)}:${server.port}',
+  };
+
   bool get isRunning => _server != null;
   String? get boundHost => _server?.address.address;
   int? get boundPort => _server?.port;
@@ -94,23 +101,41 @@ class LocalServer {
     if (server == null) {
       throw StateError('no free port from $preferredPort');
     }
-    // 요청을 끝까지 안 보내는 연결을 기본 120초(최대 240초) 대신 빨리 정리함. 웹소켓은 업그레이드 때
-    // 서버에서 떨어져 나가서 영향 없음
+    _serve(server, handler);
+    _server = server;
+    // 루프백 바인드(테스트)는 혼자 받음
+    if (!address.isLoopback) {
+      for (final extra in await NetworkGuard.extraBindAddresses(address)) {
+        try {
+          _extraServers.add(
+            _serve(await HttpServer.bind(extra, server.port), handler),
+          );
+        } on SocketException {
+          // 그 주소만 건너뜀 (기본 주소는 이미 받음)
+        }
+      }
+    }
+    return (host: server.address.address, port: server.port);
+  }
+
+  // 요청을 끝까지 안 보내는 연결을 기본 120초(최대 240초) 대신 빨리 정리함. 웹소켓은 업그레이드 때
+  // 서버에서 떨어져 나가서 영향 없음. X-Powered-By(서버 지문)를 안 붙임
+  HttpServer _serve(HttpServer server, Handler handler) {
     server.idleTimeout = idleTimeout;
-    // X-Powered-By(서버 지문)를 안 붙임
     shelf_io.serveRequests(
       server.where(_parsable),
       handler,
       poweredByHeader: null,
     );
-
-    _server = server;
-    return (host: server.address.address, port: server.port);
+    return server;
   }
 
   Future<void> stop() async {
-    final server = _server;
+    final servers = [?_server, ..._extraServers];
     _server = null;
-    await server?.close(force: true);
+    _extraServers.clear();
+    for (final server in servers) {
+      await server.close(force: true);
+    }
   }
 }

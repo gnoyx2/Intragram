@@ -9,6 +9,16 @@ mixin _LinkRegistryConnect
   }) async {
     final existing = _existingLinkFor(peer);
     if (existing != null) return existing.key;
+    // 끊긴 같은 상대 1:1이 있으면 새 대화 없이 그 대화로 다시 검 (배너 재연결과 같은 길)
+    final offline = verifyPeerId ? _offlineChatWith(peer.peerId) : null;
+    if (offline != null) {
+      store.updateConversation(
+        offline.id,
+        (c) => c.copyWith(peerHost: peer.host, peerPort: peer.port),
+      );
+      await reconnect(offline.id);
+      return offline.id;
+    }
 
     final channel = await _dialPeer(peer);
 
@@ -35,8 +45,9 @@ mixin _LinkRegistryConnect
       remotePort: peer.port,
       dialledByUs: true,
       expectedPeerId: verifyPeerId ? peer.peerId : null,
+      mergeAfterHello: !verifyPeerId,
     );
-    return conversationId;
+    return verifyPeerId ? conversationId : _settleManualDial(conversationId);
   }
 
   // mDNS가 막힌 망(카페·회사 Wi-Fi)용. 다이얼 경로가 같아서 리터럴 사설 IP만 통과함.
