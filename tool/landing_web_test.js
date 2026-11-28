@@ -17,6 +17,9 @@ assert.match(html, /WebRTC 암호화/);
 assert.match(html, /App messages and files also use encrypted WebRTC/);
 assert.match(html, /100 MiB/);
 assert.match(html, /href="#install"/);
+const macosCard = html.match(/<article\b[^>]*\bdata-os="macos"[\s\S]*?<\/article>/)?.[0] ?? '';
+assert.match(macosCard, /https:\/\/apps\.apple\.com\/kr\/app\/intragram\/id6814277170/, 'macOS card must link to the Mac App Store');
+assert.match(macosCard, /intragram-macos\.dmg/, 'macOS card must retain the downloadable DMG');
 
 // Landing and lightweight-client assets must ship together without a CDN.
 for (const relative of ['index.html', 'web/lite.html']) {

@@ -364,8 +364,8 @@ jobs:
 
             Signing reports are available in the workflow-run artifacts.
             - Android: the APK and Google Play AAB use the release signing key.
-            - iPhone and iPad: [App Store](https://apps.apple.com/app/id6814277170).
-            - macOS DMG: ad-hoc signed, not notarized. Gatekeeper will warn.
+            - iPhone, iPad and Mac: [App Store](https://apps.apple.com/kr/app/intragram/id6814277170).
+            - macOS: on the [Mac App Store](https://apps.apple.com/kr/app/intragram/id6814277170), and also attached as `intragram-macos.dmg` (ad-hoc signed, not notarized; Gatekeeper will warn).
             - Windows installer (`-setup.exe`: installs for the current user without admin rights,
               remove it in Settings > Apps) and portable zip (`-portable.zip`): not Authenticode-signed. SmartScreen will warn.
             - Linux tarball: experimental, Linux runtime/dependencies not yet reviewed; no OS-level signing.
