@@ -5,7 +5,9 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 // 서버는 떠도 Windows 방화벽이 들어오는 연결을 막을 수 있음 (첫 경고 창에서 취소, 공용에서만 허용한 뒤 망이 개인으로 바뀜).
 // 이 실행 파일의 켜진 인바운드 규칙과 지금 망 종류를 PowerShell로 읽음. 못 읽으면 null이라 알리지 않음
 Future<bool?> windowsInboundBlocked() async {
-  if (!Platform.isWindows) return null;
+  if (!Platform.isWindows || Platform.environment['FLUTTER_TEST'] == 'true') {
+    return null;
+  }
   final exe = Platform.resolvedExecutable.replaceAll("'", "''");
   try {
     final result = await Process.run('powershell.exe', [
